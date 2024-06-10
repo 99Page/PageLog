@@ -10,9 +10,13 @@ import SwiftUI
 
 @main
 struct TooltipApp: App {
+    
+    let tooltipModel = TooltipModel()
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environment(tooltipModel)
         }
     }
 }

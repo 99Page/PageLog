@@ -9,55 +9,50 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @Environment(TooltipModel.self) var tooltipModel
+    
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
+                HeaderView()
+                
+                Spacer()
+                
+                Button(action: {
+                    tooltipModel.showTooltip(of: .play, targetX: \.midX, targetY: \.minY)
+                }, label: {
+                    Image(systemName: "play.circle.fill")
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        .frame(width: 80)
+                        .foregroundStyle(Color.white)
+                        .anchorPreference(key: AnchorPreferenceKey.self, value: .bounds) {
+                            [AnchorType.play: $0]
+                        }
+                })
+            }
+            .background(
                 Image(.bear)
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea(.all, edges: .vertical)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(alignment: .bottom) {
-                        Image(systemName: "play.circle.fill")
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                            .frame(width: 80)
-                            .foregroundStyle(Color.white)
+            )
+            .overlay {
+                GeometryReader(content: { geometry in
+                    tooltipModel.currentAnchor.map { anchor in
+                        TooltipView()
+                            .frame(alignment: .leading)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(Color.blue)
+//                            .offset(x: geometry[$0][keyPath: tooltipModel.targetX],
+//                                    y: geometry[$0][keyPath: tooltipModel.targetY])
                     }
-                
+                })
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        
-                    }, label: {
-                        Image(systemName: "chevron.down")
-                            .resizable()
-                            .aspectRatio(1.8, contentMode: .fill)
-                            .frame(width: 23)
-                            .font(.headline)
-                            .foregroundStyle(Color.white)
-                    })
-                }
-                
-                ToolbarItem(placement: .principal) {
-                    Text("Bear")
-                        .font(.system(size: 23, weight: .semibold))
-                        .foregroundStyle(Color.white)
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        
-                    }, label: {
-                        Image(systemName: "ellipsis")
-                            .resizable()
-                            .aspectRatio(4, contentMode: .fill)
-                            .font(.headline)
-                            .frame(width: 33)
-                            .foregroundStyle(Color.white)
-                    })
-                }
+            .onPreferenceChange(AnchorPreferenceKey.self, perform: { value in
+                tooltipModel.anchors = value
             })
         }
     }
@@ -65,4 +60,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environment(TooltipModel())
 }
