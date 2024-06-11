@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct AnchorPreferenceKey: PreferenceKey {
+struct DestinationAnchorPreferenceKey: PreferenceKey {
     static var defaultValue: [AnchorType: Anchor<CGRect>] = [:]
     
     static func reduce(value: inout [AnchorType: Anchor<CGRect>], nextValue: () -> [AnchorType: Anchor<CGRect>]) {
