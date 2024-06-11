@@ -15,7 +15,11 @@ struct HeaderView: View {
     var body: some View {
         HStack(spacing: 0) {
             Button {
-                tooltipModel.showTooltip(of: .chevron, targetX: \.maxX, targetY: \.maxY)
+                tooltipModel.showTooltip(
+                    of: .chevron,
+                    xAnchor: ViewAnchor(source: \.minX, destination: \.minX),
+                    targetY: \.maxY
+                )
             } label: {
                 Image(systemName: "chevron.down")
                     .resizable()
@@ -24,27 +28,35 @@ struct HeaderView: View {
                     .font(.headline)
                     .foregroundStyle(Color.white)
             }
-            .anchorPreference(key: AnchorPreferenceKey.self, value: .bounds) {
+            .anchorPreference(key: DestinationAnchorPreferenceKey.self, value: .bounds) {
                 [AnchorType.chevron: $0]
             }
             
             Spacer()
             
-            Button(action: {
-                tooltipModel.showTooltip(of: .title, targetX: \.minX, targetY: \.maxY)
-            }, label: {
+            Button {
+                tooltipModel.showTooltip(
+                    of: .title,
+                    xAnchor: ViewAnchor(source: \.midX, destination: \.midX),
+                    targetY: \.maxY
+                )
+            } label: {
                 Text("Bear")
                     .font(.system(size: 23, weight: .semibold))
                     .foregroundStyle(Color.white)
-                    .anchorPreference(key: AnchorPreferenceKey.self, value: .bounds) {
+                    .anchorPreference(key: DestinationAnchorPreferenceKey.self, value: .bounds) {
                         [AnchorType.title: $0]
                     }
-            })
+            }
             
             Spacer()
             
             Button {
-                tooltipModel.showTooltip(of: .ellipsis, targetX: \.minX, targetY: \.maxY)
+                tooltipModel.showTooltip(
+                    of: .ellipsis,
+                    xAnchor: ViewAnchor(source: \.maxX, destination: \.maxX),
+                    targetY: \.maxY
+                )
             } label: {
                 Image(systemName: "ellipsis")
                     .resizable()
@@ -53,7 +65,7 @@ struct HeaderView: View {
                     .frame(width: 33)
                     .foregroundStyle(Color.white)
             }
-            .anchorPreference(key: AnchorPreferenceKey.self, value: .bounds) {
+            .anchorPreference(key: DestinationAnchorPreferenceKey.self, value: .bounds) {
                 [AnchorType.ellipsis: $0]
             }
         }

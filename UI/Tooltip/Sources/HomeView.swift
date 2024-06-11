@@ -19,18 +19,22 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    tooltipModel.showTooltip(of: .play, targetX: \.midX, targetY: \.minY)
-                }, label: {
+                Button {
+                    tooltipModel.showTooltip(
+                        of: .play,
+                        xAnchor: ViewAnchor(source: \.midX, destination: \.midX),
+                        targetY: \.minY
+                    )
+                } label: {
                     Image(systemName: "play.circle.fill")
                         .resizable()
                         .aspectRatio(1, contentMode: .fit)
                         .frame(width: 80)
                         .foregroundStyle(Color.white)
-                        .anchorPreference(key: AnchorPreferenceKey.self, value: .bounds) {
+                        .anchorPreference(key: DestinationAnchorPreferenceKey.self, value: .bounds) {
                             [AnchorType.play: $0]
                         }
-                })
+                }
             }
             .background(
                 Image(.bear)
@@ -40,20 +44,15 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             )
             .overlay {
-                GeometryReader(content: { geometry in
+                GeometryReader { geometry in
                     tooltipModel.currentAnchor.map { anchor in
-                        TooltipView()
-                            .frame(alignment: .leading)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(Color.blue)
-//                            .offset(x: geometry[$0][keyPath: tooltipModel.targetX],
-//                                    y: geometry[$0][keyPath: tooltipModel.targetY])
+                        TooltipView(geometry: geometry, targetAnchor: anchor)
                     }
-                })
+                }
             }
-            .onPreferenceChange(AnchorPreferenceKey.self, perform: { value in
+            .onPreferenceChange(DestinationAnchorPreferenceKey.self) { value in
                 tooltipModel.anchors = value
-            })
+            }
         }
     }
 }
