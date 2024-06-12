@@ -17,8 +17,9 @@ struct HeaderView: View {
             Button {
                 tooltipModel.showTooltip(
                     of: .chevron,
-                    xAnchor: ViewAnchor(source: \.minX, destination: \.minX),
-                    targetY: \.maxY
+                    xAnchor: .minXToMinX,
+                    yAnchor: .minYToMaxY, 
+                    arrowDirection: .top
                 )
             } label: {
                 Image(systemName: "chevron.down")
@@ -37,8 +38,9 @@ struct HeaderView: View {
             Button {
                 tooltipModel.showTooltip(
                     of: .title,
-                    xAnchor: ViewAnchor(source: \.midX, destination: \.midX),
-                    targetY: \.maxY
+                    xAnchor: .midXToMidX,
+                    yAnchor: .minYToMaxY, 
+                    arrowDirection: .top
                 )
             } label: {
                 Text("Bear")
@@ -54,8 +56,9 @@ struct HeaderView: View {
             Button {
                 tooltipModel.showTooltip(
                     of: .ellipsis,
-                    xAnchor: ViewAnchor(source: \.maxX, destination: \.maxX),
-                    targetY: \.maxY
+                    xAnchor: .maxXToMaxX,
+                    yAnchor: .minYToMaxY, 
+                    arrowDirection: .top
                 )
             } label: {
                 Image(systemName: "ellipsis")

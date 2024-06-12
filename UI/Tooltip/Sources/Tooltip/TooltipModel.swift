@@ -8,16 +8,22 @@
 
 import SwiftUI
 
-struct ViewAnchor {
-    let source: KeyPath<CGRect, CGFloat>
-    let destination: KeyPath<CGRect, CGFloat>
-}
-
 @Observable
 class TooltipModel {
     private(set) var currentAnchorType: AnchorType?
-    private(set) var xAnchor = ViewAnchor(source: \.minX, destination: \.minX)
-    private(set) var targetY: KeyPath<CGRect, CGFloat> = \.minY
+    private(set) var xAnchor: XAnchorType = .minXToMinX
+    private(set) var yAnchor: YAnchorType = .minYToMaxY
+    private(set) var arrowDirection: ArrowDirection = .bottom
+    
+    let arrowHeight: CGFloat = 6
+    var tooltipYOffset: CGFloat {
+        switch arrowDirection {
+        case .top:
+            arrowHeight
+        case .bottom:
+            -arrowHeight
+        }
+    }
     
     var anchors: [AnchorType: Anchor<CGRect>] = [:]
     
@@ -26,9 +32,10 @@ class TooltipModel {
         return anchors[currentAnchorType]
     }
     
-    func showTooltip(of type: AnchorType, xAnchor: ViewAnchor, targetY: KeyPath<CGRect, CGFloat>) {
+    func showTooltip(of type: AnchorType, xAnchor: XAnchorType, yAnchor: YAnchorType, arrowDirection: ArrowDirection) {
         self.currentAnchorType = type
         self.xAnchor = xAnchor
-        self.targetY = targetY
+        self.yAnchor = yAnchor
+        self.arrowDirection = arrowDirection
     }
 }

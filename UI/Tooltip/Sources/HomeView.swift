@@ -22,8 +22,9 @@ struct HomeView: View {
                 Button {
                     tooltipModel.showTooltip(
                         of: .play,
-                        xAnchor: ViewAnchor(source: \.midX, destination: \.midX),
-                        targetY: \.minY
+                        xAnchor: .midXToMidX,
+                        yAnchor: .maxYToMinY, 
+                        arrowDirection: .bottom
                     )
                 } label: {
                     Image(systemName: "play.circle.fill")
@@ -44,11 +45,7 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             )
             .overlay {
-                GeometryReader { geometry in
-                    tooltipModel.currentAnchor.map { anchor in
-                        TooltipView(geometry: geometry, targetAnchor: anchor)
-                    }
-                }
+                TooltipView()
             }
             .onPreferenceChange(DestinationAnchorPreferenceKey.self) { value in
                 tooltipModel.anchors = value
