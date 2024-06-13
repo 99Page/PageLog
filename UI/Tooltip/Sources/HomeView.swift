@@ -7,10 +7,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     
     @Environment(TooltipModel.self) var tooltipModel
+    @Environment(\.modelContext) private var context
+    
+    @State var tooltipRepository = TooltipRepository()
     
     var body: some View {
         NavigationStack {
@@ -35,6 +39,13 @@ struct HomeView: View {
                         .anchorPreference(key: DestinationAnchorPreferenceKey.self, value: .bounds) {
                             [AnchorType.play: $0]
                         }
+                }
+                .onAppear {
+                    if tooltipRepository.query(name: "play", context: context) {
+                        tooltipModel.showTooltip(of: .play, xAnchor: .midXToMidX, yAnchor: .maxYToMinY, arrowDirection: .bottom)
+                        let tooltipCheck = TooltipCheck(identifier: "play", isChecked: true)
+                        tooltipRepository.insert(tooltipCheck, context: context)
+                    }
                 }
             }
             .background(

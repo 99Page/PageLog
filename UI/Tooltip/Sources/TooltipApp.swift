@@ -22,7 +22,8 @@ struct TooltipApp: App {
             /// 아래 Modifier를 사용해 설정한다. 
             /// 모델간에 Relation이 설정되어 있다면 생략 가능하다.
                 .modelContainer(
-                    for: [Trip.self, Accomodation.self]
+                    for: [TooltipCheck.self, Accomodation.self, Trip.self
+                         ]
                 )
         }
     }
