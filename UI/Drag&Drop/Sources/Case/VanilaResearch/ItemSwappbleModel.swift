@@ -39,6 +39,7 @@ final class ItemSwappableModel: ColorRectangleDropDelegate {
     func performDrop(_ model: ColorRectangleModel) {
         swapPosition()
         draggedColorRectangleModel = nil
+        enteredColorRectangleModel = nil
     }
     
     private func swapPosition() {
