@@ -12,7 +12,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             NavigationLink("Vanila") {
-                VanilaRe
+                ItemSwappableView()
             }
         }
     }
