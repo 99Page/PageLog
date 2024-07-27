@@ -8,4 +8,4 @@
 import ProjectDescription
 
 let workspace = Workspace(name: "PageLog",
-                          projects: ["SwiftUI/**", "Language/**"])
+                          projects: ["SwiftUI/**", "Language/**", "Algorithm/**"])
