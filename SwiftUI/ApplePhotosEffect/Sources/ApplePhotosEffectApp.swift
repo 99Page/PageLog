@@ -11,7 +11,7 @@ import SwiftUI
 struct ApplePhotosEffectApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            KeepItemPositionView()
         }
     }
 }
