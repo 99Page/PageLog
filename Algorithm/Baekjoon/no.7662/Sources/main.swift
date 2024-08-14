@@ -137,6 +137,7 @@ struct PriorityQueue<Element: Comparable> {
         let newElement = elements[index]
         let parentElement = elements[parentIndex]
         
+        guard parentIndex != index else { return false }
         return compare(newElement, parentElement)
     }
 }
