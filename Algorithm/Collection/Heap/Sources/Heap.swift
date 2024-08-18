@@ -1,40 +1,12 @@
 //
-//  File.swift
-//  ApplePhotosEffectManifests
+//  Heap.swift
+//  Heap
 //
-//  Created by 노우영 on 8/14/24.
+//  Created by 노우영 on 8/18/24.
+//  Copyright © 2024 Page. All rights reserved.
 //
 
 import Foundation
-
-
-let n = readValue()
-var minHeap = Heap<Int>.minHeap()
-
-executeMinHeap()
-
-func executeMinHeap() {
-    for _ in 0..<n {
-        let operation = readValue()
-        handleOperation(operation)
-    }
-}
-
-func handleOperation(_ operation: Int) {
-    if operation == 0 {
-        let top = minHeap.pop() ?? 0
-        print(top)
-    } else {
-        minHeap.insert(operation)
-    }
-}
-
-
-func readValue() -> Int {
-    let input = readLine()!
-    let result = Int(input)!
-    return result
-}
 
 struct Heap<Element: Comparable> {
     private let comparator: (Element, Element) -> Bool
@@ -110,6 +82,7 @@ struct Heap<Element: Comparable> {
             siftDown(currentIndex: swapIndex)
         }
     }
+    
     
     
     
