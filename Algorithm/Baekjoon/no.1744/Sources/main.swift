@@ -1,23 +1,99 @@
 //
-//  Heap.swift
-//  Heap
+//  File.swift
+//  ApplePhotosEffectManifests
 //
-//  Created by 노우영 on 8/18/24.
-//  Copyright © 2024 Page. All rights reserved.
+//  Created by 노우영 on 8/19/24.
 //
 
 import Foundation
 
+var maxHeap = Heap<Int>.maxHeap()
+var minHeap = Heap<Int>.minHeap()
+let n = readInteger()
+
+insertValues()
+
+var result: Int = 0
+
+findMaxSum()
+
+print(result)
+
+func findMaxSum() {
+    addValuesInMaxHeap()
+    addValuesInMinHeap()
+}
+
+func addValuesInMinHeap() {
+    guard !minHeap.storage.isEmpty else { return }
+    
+    var oldValue = minHeap.pop()!
+    var isOddSequence: Bool = false
+    
+    while !minHeap.storage.isEmpty {
+        let newValue = minHeap.pop()!
+        
+        if !isOddSequence {
+            result += oldValue * newValue
+        }
+        
+        oldValue = newValue
+        isOddSequence.toggle()
+    }
+    
+    /// 홀수번째에 있는 수가 더해지지 않은 경우입니다.
+    if !isOddSequence {
+        result += oldValue
+    }
+}
+
+func addValuesInMaxHeap() {
+    guard !maxHeap.storage.isEmpty else { return }
+    
+    var oldValue = maxHeap.pop()!
+    var isOddSequence: Bool = false
+    
+    while !maxHeap.storage.isEmpty {
+        let newValue = maxHeap.pop()!
+        
+        if !isOddSequence {
+            result += max(oldValue * newValue, oldValue + newValue)
+        }
+        
+        oldValue = newValue
+        isOddSequence.toggle()
+    }
+    
+    /// 홀수번째에 있는 수가 더해지지 않은 경우입니다.
+    if !isOddSequence {
+        result += oldValue
+    }
+}
+
+
+func insertValues() {
+    for _ in 0..<n {
+        let value = readInteger()
+        if value > 0 {
+            maxHeap.insert(value)
+        } else {
+            minHeap.insert(value)
+        }
+    }
+}
+
+func readInteger() -> Int {
+    let input = readLine()!
+    return Int(input)!
+}
+
+
 struct Heap<Element: Comparable> {
     private let comparator: (Element, Element) -> Bool
-    private(set) var storage: [Element] = []
+    var storage: [Element] = []
     
     init(comparator: @escaping (Element, Element) -> Bool) {
         self.comparator = comparator
-    }
-    
-    var isEmpty: Bool {
-        storage.isEmpty
     }
     
     func peek() -> Element? {
