@@ -1,40 +1,135 @@
-//
-//  File.swift
-//  ApplePhotosEffectManifests
-//
-//  Created by 노우영 on 8/14/24.
-//
-
 import Foundation
 
-
-let n = readValue()
 var minHeap = Heap<Int>.minHeap()
+var maxHeap = Heap<Int>.maxHeap()
 
-executeMinHeap()
+/// Key: 각 힙에서 pop된 값의 개수
+/// Value: 개수
+var maxPopDictionary: [Int: Int] = [:]
+var minPopDictionary: [Int: Int] = [:]
 
-func executeMinHeap() {
-    for _ in 0..<n {
-        let operation = readValue()
-        handleOperation(operation)
+let t = readIntValue()
+
+executeDualPriorityQueueSeveralTimes()
+
+func executeDualPriorityQueueSeveralTimes() {
+    for _ in 0..<t{
+        executeDualPriorityQueue()
+        
+        minHeap.storage.removeAll()
+        maxHeap.storage.removeAll()
+        maxPopDictionary.removeAll()
+        minPopDictionary.removeAll()
     }
 }
 
-func handleOperation(_ operation: Int) {
-    if operation == 0 {
-        let top = minHeap.pop() ?? 0
-        print(top)
+func executeDualPriorityQueue() {
+    let k = readIntValue()
+    
+    for _ in 0..<k {
+       let (operation, value) = readOperationAndValue()
+        handleOperations(operation: operation, value: value)
+    }
+    
+    
+    let minValue = popInMinHeap()
+    
+    if minValue != nil {
+        maxHeap.insert(minValue!)
+    }
+    
+    let maxValue = popInMaxHeap()
+    
+    if minValue == nil || maxValue == nil {
+        print("EMPTY")
     } else {
-        minHeap.insert(operation)
+        print("\(maxValue!) \(minValue!)")
     }
 }
 
+func handleOperations(operation: String, value: Int) {
+    switch operation {
+    case "I":
+        minHeap.insert(value)
+        maxHeap.insert(value)
+    case "D":
+        pop(value: value)
+    default:
+        break
+    }
+}
 
-func readValue() -> Int {
+func pop(value: Int) {
+    switch value {
+    case 1:
+        popInMaxHeap()
+    case -1:
+        popInMinHeap()
+    default:
+        break
+    }
+}
+
+@discardableResult
+func popInMinHeap() -> Int? {
+    var minValue = minHeap.pop()
+    
+    while minValue != nil {
+        /// maxHeap에서 뺀 값이 아닌 경우
+        if maxPopDictionary[minValue!] == nil || maxPopDictionary[minValue!] == 0 {
+            let newValue = (minPopDictionary[minValue!] ?? 0) + 1
+            minPopDictionary.updateValue(newValue, forKey: minValue!)
+            return minValue
+        } else { /// maxHeap에서 이미 뺀 값인 경우
+            maxPopDictionary[minValue!]! -= 1
+            minValue = minHeap.pop()
+        }
+    }
+    
+    maxHeap.storage.removeAll()
+    maxPopDictionary.removeAll()
+    minPopDictionary.removeAll()
+    return minValue
+}
+
+
+@discardableResult
+func popInMaxHeap() -> Int? {
+    var maxValue = maxHeap.pop()
+    
+    while maxValue != nil {
+        if minPopDictionary[maxValue!] == nil || minPopDictionary[maxValue!] == 0 {
+            let newValue = (maxPopDictionary[maxValue!] ?? 0) + 1
+            maxPopDictionary.updateValue(newValue, forKey: maxValue!)
+            return maxValue
+        } else {
+            minPopDictionary[maxValue!]! -= 1
+            maxValue = maxHeap.pop()
+        }
+    }
+    
+    minHeap.storage.removeAll()
+    maxPopDictionary.removeAll()
+    minPopDictionary.removeAll()
+    return maxValue
+}
+
+func readOperationAndValue() -> (String, Int) {
+    let input = readLine()!
+    let splitedInput = input.split(separator: " ")
+    
+    let opereation = String(splitedInput[0])
+    let value = Int(splitedInput[1])!
+    
+    return (opereation, value)
+}
+
+func readIntValue() -> Int {
     let input = readLine()!
     let result = Int(input)!
     return result
 }
+
 
 struct Heap<Element: Comparable> {
     private let comparator: (Element, Element) -> Bool
@@ -67,6 +162,8 @@ struct Heap<Element: Comparable> {
     
     
     private func hasHigherPriorityThanParent(index: Int) -> Bool {
+        guard index < storage.endIndex else { return false }
+        
         let parentIndex = parentIndex(childIndex: index)
         let parentElement = storage[parentIndex]
         let childElement = storage[index]
@@ -95,7 +192,7 @@ struct Heap<Element: Comparable> {
         let leftIndex = leftChildIndex(parentIndex: currentIndex)
         let rightIndex = rightChildIndex(parentIndex: currentIndex)
         
-        if leftIndex < storage.endIndex && comparator(storage[leftIndex], storage[swapIndex]) {
+        if hasHigherPriorityThanParent(index: leftIndex) {
             swapIndex = leftIndex
             isSwap = true
         }
@@ -110,8 +207,6 @@ struct Heap<Element: Comparable> {
             siftDown(currentIndex: swapIndex)
         }
     }
-    
-    
     
     static func minHeap() -> Self{
         self.init(comparator: <)
@@ -134,3 +229,4 @@ struct Heap<Element: Comparable> {
         (childIndex - 1) / 2
     }
 }
+

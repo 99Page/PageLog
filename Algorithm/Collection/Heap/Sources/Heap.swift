@@ -39,6 +39,8 @@ struct Heap<Element: Comparable> {
     
     
     private func hasHigherPriorityThanParent(index: Int) -> Bool {
+        guard index < storage.endIndex else { return false }
+        
         let parentIndex = parentIndex(childIndex: index)
         let parentElement = storage[parentIndex]
         let childElement = storage[index]
@@ -67,7 +69,7 @@ struct Heap<Element: Comparable> {
         let leftIndex = leftChildIndex(parentIndex: currentIndex)
         let rightIndex = rightChildIndex(parentIndex: currentIndex)
         
-        if leftIndex < storage.endIndex && comparator(storage[leftIndex], storage[swapIndex]) {
+        if hasHigherPriorityThanParent(index: leftIndex) {
             swapIndex = leftIndex
             isSwap = true
         }
@@ -83,9 +85,6 @@ struct Heap<Element: Comparable> {
         }
     }
     
-    
-    
-    
     static func minHeap() -> Self{
         self.init(comparator: <)
     }
@@ -95,15 +94,15 @@ struct Heap<Element: Comparable> {
     }
     
     // MARK: Index 관련 함수들
-    func leftChildIndex(parentIndex: Int) -> Int {
+    private func leftChildIndex(parentIndex: Int) -> Int {
         parentIndex * 2 + 1
     }
     
-    func rightChildIndex(parentIndex: Int) -> Int {
+    private func rightChildIndex(parentIndex: Int) -> Int {
         parentIndex * 2 + 2
     }
     
-    func parentIndex(childIndex: Int) -> Int {
+    private func parentIndex(childIndex: Int) -> Int {
         (childIndex - 1) / 2
     }
 }
