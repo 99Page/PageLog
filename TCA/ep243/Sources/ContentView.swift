@@ -9,6 +9,28 @@
 import ComposableArchitecture
 import SwiftUI
 
+struct NumberFactClient {
+    var fetch: @Sendable (Int) async throws -> String
+}
+
+extension NumberFactClient: DependencyKey {
+    static var liveValue: NumberFactClient = .init { number in
+        let urlString = "http://www.numbersapi.com/\(number)"
+        let url = URL(string: urlString)!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let fact = String(decoding: data, as: UTF8.self)
+         
+        return fact
+    }
+}
+
+extension DependencyValues {
+    var numberFact: NumberFactClient {
+        get { self[NumberFactClient.self] }
+        set { self[NumberFactClient.self] = newValue }
+    }
+}
+
 struct CounterFeature: Reducer {
     struct State: Equatable {
         var count = 0
@@ -17,7 +39,9 @@ struct CounterFeature: Reducer {
         var isLoadingFact = false
     }
     
-    enum Action {
+    /// 내가 느끼는 TCA 단점 중 하나.
+    /// View에 불필요한 Action들이 전부 노출된다. 
+    enum Action: Equatable {
         case decrementButtonTapped
         case incrementButtonTapped
         case getFactButtonTapped
@@ -29,6 +53,9 @@ struct CounterFeature: Reducer {
     private enum CancelID {
         case timer
     }
+    
+    @Dependency(\.continuousClock) var clock
+    @Dependency(\.numberFact) var numberFact
     
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -45,12 +72,7 @@ struct CounterFeature: Reducer {
                 state.fact = nil
                 state.isLoadingFact = true
                 return .run { [count = state.count] send in
-                    try await Task.sleep(for: .seconds(1))
-                    let urlString = "http://www.numbersapi.com/\(count)"
-                    let url = URL(string: urlString)!
-                    let (data, _) = try await URLSession.shared.data(from: url)
-                    let fact = String(decoding: data, as: UTF8.self)
-                    await send(.factResponse(fact))
+                    try await send(.factResponse(self.numberFact.fetch(count)))
                 }
             case .timerTicked:
                 state.count += 1
@@ -61,8 +83,7 @@ struct CounterFeature: Reducer {
                 
                 if state.isTimerOn {
                     return .run { send in
-                        while true {
-                            try await Task.sleep(for: .seconds(1))
+                        for await _ in self.clock.timer(interval: .seconds(1)) {
                             await send(.timerTicked)
                         }
                     }
