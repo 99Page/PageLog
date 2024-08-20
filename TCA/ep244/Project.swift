@@ -7,21 +7,20 @@
 
 import ProjectDescription
 
-let value: Plist.Value = .dictionary(["NSAllowsArbitraryLoads": true])
-
 let infoPlist: [String: Plist.Value] = [
     "CFBundleShortVersionString": "1.0",
     "CFBundleVersion": "1",
     "UIMainStoryboardFile": "",
-    "UILaunchStoryboardName": "LaunchScreen",
-    "NSAppTransportSecurity": value
+    "UILaunchStoryboardName": "LaunchScreen"
 ]
 
+let episodeNumber = "244"
+
 let target = Target.target(
-    name: "TCA-243",
+    name: "TCA-\(episodeNumber)",
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.tca.episode.243",
+    bundleId: "com.page.tca.episode.\(episodeNumber)",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
@@ -35,11 +34,11 @@ let testTarget = Target.target(
     name: "TCA-243Tests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.tca.episode.243.tests",
+    bundleId: "com.page.tca.episode.\(episodeNumber).tests",
     deploymentTargets: .iOS("17.4"),
     sources: ["Tests/**"],
     dependencies: [
-        .target(name: "TCA-243")
+        .target(name: "TCA-\(episodeNumber)")
     ]
 )
 
@@ -48,7 +47,7 @@ let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.13.0")
 
 
 let project = Project(
-    name: "TCA-243",
+    name: "TCA-\(episodeNumber)",
     organizationName: "Page",
     packages: [
         .remote(url: tcaURL, requirement: tcaVersion),
