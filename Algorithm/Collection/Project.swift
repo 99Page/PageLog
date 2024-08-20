@@ -6,13 +6,13 @@
 
 import ProjectDescription
 
-let projectName = "Heap"
+let projectName = "PageCollection"
 
 let target = Target.target(
     name: projectName,
     destinations: .macOS,
     product: .staticFramework,
-    bundleId: "com.page.heap",
+    bundleId: "com.page.page.collection",
     deploymentTargets: .macOS("14.5"),
     sources: ["Sources/**"]
 )
@@ -21,7 +21,7 @@ let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .macOS,
     product: .unitTests,
-    bundleId: "com.page.heap.tests",
+    bundleId: "com.page.collection.tests",
     deploymentTargets: .macOS("14.5"),
     sources: ["Tests/**"],
     dependencies: [
