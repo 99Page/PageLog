@@ -12,6 +12,10 @@ struct Queue<Element> {
     private var inStack = [Element]()
     private var outStack = [Element]()
     
+    var isEmpty: Bool {
+        inStack.isEmpty && outStack.isEmpty
+    }
+    
     mutating func enqueue(_ newElement: Element) {
         inStack.append(newElement)
     }

@@ -1,38 +1,81 @@
-//
-//  main.swift
-//  ApplePhotosEffectManifests
-//
-//  Created by 노우영 on 8/20/24.
-//
-
 import Foundation
 
+/// Backtracking으로 접근하는 건 좋았는데
+/// 탐색 문제를 재귀적으로 풀려고하니까 콜스택 문제가 있었다.
+/// 탐색이 필요하면 Queue 사용을 먼저 고려하자.
+/// Queue + BFS 사용 우선 고려! 
 let maxXCoordinate = 100000
 let minXCoordinate = 0
 
 let initialValue = MoveInfo(cost: .max, lastPosition: -1, currentPosition: -1)
 var moveInfos: [MoveInfo] = Array(repeating: initialValue, count: maxXCoordinate + 1)
-var pq = Heap<MoveInfo>.minHeap()
+var queue = Queue<MoveInfo>()
 
 let (n, k) = readNAndK()
 
-func findMinCostMove() {
-    let start = MoveInfo(cost: 0, lastPosition: k, currentPosition: k)
-    pq.insert(start)
+findMinCostMove()
+
+print(moveInfos[k].cost)
+printPath()
+
+func printPath() {
+    var paths: [Int] = []
+    var currentPosition = moveInfos[k]
     
-    while !pq.isEmpty {
-        let current = pq.pop()!
+    
+    while currentPosition.cost != 0 {
+        paths.append(currentPosition.currentPosition)
+        let newIndex = currentPosition.lastPosition
+        currentPosition = moveInfos[newIndex]
+    }
+ 
+    paths.append(currentPosition.currentPosition)
+    
+    for value in paths.reversed() {
+        print(value, terminator: " ")
+    }
+}
+
+
+
+func findMinCostMove() {
+    let start = MoveInfo(cost: 0, lastPosition: n, currentPosition: n)
+    moveInfos[n] = start
+    queue.enqueue(start)
+    
+    while !queue.isEmpty {
+        let current = queue.dequeue()!
         
         let newCost = current.cost + 1
         let lastPosition = current.currentPosition
         
         let doubledPosition = current.currentPosition * 2
+        let nextPosition = current.currentPosition + 1
+        let previousPosition = current.currentPosition - 1
         
         if isInsertable(index: doubledPosition, newCost: newCost) {
-            let moveInfo = MoveInfo(cost: newCost, lastPosition: <#T##Int#>, currentPosition: <#T##Int#>)
-            pq.insert(<#T##element: MoveInfo##MoveInfo#>)
+            let moveInfo = MoveInfo(cost: newCost, lastPosition: lastPosition, currentPosition: doubledPosition)
+            updateMoveInfos(moveInfo: moveInfo)
+            queue.enqueue(moveInfo)
+        }
+        
+        if isInsertable(index: nextPosition, newCost: newCost) {
+            let moveInfo = MoveInfo(cost: newCost, lastPosition: lastPosition, currentPosition: nextPosition)
+            updateMoveInfos(moveInfo: moveInfo)
+            queue.enqueue(moveInfo)
+        }
+        
+        if isInsertable(index: previousPosition, newCost: newCost) {
+            let moveInfo = MoveInfo(cost: newCost, lastPosition: lastPosition, currentPosition: previousPosition)
+            updateMoveInfos(moveInfo: moveInfo)
+            queue.enqueue(moveInfo)
         }
     }
+}
+
+func updateMoveInfos(moveInfo: MoveInfo) {
+    let index = moveInfo.currentPosition
+    moveInfos[index] = moveInfo
 }
 
 func isInsertable(index: Int, newCost: Int) -> Bool {
@@ -55,109 +98,27 @@ func readNAndK() -> (Int, Int) {
     return (n, k)
 }
 
-struct Heap<Element: Comparable> {
-    private let comparator: (Element, Element) -> Bool
-    private(set) var storage: [Element] = []
-    
-    init(comparator: @escaping (Element, Element) -> Bool) {
-        self.comparator = comparator
-    }
+struct Queue<Element> {
+    private var inStack = [Element]()
+    private var outStack = [Element]()
     
     var isEmpty: Bool {
-        storage.isEmpty
+        inStack.isEmpty && outStack.isEmpty
     }
     
-    func peek() -> Element? {
-        storage.first
+    mutating func enqueue(_ newElement: Element) {
+        inStack.append(newElement)
     }
     
-    /// - Complexity: O(log n)
-    mutating func insert(_ element: Element) {
-        storage.append(element)
-        let insertedIndex = storage.count - 1
-        siftUp(startIndex: insertedIndex)
-    }
-    
-    mutating private func siftUp(startIndex: Int) {
-        var currentIndex = startIndex
-        
-        while hasHigherPriorityThanParent(index: currentIndex) {
-            let parentIndex = parentIndex(childIndex: currentIndex)
-            storage.swapAt(currentIndex, parentIndex)
-            currentIndex = parentIndex
-        }
-    }
-    
-    
-    private func hasHigherPriorityThanParent(index: Int) -> Bool {
-        guard index < storage.endIndex else { return false }
-        
-        let parentIndex = parentIndex(childIndex: index)
-        let parentElement = storage[parentIndex]
-        let childElement = storage[index]
-        
-        return comparator(childElement, parentElement)
-    }
-    
-    mutating func pop() -> Element? {
-        guard !storage.isEmpty else { return nil }
-        
-        guard storage.count != 1 else { return storage.removeLast()}
-        
-        let lastIndex = storage.count - 1
-        
-        storage.swapAt(0, lastIndex)
-        let result = storage.removeLast()
-        
-        siftDown(currentIndex: 0)
-        
-        return result
-    }
-    
-    private mutating func siftDown(currentIndex: Int) {
-        var swapIndex = currentIndex
-        var isSwap = false
-        let leftIndex = leftChildIndex(parentIndex: currentIndex)
-        let rightIndex = rightChildIndex(parentIndex: currentIndex)
-        
-        if hasHigherPriorityThanParent(index: leftIndex) {
-            swapIndex = leftIndex
-            isSwap = true
+    mutating func dequeue() -> Element? {
+        if outStack.isEmpty {
+            outStack = inStack.reversed()
+            inStack.removeAll()
         }
         
-        if rightIndex < storage.endIndex && comparator(storage[rightIndex], storage[swapIndex]) {
-            swapIndex = rightIndex
-            isSwap = true
-        }
-        
-        if isSwap {
-            storage.swapAt(swapIndex, currentIndex)
-            siftDown(currentIndex: swapIndex)
-        }
-    }
-    
-    static func minHeap() -> Self{
-        self.init(comparator: <)
-    }
-    
-    static func maxHeap() -> Self{
-        self.init(comparator: >)
-    }
-    
-    // MARK: Index 관련 함수들
-    private func leftChildIndex(parentIndex: Int) -> Int {
-        parentIndex * 2 + 1
-    }
-    
-    private func rightChildIndex(parentIndex: Int) -> Int {
-        parentIndex * 2 + 2
-    }
-    
-    private func parentIndex(childIndex: Int) -> Int {
-        (childIndex - 1) / 2
+        return outStack.popLast()
     }
 }
-
 
 
 
