@@ -1,27 +1,29 @@
 //
 //  Project.swift
-//  ConcurrencyManifests
+//  ApplePhotosEffectManifests
 //
-//  Created by 노우영 on 7/27/24.
+//  Created by 노우영 on 8/21/24.
 //
+
 
 import ProjectDescription
 
-let name = "no2467"
-
+let problemNumber = "no.10830"
 let target = Target.target(
-    name: name,
+    name: problemNumber,
     destinations: .macOS,
     product: .commandLineTool,
-    bundleId: "com.page.backjoon.\(name)",
+    bundleId: "com.page.backjoon.\(problemNumber)",
     deploymentTargets: .macOS("14.5"),
     sources: ["Sources/**"]
 )
 
 let project = Project(
-    name: name,
+    name: "\(problemNumber)",
     organizationName: "Page",
     targets: [target]
 )
+
+
 
 
