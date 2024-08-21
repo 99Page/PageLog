@@ -31,7 +31,7 @@ let target = Target.target(
 )
 
 let testTarget = Target.target(
-    name: "TCA-243Tests",
+    name: "TCA-\(episodeNumber)Tests",
     destinations: .iOS,
     product: .unitTests,
     bundleId: "com.page.tca.episode.\(episodeNumber).tests",
