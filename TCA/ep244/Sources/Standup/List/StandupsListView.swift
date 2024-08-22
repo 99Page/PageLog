@@ -71,8 +71,11 @@ struct StandupsListView: View {
         WithViewStore(self.store, observe: \.standups) { viewStore in
             List {
                 ForEach(viewStore.state) { standup in
-                    CardView(scrum: standup)
-                        .listRowBackground(standup.theme.mainColor)
+                    NavigationLink(state: AppFeature.Path.State.detail(StandupDetailFeature.State(standup: standup))) {
+                        CardView(scrum: standup)
+                            .listRowBackground(standup.theme.mainColor)
+                    }
+                    
                 }
             }
             .navigationTitle("Daily Standups")

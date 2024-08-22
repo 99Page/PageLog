@@ -19,16 +19,26 @@ struct StandupDetailFeature {
     enum Action {
         case deleteButtonTapped
         case deleteMeetings(atOffset: IndexSet)
+        case delegate(Delegate)
         case editButtonTapped
         case editStanup(PresentationAction<StandupFormFeature.Action>)
         case cancelStandupButtonTapped
         case saveStandupButtonTapped
+        
+        enum Delegate {
+            case standupUpdate(Standup)
+        }
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .deleteButtonTapped:
+                return .none
+                
+            /// ParentView는 이 동작을 감지할 수 있다.
+            /// ChildView의 Action을 받고 ParentView를 동작시키고 싶으면 이런식으로 Delegate 사용하면 된다. 
+            case .delegate:
                 return .none
             case let .deleteMeetings(atOffset):
                 state.standup.meetings.remove(atOffsets: atOffset)
@@ -48,7 +58,7 @@ struct StandupDetailFeature {
                 state.standup = standup
                 state.editStandup = nil
                 
-                return .none
+                return .send(.delegate(.standupUpdate(standup)))
             }
         }
         .ifLet(\.$editStandup, action: \.editStanup) {
