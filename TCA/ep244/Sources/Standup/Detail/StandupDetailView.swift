@@ -12,27 +12,51 @@ import SwiftUI
 @Reducer
 struct StandupDetailFeature {
     struct State: Equatable {
+        @PresentationState var alert: AlertState<Action.Alert>?
         @PresentationState var editStandup: StandupFormFeature.State?
         var standup: Standup
     }
     
-    enum Action {
+    enum Action: Equatable {
+        case alert(PresentationAction<Alert>)
         case deleteButtonTapped
         case deleteMeetings(atOffset: IndexSet)
+        case delegate(Delegate)
         case editButtonTapped
         case editStanup(PresentationAction<StandupFormFeature.Action>)
         case cancelStandupButtonTapped
         case saveStandupButtonTapped
+        
+        enum Alert {
+            case confirmDeletion
+        }
+        
+        enum Delegate: Equatable {
+            case standupUpdate(Standup)
+        }
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .deleteButtonTapped:
+                state.alert = AlertState {
+                    TextState("Are you sure want to delete?")
+                } actions: {
+                    ButtonState(role: .destructive, action: .confirmDeletion) {
+                        TextState("Delete")
+                    }
+                }
+                return .none
+                
+            /// ParentView는 이 동작을 감지할 수 있다.
+            /// ChildView의 Action을 받고 ParentView를 동작시키고 싶으면 이런식으로 Delegate 사용하면 된다. 
+            case .delegate:
                 return .none
             case let .deleteMeetings(atOffset):
                 state.standup.meetings.remove(atOffsets: atOffset)
                 return .none
+//                return .send(.delegate(.standupUpdate(state.standup)))
             case .editButtonTapped:
                 state.editStandup = StandupFormFeature.State(standup: state.standup)
                 return .none
@@ -49,10 +73,21 @@ struct StandupDetailFeature {
                 state.editStandup = nil
                 
                 return .none
+//                return .send(.delegate(.standupUpdate(standup)))
+            case .alert(.presented(.confirmDeletion)):
+                return .none
+            case .alert(.dismiss):
+                return .none
             }
         }
+        .ifLet(\.$alert, action: \.alert)
         .ifLet(\.$editStandup, action: \.editStanup) {
             StandupFormFeature()
+        }
+        .onChange(of: \.standup) { oldValue, newValue in
+            Reduce { state, action in
+                .send(.delegate(.standupUpdate(newValue)))
+            }
         }
     }
 }
@@ -133,6 +168,7 @@ struct StandupDetailView: View {
                     viewStore.send(.editButtonTapped)
                 }
             }
+            .alert(store: store.scope(state: \.$alert, action: \.alert))
             .sheet(
                 store: self.store.scope(
                     state: \.$editStandup,
@@ -168,6 +204,7 @@ struct StandupDetailView: View {
     NavigationStack {
         StandupDetailView(store: Store(initialState: StandupDetailFeature.State(standup: .mock), reducer: {
             StandupDetailFeature()
+                ._printChanges()
         }))
     }
 }
