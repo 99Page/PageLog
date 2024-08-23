@@ -17,7 +17,7 @@ struct AppFeature {
         var standupList = StandupsListFeature.State()
     }
     
-    enum Action {
+    enum Action: Equatable {
         case path(StackAction<Path.State, Path.Action>)
         case standupList(StandupsListFeature.Action)
     }
@@ -28,7 +28,7 @@ struct AppFeature {
             case detail(StandupDetailFeature.State)
         }
         
-        enum Action {
+        enum Action: Equatable {
             case detail(StandupDetailFeature.Action)
         }
         
@@ -46,13 +46,13 @@ struct AppFeature {
         
         Reduce { state, action in
             switch action {
-            case let .path(.element(id: id, action: .detail(.saveStandupButtonTapped))):
-                guard case let .some(.detail(detailState)) = state.path[id: id]
-                else { return .none }
+            case let .path(.element(id: _, action: .detail(.delegate(action)))):
                 
-                let detailStandupId = detailState.standup.id
-                state.standupList.standups[id: detailStandupId] = detailState.standup
-                return .none
+                switch action {
+                case let .standupUpdate(standup):
+                    state.standupList.standups[id: standup.id] = standup
+                    return .none
+                }
             case let .path(.popFrom(id: id)):
                 /// 내가 고민했던 Sibling끼리의 데이터 업데이트 상황에 대한 TCA의 해결책.
                 /// StackView가 모든 상태를 알고 있으니
