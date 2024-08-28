@@ -7,20 +7,21 @@
 
 import ProjectDescription
 
-
+let problemNumber = "no.16928"
 let target = Target.target(
-    name: "no16928",
+    name: problemNumber,
     destinations: .macOS,
     product: .commandLineTool,
-    bundleId: "com.page.backjoon.no16928",
+    bundleId: "com.page.backjoon.\(problemNumber)",
     deploymentTargets: .macOS("14.5"),
     sources: ["Sources/**"]
 )
 
 let project = Project(
-    name: "no16928",
+    name: "\(problemNumber)",
     organizationName: "Page",
     targets: [target]
 )
+
 
 
