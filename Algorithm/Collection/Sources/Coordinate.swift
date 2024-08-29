@@ -20,23 +20,17 @@ struct Coordinate {
     ///   - rowSize: 그리드의 행 크기입니다.
     ///   - colSize: 그리드의 열 크기입니다.
     /// - Returns: 상, 하, 좌, 우로 이동한 유효한 좌표들을 반환합니다.
-    func getNextCoordinates(rowSize: Int, colSize: Int) -> [Coordinate] {
-        var nextCoordinates: [Coordinate] = []
+    func findValidNextPositions(rowSize: Int, colSize: Int) -> [Coordinate] {
+        let candidates = [
+            Coordinate(row: row, col: col - 1, distance: distance + 1),
+            Coordinate(row: row, col: col + 1, distance: distance + 1),
+            Coordinate(row: row - 1, col: col, distance: distance + 1),
+            Coordinate(row: row + 1, col: col, distance: distance + 1)
+        ]
         
-        let left = Coordinate(row: row, col: col - 1, distance: distance + 1)
-        let right = Coordinate(row: row, col: col + 1, distance: distance + 1)
-        let up = Coordinate(row: row - 1, col: col, distance: distance + 1)
-        let down = Coordinate(row: row + 1, col: col, distance: distance + 1)
+        /// 유효한 좌표만 필터링하여 반환
+        return candidates.filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
         
-        let candidates = [left, right, up, down]
-        
-        for candidate in candidates {
-            if candidate.isValidCoordinate(rowSize: rowSize, colSize: colSize) {
-                nextCoordinates.append(candidate)
-            }
-        }
-        
-        return nextCoordinates
     }
     
     private func isValidCoordinate(rowSize: Int, colSize: Int) -> Bool {
