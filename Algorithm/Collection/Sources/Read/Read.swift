@@ -8,6 +8,17 @@
 
 import Foundation
 
+func readGrid<T: LosslessStringConvertible>(_ k: Int) -> [[T]] {
+    var result: [[T]] = []
+        
+    (0..<k).forEach { _ in
+        let array: [T] = readArray()
+        result.append(array)
+    }
+    
+    return result
+}
+
 func readArray<T: LosslessStringConvertible>() -> [T] {
     let line = readLine()!
     let splitedLine = line.split(separator: " ")
