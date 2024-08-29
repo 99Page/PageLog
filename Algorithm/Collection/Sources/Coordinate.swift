@@ -85,8 +85,11 @@ struct Coordinate {
     ///   - colSize: 그리드의 열 크기입니다.
     /// - Returns: 현재 좌표가 유효하다면 `true`, 그렇지 않다면 `false`를 반환합니다.
     func isValidCoordinate(rowSize: Int, colSize: Int) -> Bool {
-        self.row >= arrayIndexBase.minIndex && self.row < rowSize + arrayIndexBase.additionalIndexToSize
-        && self.col >= arrayIndexBase.minIndex && self.col < colSize + arrayIndexBase.additionalIndexToSize
+        let rowThreshold = rowSize + arrayIndexBase.additionalIndexToSize
+        let colThreshold = colSize + arrayIndexBase.additionalIndexToSize
+        
+        return self.row >= arrayIndexBase.minIndex && self.row < rowThreshold
+        && self.col >= arrayIndexBase.minIndex && self.col < colThreshold
     }
     
     enum ArrayIndexBase {
