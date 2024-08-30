@@ -1,6 +1,6 @@
 import ProjectDescription
 
-let problemNumber = "bronze.to.silver"
+let problemNumber = "no.2742"
 let target = Target.target(
     name: problemNumber,
     destinations: .macOS,
@@ -15,6 +15,7 @@ let project = Project(
     organizationName: "Page",
     targets: [target]
 )
+
 
 
 
