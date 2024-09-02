@@ -47,25 +47,28 @@ struct AppFeature {
         Reduce { state, action in
             switch action {
             case let .path(.element(id: _, action: .detail(.delegate(action)))):
-                
                 switch action {
                 case let .standupUpdate(standup):
                     state.standupList.standups[id: standup.id] = standup
                     return .none
+                case let .deleteStandup(id):
+                    state.standupList.standups.removeAll()
+                    return .none
                 }
-            case let .path(.popFrom(id: id)):
-                /// 내가 고민했던 Sibling끼리의 데이터 업데이트 상황에 대한 TCA의 해결책.
-                /// StackView가 모든 상태를 알고 있으니
-                /// pop됐을 때 여기서 상태를 업데이트해서 반영할 수 있다.
-                /// 이 아이디어를 Vanila Swift에서도 적용해볼만 할 것 같다.
-                ///
-                /// Sibling 업데이트는 Stack에서 관리하자.
-                guard case let .some(.detail(detailState)) = state.path[id: id]
-                else { return .none }
-                
-                let detailStandupId = detailState.standup.id
-                state.standupList.standups[id: detailStandupId] = detailState.standup
-                return .none
+                // 아래 방식처럼 할 수도 있는데, delegate 방식으로 변경됐다.
+//            case let .path(.popFrom(id: id)):
+//                /// 내가 고민했던 Sibling끼리의 데이터 업데이트 상황에 대한 TCA의 해결책.
+//                /// StackView가 모든 상태를 알고 있으니
+//                /// pop됐을 때 여기서 상태를 업데이트해서 반영할 수 있다.
+//                /// 이 아이디어를 Vanila Swift에서도 적용해볼만 할 것 같다.
+//                ///
+//                /// Sibling 업데이트는 Stack에서 관리하자.
+//                guard case let .some(.detail(detailState)) = state.path[id: id]
+//                else { return .none }
+//                
+//                let detailStandupId = detailState.standup.id
+//                state.standupList.standups[id: detailStandupId] = detailState.standup
+//                return .none
             case .path:
                 return .none
             case .standupList(_):

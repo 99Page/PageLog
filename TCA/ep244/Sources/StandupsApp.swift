@@ -12,11 +12,9 @@ import ComposableArchitecture
 struct StandupsApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                StandupsListView(store: Store(initialState: StandupsListFeature.State()) {
-                    StandupsListFeature()
-                })
-            }
+            AppView(store: Store(initialState: AppFeature.State(), reducer: {
+                AppFeature()
+            }))
         }
     }
 }
