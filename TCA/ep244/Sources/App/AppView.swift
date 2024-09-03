@@ -26,15 +26,21 @@ struct AppFeature {
     struct Path {
         enum State: Equatable {
             case detail(StandupDetailFeature.State)
+            case recordMeeting(RecordMeetingFeature.State)
         }
         
         enum Action: Equatable {
             case detail(StandupDetailFeature.Action)
+            case recordMeeting(RecordMeetingFeature.Action)
         }
         
         var body: some ReducerOf<Self> {
             Scope(state: \.detail, action: \.detail) {
                 StandupDetailFeature()
+            }
+            
+            Scope(state: \.recordMeeting, action: \.recordMeeting) {
+                RecordMeetingFeature()
             }
         }
     }
@@ -52,7 +58,7 @@ struct AppFeature {
                     state.standupList.standups[id: standup.id] = standup
                     return .none
                 case let .deleteStandup(id):
-                    state.standupList.standups.removeAll()
+                    state.standupList.standups.remove(id: id)
                     return .none
                 }
                 // 아래 방식처럼 할 수도 있는데, delegate 방식으로 변경됐다.
@@ -97,6 +103,10 @@ struct AppView: View {
             case .detail:
                 CaseLet(\AppFeature.Path.State.detail, action: AppFeature.Path.Action.detail) { store in
                     StandupDetailView(store: store)
+                }
+            case .recordMeeting:
+                CaseLet(\AppFeature.Path.State.recordMeeting, action: AppFeature.Path.Action.recordMeeting) { store in
+                    RecordMeetingView(store: store)
                 }
             }
         }
