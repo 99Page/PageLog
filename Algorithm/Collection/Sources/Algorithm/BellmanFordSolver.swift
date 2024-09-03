@@ -1,6 +1,6 @@
 //
-//  main.swift
-//  bronze.to.silver.solve
+//  BellmanFordSolver.swift
+//  PageCollection
 //
 //  Created by 노우영 on 9/3/24.
 //  Copyright © 2024 Page. All rights reserved.
@@ -8,60 +8,12 @@
 
 import Foundation
 
-let input: [Int] = readArray()
-let cityCount = input[0]
-let edgeCount = input[1]
-
-solve()
-
-func solve() {
-    let edges = readEdges()
-    var bfSolver = BellmanFordSolver(
-        nodeCount: cityCount,
-        edge: edges,
-        arrayIndexBase: .one
-    )
-    
-    var costs = bfSolver.solve(startNode: 1)
-    
-    if bfSolver.executeResult == .negativeCycleDetected {
-        print("-1")
-    } else {
-        costs.reverse()
-        costs.removeLast()
-        costs.reverse()
-        
-        for cost in costs {
-            if cost == .max {
-                print("-1")
-            } else {
-                print(cost)
-            }
-        }
-    }
-}
-
-func readEdges() -> [BellmanFordSolver.Edge] {
-    var result: [BellmanFordSolver.Edge] = []
-    
-    (0..<edgeCount).forEach { _ in
-        let input: [Int] = readArray()
-        let startCity = input[0]
-        let destinationCity = input[1]
-        let cost = input[2]
-        
-        let edge = BellmanFordSolver.Edge(
-            start: startCity,
-            destination: destinationCity,
-            cost: cost
-        )
-        
-        result.append(edge)
-    }
-    
-    return result
-}
-
+/// 벨만-포드 알고리즘을 사용하여 그래프의 최단 경로를 계산하는 구조체
+///
+/// 벨만-포드 알고리즘은 다음과 같은 상황에서 주로 사용됩니다:
+/// - **음의 가중치를 가진 간선이 있는 그래프**: 다익스트라 알고리즘과 달리, 벨만-포드 알고리즘은 음의 가중치가 있는 간선을 처리할 수 있습니다.
+/// - **음수 사이클(negative cycle) 탐지**: 그래프에 음수 사이클이 존재하는지 여부를 감지할 수 있습니다. 음수 사이클이 존재할 경우, 최단 경로는 무한히 줄어들 수 있기 때문에 이 문제를 해결하는 데 유용합니다.
+/// - **한 정점에서 다른 정점까지의 최단 경로를 계산**: 벨만-포드 알고리즘은 단일 출발점에서 시작하여 모든 다른 정점까지의 최단 경로를 계산할 수 있습니다.
 struct BellmanFordSolver {
     private let nodeCount: Int
     private let arrayIndexBase: ArrayIndexBase
@@ -107,13 +59,6 @@ struct BellmanFordSolver {
         
         // 성공적으로 종료된 경우
         executeResult = .success
-        
-        if arrayIndexBase == .one {
-            costs.reverse()
-            costs.removeLast()
-            costs.reverse()
-        }
-        
         return costs
     }
     
@@ -133,11 +78,4 @@ struct BellmanFordSolver {
         let destination: Int
         let cost: Int
     }
-}
-
-func readArray<T: LosslessStringConvertible>() -> [T] {
-    let line = readLine()!
-    let splitedLine = line.split(separator: " ")
-    let array = splitedLine.map { T(String($0))! }
-    return array
 }
