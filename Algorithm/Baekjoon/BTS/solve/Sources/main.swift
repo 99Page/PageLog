@@ -1,64 +1,66 @@
+////
+////  main.swift
+////  bronze.to.silver.solve
+////
+////  Created by 노우영 on 9/3/24.
+////  Copyright © 2024 Page. All rights reserved.
+////
 //
-//  main.swift
-//  bronze.to.silver
+//import Foundation
 //
-//  Created by 노우영 on 8/30/24.
-//  Copyright © 2024 Page. All rights reserved.
+//let coordinateCount = Int(readLine()!)!
+//let coordinates: [Int] = readArray()
+//let maxCoordinate = 1_000_000
 //
-
-import Foundation
-
-let sequenceSize = Int(readLine()!)!
-var sequence: [Int] = []
-
-readSequence()
-solve()
-
-func solve() {
-    var isPushed: [Bool] = Array(repeating: false, count: sequenceSize + 1)
-    var targetElementIndex: Int = 0
-    var stack: [Int] = []
-    var pushCount: Int = 1
-    
-    var result: [Character] = []
-    
-    while targetElementIndex < sequenceSize {
-        let targetElement = sequence[targetElementIndex]
-        
-        if isPushed[targetElement] {
-            if targetElement == stack.last {
-                stack.removeLast()
-                result.append("-")
-                targetElementIndex += 1
-            } else {
-                print("NO")
-                return
-            }
-        } else {
-            /// sequenceSize를 넘지 않는 pushCount는 들어가지 않는다고 어떻게 증명하지?
-            /// 귀납법으로는 어려워보이고 귀류법 밖에 없을거 같네.
-            if pushCount > sequenceSize {
-                assert(false)
-            }
-            
-            /// pushCount가 sequenceSize보다 크면 index out of range 문제가 생기겠네.
-            /// 그러면 모순이 발생하는 거고
-            /// 그렇지 않으면 pushCount는 적절한 수만 들어갔다고 볼 수 있겠다.
-            isPushed[pushCount] = true
-            stack.append(pushCount)
-            pushCount += 1
-            result.append("+")
-        }
-    }
-    
-    let output = result.map { String($0) }.joined(separator: "\n")
-    print(output)
-}
-
-func readSequence() {
-    (0..<sequenceSize).forEach { _ in
-        let line = readLine()!
-        let element = Int(line)!
-        sequence.append(element)
-    }
-}
+//solve()
+//
+//func solve() {
+//    let dict: [Int: Int] = createDitionary()
+//    var compressedCoordinates: [Int] = []
+//    
+//    for coordinate in coordinates {
+//        let compressedCoordinate = dict[coordinate]!
+//        compressedCoordinates.append(compressedCoordinate)
+//    }
+//    
+//    let result = compressedCoordinates.joinedString()
+//    print(result)
+//}
+//
+//func createDitionary() -> [Int: Int] {
+//    let sortedCoordinates = coordinates.sorted()
+//    var lastCoordinate = maxCoordinate + 1
+//    var lastCompressedCoordinate = -1
+//    var result: [Int: Int] = [:]
+//    
+//    for coordinate in sortedCoordinates {
+//        if lastCoordinate == coordinate {
+//            continue
+//        } else {
+//            let currentCompressedCoordinate = lastCompressedCoordinate + 1
+//            result[coordinate] = lastCompressedCoordinate + 1
+//            lastCoordinate = coordinate
+//            lastCompressedCoordinate = currentCompressedCoordinate
+//        }
+//    }
+//    
+//    return result
+//}
+//
+//extension Array where Element: LosslessStringConvertible {
+//    /// 배열의 각 요소를 문자열로 변환한 후 지정된 구분자로 결합하여 반환합니다.
+//    /// - Parameter separator: 각 문자열 요소를 결합할 때 사용할 구분자
+//    /// - Returns: 결합된 문자열
+//    func joinedString(with separator: String = " ") -> String {
+//        self.map(String.init).joined(separator: separator)
+//    }
+//}
+//
+//
+//func readArray<T: LosslessStringConvertible>() -> [T] {
+//    let line = readLine()!
+//    let splitedLine = line.split(separator: " ")
+//    let array = splitedLine.map { T(String($0))! }
+//    return array
+//}
+//
