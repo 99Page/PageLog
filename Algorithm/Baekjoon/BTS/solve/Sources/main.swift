@@ -1,143 +1,66 @@
+////
+////  main.swift
+////  bronze.to.silver.solve
+////
+////  Created by 노우영 on 9/3/24.
+////  Copyright © 2024 Page. All rights reserved.
+////
 //
-//  main.swift
-//  bronze.to.silver.solve
+//import Foundation
 //
-//  Created by 노우영 on 9/3/24.
-//  Copyright © 2024 Page. All rights reserved.
+//let coordinateCount = Int(readLine()!)!
+//let coordinates: [Int] = readArray()
+//let maxCoordinate = 1_000_000
 //
-
-import Foundation
-
-let input: [Int] = readArray()
-let cityCount = input[0]
-let edgeCount = input[1]
-
-solve()
-
-func solve() {
-    let edges = readEdges()
-    var bfSolver = BellmanFordSolver(
-        nodeCount: cityCount,
-        edge: edges,
-        arrayIndexBase: .one
-    )
-    
-    var costs = bfSolver.solve(startNode: 1)
-    
-    if bfSolver.executeResult == .negativeCycleDetected {
-        print("-1")
-    } else {
-        costs.reverse()
-        costs.removeLast()
-        costs.reverse()
-        
-        for cost in costs {
-            if cost == .max {
-                print("-1")
-            } else {
-                print(cost)
-            }
-        }
-    }
-}
-
-func readEdges() -> [BellmanFordSolver.Edge] {
-    var result: [BellmanFordSolver.Edge] = []
-    
-    (0..<edgeCount).forEach { _ in
-        let input: [Int] = readArray()
-        let startCity = input[0]
-        let destinationCity = input[1]
-        let cost = input[2]
-        
-        let edge = BellmanFordSolver.Edge(
-            start: startCity,
-            destination: destinationCity,
-            cost: cost
-        )
-        
-        result.append(edge)
-    }
-    
-    return result
-}
-
-struct BellmanFordSolver {
-    private let nodeCount: Int
-    private let arrayIndexBase: ArrayIndexBase
-    
-    var edge: [Edge]
-    var executeResult: ExecuteResult = .notExecuted
-    
-    init(nodeCount: Int, edge: [Edge], arrayIndexBase: ArrayIndexBase) {
-        self.nodeCount = nodeCount
-        self.arrayIndexBase = arrayIndexBase
-        self.edge = edge
-    }
-    
-    mutating func solve(startNode: Int) -> [Int] {
-        let costSize = nodeCount + arrayIndexBase.rawValue
-        var costs: [Int] = Array(repeating: .max, count: costSize)
-        costs[startNode] = 0
-        
-        for _ in 0..<costs.count - 1 {
-            var updated = false
-            
-            // 모든 간선을 확인하여 비용 갱신
-            for edge in edge {
-                if costs[edge.start] != .max && costs[edge.start] + edge.cost < costs[edge.destination] {
-                    costs[edge.destination] = costs[edge.start] + edge.cost
-                    updated = true
-                }
-            }
-            
-            // 만약 더 이상 갱신이 없다면 종료
-            if !updated {
-                break
-            }
-        }
-        
-        // 음수 사이클 확인
-        for edge in edge {
-            if costs[edge.start] != .max && costs[edge.start] + edge.cost < costs[edge.destination] {
-                executeResult = .negativeCycleDetected
-                return []
-            }
-        }
-        
-        // 성공적으로 종료된 경우
-        executeResult = .success
-        
-        if arrayIndexBase == .one {
-            costs.reverse()
-            costs.removeLast()
-            costs.reverse()
-        }
-        
-        return costs
-    }
-    
-    enum ExecuteResult {
-        case success // 최종 계산된 비용을 포함
-        case negativeCycleDetected // 음수 사이클이 발견된 경우
-        case notExecuted // 실행되지 않은 이유를 포함
-    }
-    
-    enum ArrayIndexBase: Int  {
-        case zero = 0
-        case one = 1
-    }
-    
-    struct Edge {
-        let start: Int
-        let destination: Int
-        let cost: Int
-    }
-}
-
-func readArray<T: LosslessStringConvertible>() -> [T] {
-    let line = readLine()!
-    let splitedLine = line.split(separator: " ")
-    let array = splitedLine.map { T(String($0))! }
-    return array
-}
+//solve()
+//
+//func solve() {
+//    let dict: [Int: Int] = createDitionary()
+//    var compressedCoordinates: [Int] = []
+//    
+//    for coordinate in coordinates {
+//        let compressedCoordinate = dict[coordinate]!
+//        compressedCoordinates.append(compressedCoordinate)
+//    }
+//    
+//    let result = compressedCoordinates.joinedString()
+//    print(result)
+//}
+//
+//func createDitionary() -> [Int: Int] {
+//    let sortedCoordinates = coordinates.sorted()
+//    var lastCoordinate = maxCoordinate + 1
+//    var lastCompressedCoordinate = -1
+//    var result: [Int: Int] = [:]
+//    
+//    for coordinate in sortedCoordinates {
+//        if lastCoordinate == coordinate {
+//            continue
+//        } else {
+//            let currentCompressedCoordinate = lastCompressedCoordinate + 1
+//            result[coordinate] = lastCompressedCoordinate + 1
+//            lastCoordinate = coordinate
+//            lastCompressedCoordinate = currentCompressedCoordinate
+//        }
+//    }
+//    
+//    return result
+//}
+//
+//extension Array where Element: LosslessStringConvertible {
+//    /// 배열의 각 요소를 문자열로 변환한 후 지정된 구분자로 결합하여 반환합니다.
+//    /// - Parameter separator: 각 문자열 요소를 결합할 때 사용할 구분자
+//    /// - Returns: 결합된 문자열
+//    func joinedString(with separator: String = " ") -> String {
+//        self.map(String.init).joined(separator: separator)
+//    }
+//}
+//
+//
+//func readArray<T: LosslessStringConvertible>() -> [T] {
+//    let line = readLine()!
+//    let splitedLine = line.split(separator: " ")
+//    let array = splitedLine.map { T(String($0))! }
+//    return array
+//}
+//
