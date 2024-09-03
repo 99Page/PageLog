@@ -1,64 +1,130 @@
 //
 //  main.swift
-//  bronze.to.silver
+//  bronze.to.silver.solve
 //
-//  Created by 노우영 on 8/30/24.
+//  Created by 노우영 on 9/3/24.
 //  Copyright © 2024 Page. All rights reserved.
 //
 
 import Foundation
 
-let sequenceSize = Int(readLine()!)!
-var sequence: [Int] = []
+let conditions: [Int] = readArray()
+let circleCount = conditions[0]
+let numberPerCircleCount = conditions[1]
+let rotateCount = conditions[2]
 
-readSequence()
+var numberGrid: [[Int]] = []
+var startIndexes = Array(repeating: 0, count: circleCount + 1)
+var rotates: [Rotate] = []
+
+readNumbers()
+readRotate()
 solve()
 
 func solve() {
-    var isPushed: [Bool] = Array(repeating: false, count: sequenceSize + 1)
-    var targetElementIndex: Int = 0
-    var stack: [Int] = []
-    var pushCount: Int = 1
-    
-    var result: [Character] = []
-    
-    while targetElementIndex < sequenceSize {
-        let targetElement = sequence[targetElementIndex]
-        
-        if isPushed[targetElement] {
-            if targetElement == stack.last {
-                stack.removeLast()
-                result.append("-")
-                targetElementIndex += 1
-            } else {
-                print("NO")
-                return
-            }
-        } else {
-            /// sequenceSize를 넘지 않는 pushCount는 들어가지 않는다고 어떻게 증명하지?
-            /// 귀납법으로는 어려워보이고 귀류법 밖에 없을거 같네.
-            if pushCount > sequenceSize {
-                assert(false)
-            }
-            
-            /// pushCount가 sequenceSize보다 크면 index out of range 문제가 생기겠네.
-            /// 그러면 모순이 발생하는 거고
-            /// 그렇지 않으면 pushCount는 적절한 수만 들어갔다고 볼 수 있겠다.
-            isPushed[pushCount] = true
-            stack.append(pushCount)
-            pushCount += 1
-            result.append("+")
-        }
+    for rotate in rotates {
+        rotateCircle(rotate: rotate)
     }
-    
-    let output = result.map { String($0) }.joined(separator: "\n")
-    print(output)
 }
 
-func readSequence() {
-    (0..<sequenceSize).forEach { _ in
-        let line = readLine()!
-        let element = Int(line)!
-        sequence.append(element)
+func removeNearNumbers(k: Int) {
+    var target = k
+    
+    while target <= k {
+        removeInCircle(k: k)
+        
+        target += k
     }
 }
+
+func removeWithCircle(k: Int) {
+    let startIndex = startIndexes[k]
+    
+}
+
+func removeInCircle(k: Int) {
+    let numbers = numberGrid[k]
+    
+    var lastNumber = 0
+    var lastIndex = 0
+    
+    for (index, number) in numbers.enumerated() {
+        if number == 0 {
+            continue
+        }
+        
+        if lastNumber == number {
+            numberGrid[k][index] = 0
+            numberGrid[k][lastIndex] = 0
+        }
+        
+        lastNumber = number
+        lastIndex = index
+    }
+    
+    if numberGrid[k][0] == numberGrid[k][numberPerCircleCount - 1] {
+        numberGrid[k][0] = 0
+        numberGrid[k][numberPerCircleCount - 1] = 0
+    }
+}
+
+func readRotate() {
+    (0..<rotateCount).forEach { _ in
+        let input: [Int] = readArray()
+        let rotate = Rotate(input: input)
+        rotates.append(rotate)
+    }
+}
+
+func readNumbers() {
+    numberGrid.append([])
+    
+    (0..<numberPerCircleCount).forEach { _ in
+        let numberArray: [Int] = readArray()
+        numberGrid.append(numberArray)
+    }
+}
+
+func rotateCircle(rotate: Rotate) {
+    var target = rotate.k
+    
+    while target <= circleCount {
+        let startIndexOfTarget = startIndexes[target]
+        
+        switch rotate.direction {
+        case .clockWise:
+            let newIndex = (startIndexOfTarget + rotate.t) % numberPerCircleCount
+            startIndexes[target] = newIndex
+        case .counterclockWise:
+            let newIndex = (startIndexOfTarget - rotate.t) % numberPerCircleCount
+            startIndexes[target] = newIndex
+        }
+        
+        target += rotate.k
+    }
+}
+
+func readArray<T: LosslessStringConvertible>() -> [T] {
+    let line = readLine()!
+    let splitedLine = line.split(separator: " ")
+    let array = splitedLine.map { T(String($0))! }
+    return array
+}
+
+struct Rotate {
+    let k: Int
+    let direction: Direction
+    let t: Int
+    
+    init(input: [Int]) {
+        self.k = input[0]
+        self.direction = input[1] == 1 ? .clockWise : .counterclockWise
+        self.t = input[2]
+    }
+    
+    enum Direction {
+        case clockWise
+        case counterclockWise
+    }
+}
+
