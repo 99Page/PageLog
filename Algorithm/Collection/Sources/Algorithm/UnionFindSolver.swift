@@ -11,7 +11,7 @@ import Foundation
 /// UnionFind 구조체는 서로소 집합(Disjoint Set)을 구현한 자료구조로,
 /// 빠르게 집합을 병합하거나(Union) 두 요소가 같은 집합에 속하는지 확인(Find)할 수 있습니다.
 /// 인덱스 기반 처리를 위해 ArrayIndexBase를 지원합니다.
-struct UnionFind {
+struct UnionFindSolver {
     private var parent: [Int]
     private var rank: [Int]
     private let arrayIndexBase: ArrayIndexBase
