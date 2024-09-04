@@ -1,77 +1,12 @@
+//
+//  FloydWarshallSolver.swift
+//  PageCollection
+//
+//  Created by 노우영 on 9/4/24.
+//  Copyright © 2024 Page. All rights reserved.
+//
+
 import Foundation
-
-let cityCount = Int(readLine()!)!
-let edgeCount = Int(readLine()!)!
-var edges: [FloydWarshallSolver.Edge] = []
-
-solve()
-
-func solve() {
-    readEdges()
-    var solver = FloydWarshallSolver(edges: edges, arrayIndexBase: .one(nodeCount: cityCount))
-    let result = solver.solve()
-    
-    for (index, row) in result.enumerated() {
-        if index == 0 {
-            continue
-        }
-        
-        for (index, cost) in row.enumerated() {
-            if index == 0 {
-                continue
-            }
-            
-            if cost == .max {
-                print(0, terminator: " ")
-            } else {
-                print(cost, terminator: " ")
-            }
-        }
-        
-        print()
-    }
-    
-}
-
-extension Array where Element: LosslessStringConvertible {
-    /// 배열의 각 요소를 문자열로 변환한 후 지정된 구분자로 결합하여 반환합니다.
-    /// - Parameter separator: 각 문자열 요소를 결합할 때 사용할 구분자
-    /// - Returns: 결합된 문자열
-    func joinedString(with separator: String = " ") -> String {
-        self.map(String.init).joined(separator: separator)
-    }
-}
-
-extension Array where Element: Collection, Element.Element: LosslessStringConvertible {
-    /// 2차원 배열의 각 요소를 문자열로 변환한 후 각 행을 지정된 구분자로 결합하고, 행들은 `\n`으로 구분하여 반환합니다.
-    /// - Parameter separator: 각 행 내의 문자열 요소를 결합할 때 사용할 구분자
-    /// - Returns: 결합된 문자열
-    func joinedString2D(with separator: String = " ") -> String {
-        self.map { row in
-            row.map(String.init).joined(separator: separator)
-        }.joined(separator: "\n")
-    }
-}
-
-
-func readEdges() {
-    (0..<edgeCount).forEach { _ in
-        let input: [Int] = readArray()
-        let start = input[0]
-        let dest = input[1]
-        let cost = input[2]
-        let edge = FloydWarshallSolver.Edge(start: start, destination: dest, cost: cost)
-        edges.append(edge)
-    }
-}
-
-func readArray<T: LosslessStringConvertible>() -> [T] {
-    let line = readLine()!
-    let splitedLine = line.split(separator: " ")
-    let array = splitedLine.map { T(String($0))! }
-    return array
-}
-
 
 /// FloydWarshallSolver 구조체는 플로이드-워셜 알고리즘을 사용하여 그래프의 모든 정점 쌍 사이의 최단 경로를 계산합니다.
 ///
@@ -159,7 +94,7 @@ struct FloydWarshallSolver {
         
         var startIndex: Int {
             switch self {
-            case .zero: 
+            case .zero:
                 return 0
             case .one:
                 return 1
@@ -173,4 +108,3 @@ struct FloydWarshallSolver {
         let cost: Int
     }
 }
-

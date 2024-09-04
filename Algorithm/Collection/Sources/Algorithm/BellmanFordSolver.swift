@@ -15,20 +15,18 @@ import Foundation
 /// - **음수 사이클(negative cycle) 탐지**: 그래프에 음수 사이클이 존재하는지 여부를 감지할 수 있습니다. 음수 사이클이 존재할 경우, 최단 경로는 무한히 줄어들 수 있기 때문에 이 문제를 해결하는 데 유용합니다.
 /// - **한 정점에서 다른 정점까지의 최단 경로를 계산**: 벨만-포드 알고리즘은 단일 출발점에서 시작하여 모든 다른 정점까지의 최단 경로를 계산할 수 있습니다.
 struct BellmanFordSolver {
-    private let nodeCount: Int
     private let arrayIndexBase: ArrayIndexBase
     
     var edge: [Edge]
     var executeResult: ExecuteResult = .notExecuted
     
-    init(nodeCount: Int, edge: [Edge], arrayIndexBase: ArrayIndexBase) {
-        self.nodeCount = nodeCount
+    init(edge: [Edge], arrayIndexBase: ArrayIndexBase) {
         self.arrayIndexBase = arrayIndexBase
         self.edge = edge
     }
     
     mutating func solve(startNode: Int) -> [Int] {
-        let costSize = nodeCount + arrayIndexBase.rawValue
+        let costSize = arrayIndexBase.arraySize
         var costs: [Int] = Array(repeating: .max, count: costSize)
         costs[startNode] = 0
         
@@ -68,9 +66,18 @@ struct BellmanFordSolver {
         case notExecuted // 실행되지 않은 이유를 포함
     }
     
-    enum ArrayIndexBase: Int  {
-        case zero = 0
-        case one = 1
+    enum ArrayIndexBase {
+        case zero(nodeCount: Int)
+        case one(nodeCount: Int)
+        
+        var arraySize: Int {
+            switch self {
+            case .zero(let nodeCount):
+                return nodeCount
+            case .one(let nodeCount):
+                return nodeCount + 1
+            }
+        }
     }
     
     struct Edge {
