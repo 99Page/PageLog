@@ -8,6 +8,14 @@
 
 import Foundation
 
+let array = [[1, 2], [3,4], [5, 6]]
+
+let result = array.reduce(into: []) { partialResult, array in
+    partialResult = [5, 6]
+}
+
+print(array.cartesianProduct())
+
 var dices: [[Int]] = []
 var maxWin: Int = 0
 var goodDice: [Int] = []
@@ -100,11 +108,14 @@ extension Array where Element: Collection {
     /// - Returns: 카테시안 곱 결과 배열
     func cartesianProduct() -> [[Element.Element]] {
         return self.reduce([[]]) { (result, array) in
-            result.flatMap { product in
-                array.map { element in
+            let tmp = result.flatMap { product in
+                print("product: \(product)")
+                return array.map { element in
                     product + [element]
                 }
             }
+            print(tmp)
+            return tmp
         }
     }
 }
