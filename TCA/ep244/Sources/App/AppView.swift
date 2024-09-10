@@ -22,6 +22,9 @@ struct AppFeature {
         case standupList(StandupsListFeature.Action)
     }
     
+    @Dependency(\.uuid) var uuid
+    @Dependency(\.date.now) var date
+    
     @Reducer
     struct Path {
         enum State: Equatable {
@@ -75,6 +78,29 @@ struct AppFeature {
 //                let detailStandupId = detailState.standup.id
 //                state.standupList.standups[id: detailStandupId] = detailState.standup
 //                return .none
+            case let .path(.element(id: id, action: .recordMeeting(.delegate(action)))):
+                switch action {
+                case .saveMeeting:
+                    guard let detailId = state.path.ids.dropLast().last else {
+                        XCTFail("Record meeting is the last element in the stack. A detail feature should proceed it.")
+                        return .none
+                    }
+                    
+                    let newMeeting = Meeting(
+                        id: self.uuid(),
+                        date: self.date,
+                        transcript: "N/A"
+                    )
+                    
+                    state.path[id: detailId, case: \.detail]?.standup.meetings.insert(newMeeting, at: 0)
+                    
+                    guard let standup = state.path[id: detailId, case: \.detail]?.standup
+                    else { return .none }
+                    
+                    state.standupList.standups[id: standup.id ] = standup
+                    
+                    return .none
+                }
             case .path:
                 return .none
             case .standupList(_):
@@ -115,6 +141,28 @@ struct AppView: View {
 
 #Preview {
     AppView(store: Store(initialState: AppFeature.State(), reducer: {
+        AppFeature()
+            ._printChanges()
+    }))
+}
+
+
+#Preview("Quick finishi meeting") {
+    var standup = Standup.mock
+    standup.duration = .seconds(6)
+    
+    let detailPath: AppFeature.Path.State = .detail(.init(standup: standup))
+    let recordPath: AppFeature.Path.State = .recordMeeting(.init(standup: standup))
+    let stackState = StackState([detailPath, recordPath])
+    
+    let standupListState = StandupsListFeature.State(standups: [standup])
+    
+    let state = AppFeature.State(
+        path: StackState([detailPath, recordPath]),
+        standupList: standupListState
+    )
+    
+    return AppView(store: Store(initialState: state, reducer: {
         AppFeature()
             ._printChanges()
     }))
