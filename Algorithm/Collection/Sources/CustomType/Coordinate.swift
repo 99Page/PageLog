@@ -98,8 +98,10 @@ struct Coordinate {
         
         var minIndex: Int {
             switch self {
-            case .zero: 0
-            case .one: 1
+            case .zero: 
+                return 0
+            case .one:
+                return 1
             }
         }
         
