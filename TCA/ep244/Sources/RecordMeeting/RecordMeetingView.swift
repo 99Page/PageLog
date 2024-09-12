@@ -46,8 +46,8 @@ struct RecordMeetingFeature {
             case confirmDiscard
         }
         
-        enum Delegate {
-            case saveMeeting
+        enum Delegate: Equatable {
+            case saveMeeting(transcript: String)
         }
     }
     
@@ -94,8 +94,10 @@ struct RecordMeetingFeature {
                 
                 if state.secondsElapsed.isMultiple(of: secondPerAttendee) {
                     if state.speakerIndex == state.standup.attendees.count - 1 {
-                        return .run { send in
-                            await send(.delegate(.saveMeeting))
+                        /// capture 필요하면 아래 코드 참고
+                        return .run { [transcript = state.transcript] send in
+                            let saveMeeting: Action.Delegate = .saveMeeting(transcript: transcript)
+                            await send(.delegate(saveMeeting))
                             await self.dismiss()
                         }
                     }
@@ -110,8 +112,9 @@ struct RecordMeetingFeature {
                     await self.dismiss()
                 }
             case .alert(.presented(.confirmSave)):
-                return .run { send in
-                    await send(.delegate(.saveMeeting))
+                return .run { [transcript = state.transcript] send in
+                    let saveMeeting: Action.Delegate = .saveMeeting(transcript: transcript)
+                    await send(.delegate(saveMeeting))
                     await self.dismiss()
                 }
             case .alert(.dismiss):

@@ -132,7 +132,7 @@ final class AppTests: XCTestCase {
         }
     }
     
-    func testTimerRunOutMeeting() async {
+    func testTimerRunOutEndMeeting() async {
         let standup = Standup(
             id: UUID(),
             attendees: [Attendee(id: UUID())],
@@ -165,12 +165,68 @@ final class AppTests: XCTestCase {
         
         await store.send(.path(.element(id: 1, action: .recordMeeting(.onTask))))
         
-        await store.receive(.path(.element(id: 1, action: .recordMeeting(.delegate(.saveMeeting)))))
+        let saveMeeting: AppFeature.Path.Action = .recordMeeting(.delegate(.saveMeeting(transcript: "")))
+        await store.receive(.path(.element(id: 1, action: saveMeeting)))
         await store.receive(.path(.popFrom(id: 1)))
         
         store.assert { state in
             state.path[id: 0, case: \.detail]?.standup.meetings = [
-                Meeting(id: UUID(0), date: Date(timeIntervalSince1970: 123456789), transcript: "N/A")
+                Meeting(id: UUID(0), date: Date(timeIntervalSince1970: 123456789), transcript: "")
+            ]
+            
+            XCTAssertEqual(state.path.count, 1)
+        }
+    }
+    
+    func testTimerRunOutEndMeeting_WithSpeechRecognizer() async {
+        let standup = Standup(
+            id: UUID(),
+            attendees: [Attendee(id: UUID())],
+            duration: .seconds(1),
+            meetings: [],
+            theme: .bubblegum,
+            title: "Point-free"
+        )
+        
+        let standupDetailState: StandupDetailFeature.State = .init(standup: standup)
+        let detailPath: AppFeature.Path.State = .detail(standupDetailState)
+        
+        let recordMeetingState: RecordMeetingFeature.State = .init(standup: standup)
+        let recordMeetingPath: AppFeature.Path.State = .recordMeeting(recordMeetingState)
+        
+        let standupListState: StandupsListFeature.State = .init(standups: [standup])
+        
+        let appState = AppFeature.State(path: StackState([detailPath, recordMeetingPath]), standupList: standupListState)
+        
+        let store = TestStore(initialState: appState) {
+            AppFeature()
+        } withDependencies: {
+            $0.continuousClock = ImmediateClock()
+            $0.speechClient.requestAuthorization = { .denied }
+            $0.speechClient.start = {
+                AsyncThrowingStream {
+                    $0.yield("good meeting!")
+                }
+            }
+            $0.date.now = Date(timeIntervalSince1970: 123456789)
+            $0.uuid = .incrementing
+        }
+        
+        store.exhaustivity = .off
+        
+        await store.send(.path(.element(id: 1, action: .recordMeeting(.onTask))))
+        
+        let saveMeeting: AppFeature.Path.Action = .recordMeeting(.delegate(.saveMeeting(transcript: "good meeting!")))
+        await store.receive(.path(.element(id: 1, action: saveMeeting)))
+        await store.receive(.path(.popFrom(id: 1)))
+        
+        store.assert { state in
+            state.path[id: 0, case: \.detail]?.standup.meetings = [
+                Meeting(
+                    id: UUID(0),
+                    date: Date(timeIntervalSince1970: 123456789),
+                    transcript: "good meeting!"
+                )
             ]
             
             XCTAssertEqual(state.path.count, 1)

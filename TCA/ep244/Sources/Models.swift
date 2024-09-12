@@ -30,6 +30,10 @@ struct Meeting: Equatable, Identifiable, Codable {
     let id: UUID
     let date: Date
     var transcript: String
+    
+    static var mock: Meeting {
+        Meeting(id: UUID(), date: .now, transcript: "transcript")
+    }
 }
 
 enum Theme: String, CaseIterable, Identifiable, Codable {
