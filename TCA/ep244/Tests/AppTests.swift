@@ -168,13 +168,56 @@ final class AppTests: XCTestCase {
         await store.receive(.path(.element(id: 1, action: .recordMeeting(.delegate(.saveMeeting)))))
         await store.receive(.path(.popFrom(id: 1)))
         
-//        await store.skipReceivedActions()
-        
         store.assert { state in
             state.path[id: 0, case: \.detail]?.standup.meetings = [
                 Meeting(id: UUID(0), date: Date(timeIntervalSince1970: 123456789), transcript: "N/A")
             ]
             
+            XCTAssertEqual(state.path.count, 1)
+        }
+    }
+    
+    func testEndMeetingEalryDiscard() async {
+        let standup = Standup(
+            id: UUID(),
+            attendees: [Attendee(id: UUID())],
+            duration: .seconds(1),
+            meetings: [],
+            theme: .bubblegum,
+            title: "Point-free"
+        )
+        
+        let standupDetailState: StandupDetailFeature.State = .init(standup: standup)
+        let detailPath: AppFeature.Path.State = .detail(standupDetailState)
+        
+        let recordMeetingState: RecordMeetingFeature.State = .init(standup: standup)
+        let recordMeetingPath: AppFeature.Path.State = .recordMeeting(recordMeetingState)
+        
+        let standupListState: StandupsListFeature.State = .init(standups: [standup])
+        
+        let appState = AppFeature.State(path: StackState([detailPath, recordMeetingPath]), standupList: standupListState)
+        
+        let store = TestStore(initialState: appState) {
+            AppFeature()
+        } withDependencies: {
+            $0.continuousClock = ImmediateClock()
+            $0.speechClient.requestAuthorization = { .denied }
+            $0.date.now = .now
+        }
+        
+        store.exhaustivity = .off
+        
+        await store.send(.path(.element(id: 1, action: .recordMeeting(.onTask))))
+        
+        await store.send(.path(.element(id: 1, action: .recordMeeting(.endMeetingButtonTapped))))
+        
+        let recordMeetingCofirmDiscardAction: RecordMeetingFeature.Action = .alert(.presented(.confirmDiscard))
+        await store.send(.path(.element(id: 1, action: .recordMeeting(recordMeetingCofirmDiscardAction))))
+        
+        await store.skipReceivedActions()
+        
+        store.assert { state in
+            state.path[id: 0, case: \.detail]?.standup.meetings = []
             XCTAssertEqual(state.path.count, 1)
         }
     }

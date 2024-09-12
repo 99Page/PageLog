@@ -17,6 +17,7 @@ struct RecordMeetingFeature {
         var secondsElapsed = 0
         var speakerIndex = 0
         let standup: Standup
+        var transcript = ""
         
         init(standup: Standup) {
             self.standup = standup
@@ -38,6 +39,7 @@ struct RecordMeetingFeature {
         case nextButtonTapped
         case onTask
         case timerTicked
+        case speechResult(transcript: String)
         
         enum Alert {
             case confirmSave
@@ -53,23 +55,7 @@ struct RecordMeetingFeature {
         Reduce { state, action in
             switch action {
             case .endMeetingButtonTapped:
-                state.alert = AlertState {
-                    TextState("End meeting?")
-                } actions: {
-                    ButtonState(action: .confirmSave) {
-                        TextState("Save and end")
-                    }
-                    
-                    ButtonState(role: .destructive, action: .confirmDiscard) {
-                        TextState("Discard")
-                    }
-                    
-                    ButtonState(role: .cancel) {
-                        TextState("Resume")
-                    }
-                } message: {
-                    TextState("You are endting the meeting early. What would you like to do?")
-                }
+                state.alert = .endMeeting(isDiscardable: true)
                 return .none
             case .nextButtonTapped:
                 guard state.speakerIndex < state.standup.attendees.count - 1 else {
@@ -95,13 +81,14 @@ struct RecordMeetingFeature {
                 return .none
             case .onTask:
                 return .run { send in
-                    let status = await self.speechClient.requestAuthorization()
-                     
-                    for await _ in self.continuousClock.timer(interval: .seconds(1)) {
-                        await send(.timerTicked)
-                    }
+                    /// 내부가 길어지면 함수로 빼낸다.
+                    /// case를 추가할 줄 알았는데 그건 아니다 
+                    await onTask(send: send)
                 }
             case .timerTicked:
+                guard state.alert == nil 
+                else { return .none }
+                
                 state.secondsElapsed += 1
                 let secondPerAttendee = Int(state.standup.durationPerAttendee.components.seconds)
                 
@@ -119,7 +106,7 @@ struct RecordMeetingFeature {
             case .delegate:
                 return .none
             case .alert(.presented(.confirmDiscard)):
-                return .run { _ in
+                return .run { send in
                     await self.dismiss()
                 }
             case .alert(.presented(.confirmSave)):
@@ -129,9 +116,36 @@ struct RecordMeetingFeature {
                 }
             case .alert(.dismiss):
                 return .none
+            case let .speechResult(transcript):
+                state.transcript = transcript
+                return .none
             }
         }
         .ifLet(\.$alert, action: \.alert)
+    }
+    
+    private func onTask(send: Send<Action>) async {
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                let status = await self.speechClient.requestAuthorization()
+                
+                if status == .authorized {
+                    do {
+                        for try await trascript in self.speechClient.start() {
+                            await send(.speechResult(transcript: trascript))
+                        }
+                    } catch {
+                        // TODO: Handle error
+                    }
+                }
+            }
+            
+            group.addTask {
+                for await _ in self.continuousClock.timer(interval: .seconds(1)) {
+                    await send(.timerTicked)
+                }
+            }
+        }
     }
 }
 
@@ -189,5 +203,30 @@ struct RecordMeetingView: View {
         RecordMeetingView(store: Store(initialState: RecordMeetingFeature.State(standup: .mock), reducer: {
             RecordMeetingFeature()
         }))
+    }
+}
+
+
+extension AlertState where Action == RecordMeetingFeature.Action.Alert {
+    static func endMeeting(isDiscardable: Bool) -> AlertState {
+        AlertState {
+            TextState("End meeting?")
+        } actions: {
+            ButtonState(action: .confirmSave) {
+                TextState("Save and end")
+            }
+            
+            if isDiscardable {
+                ButtonState(role: .destructive, action: .confirmDiscard) {
+                    TextState("Discard")
+                }
+            }
+            
+            ButtonState(role: .cancel) {
+                TextState("Resume")
+            }
+        } message: {
+            TextState("You are endting the meeting early. What would you like to do?")
+        }
     }
 }
