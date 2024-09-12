@@ -78,7 +78,7 @@ extension Standup {
             Attendee(id: UUID(), name: "Blob III"),
             Attendee(id: UUID(), name: "Blob I"),
         ],
-        duration: .seconds(60),
+        duration: .seconds(6),
         meetings: [
             Meeting(id: UUID(), date: Date().addingTimeInterval(-60 * 60 * 24 * 7), transcript: """
                             Baby (baby), got me looking so crazy (crazy)

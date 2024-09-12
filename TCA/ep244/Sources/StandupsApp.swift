@@ -12,7 +12,7 @@ import ComposableArchitecture
 struct StandupsApp: App {
     var body: some Scene {
         WindowGroup {
-            AppView(store: Store(initialState: AppFeature.State(), reducer: {
+            AppView(store: Store(initialState: AppFeature.State(standupList: StandupsListFeature.State(standups: [.mock])), reducer: {
                 AppFeature()
             }))
         }
