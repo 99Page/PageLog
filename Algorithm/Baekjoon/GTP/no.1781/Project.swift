@@ -1,6 +1,6 @@
 import ProjectDescription
 
-let problemNumber = "1781"
+let problemNumber = "no.1781"
 let target = Target.target(
     name: problemNumber,
     destinations: .macOS,

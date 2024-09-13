@@ -43,8 +43,8 @@ import Foundation
 
 let homeworkCount = Int(readLine()!)!
 var homeworks: [Homework] = []
-var nearestEmptyDeadline: [Int] = []
-var noddles: [Int] = []
+var nearestAvailableDeadline: [Int] = []
+var noodles: [Int] = []
 
 solve()
 
@@ -52,7 +52,7 @@ func solve() {
     readInputs()
     findMaxNoodleCount()
     
-    let sum = noddles.reduce(into: 0) { partialResult, value in
+    let sum = noodles.reduce(into: 0) { partialResult, value in
         partialResult += value
     }
     
@@ -78,13 +78,13 @@ func findMaxNoodleCount() {
 func fillNoodle(to deadline: Int, noddleCount: Int) -> Int {
     guard deadline != 0 else { return 0 }
     
-    if noddles[deadline] == 0 {
-        noddles[deadline] = noddleCount
-        return nearestEmptyDeadline[deadline]
+    if noodles[deadline] == 0 {
+        noodles[deadline] = noddleCount
+        return nearestAvailableDeadline[deadline]
     } else {
-        let emptyDeadline = nearestEmptyDeadline[deadline]
+        let emptyDeadline = nearestAvailableDeadline[deadline]
         let find = fillNoodle(to: emptyDeadline, noddleCount: noddleCount)
-        nearestEmptyDeadline[deadline] = find
+        nearestAvailableDeadline[deadline] = find
         return find
     }
 }
@@ -100,10 +100,10 @@ func readInputs() {
         maxDeadLine = max(maxDeadLine, input[0])
     }
     
-    nearestEmptyDeadline.append(0)
+    nearestAvailableDeadline.append(0)
     
     for index in 1...maxDeadLine {
-        nearestEmptyDeadline.append(index - 1)
+        nearestAvailableDeadline.append(index - 1)
     }
 
     
