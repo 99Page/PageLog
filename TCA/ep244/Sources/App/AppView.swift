@@ -53,6 +53,8 @@ struct AppFeature {
         }
     }
     
+    @Dependency(\.continuousClock) var clock
+    
     var body: some ReducerOf<Self> {
         Scope(state: \.standupList, action: \.standupList) {
             StandupsListFeature()
@@ -118,6 +120,17 @@ struct AppFeature {
         .forEach(\.path, action: \.path) {
             Path()
         }
+        
+        Reduce { state, _ in
+                .run { [standups = state.standupList.standups] _ in
+                    enum CancelID { case saveDebounce }
+                    try await withTaskCancellation(id: CancelID.saveDebounce, cancelInFlight: true) {
+                        try await self.clock.sleep(for: .seconds(1))
+                        try JSONEncoder().encode(standups).write(to: .standups)
+                    }
+                }
+        }
+        
     }
 }
 
@@ -162,7 +175,7 @@ struct AppView: View {
     let recordPath: AppFeature.Path.State = .recordMeeting(.init(standup: standup))
     let stackState = StackState([detailPath, recordPath])
     
-    let standupListState = StandupsListFeature.State(standups: [standup])
+    let standupListState = StandupsListFeature.State()
     
     let state = AppFeature.State(
         path: StackState([detailPath, recordPath]),

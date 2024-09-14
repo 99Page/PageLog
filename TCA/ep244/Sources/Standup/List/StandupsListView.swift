@@ -18,6 +18,17 @@ struct StandupsListFeature {
         /// pointfree에서 IdentifiedArray 라이브러리를 만들었다.
         /// ID 기반으로 배열을 조회해서 런타임에 안전하다.
         var standups: IdentifiedArrayOf<Standup> = []
+        
+        init(addStandups: StandupFormFeature.State? = nil) {
+            self.addStandup = addStandup
+            
+            do {
+                let data = try Data(contentsOf: .standups)
+                self.standups = try JSONDecoder().decode(IdentifiedArrayOf<Standup>.self, from: data)
+            } catch {
+                self.standups = []
+            }
+        }
     }
     
     enum Action: Equatable {
@@ -124,7 +135,9 @@ struct StandupsListView: View {
 #Preview {
     NavigationStack {
         StandupsListView(
-            store: Store(initialState: StandupsListFeature.State(standups: [.mock])) {
+            store: Store(initialState: StandupsListFeature.State(
+//                standups: [.mock]
+            )) {
                 StandupsListFeature()
                     ._printChanges()
             }
