@@ -30,11 +30,16 @@ struct AppFeature {
         enum State: Equatable {
             case detail(StandupDetailFeature.State)
             case recordMeeting(RecordMeetingFeature.State)
+            /// meeting view는 reducer가 없으니 위의 두 가지 케이스처럼 state를 갖지 않는다.
+            case meeting(meeting: Meeting, standup: Standup)
         }
         
         enum Action: Equatable {
             case detail(StandupDetailFeature.Action)
             case recordMeeting(RecordMeetingFeature.Action)
+            
+            /// meeting view는 reducer를 갖지 않으니 Action을 가질 필요가 없다.
+            case meeting
         }
         
         var body: some ReducerOf<Self> {
@@ -47,6 +52,8 @@ struct AppFeature {
             }
         }
     }
+    
+    @Dependency(\.continuousClock) var clock
     
     var body: some ReducerOf<Self> {
         Scope(state: \.standupList, action: \.standupList) {
@@ -80,7 +87,7 @@ struct AppFeature {
 //                return .none
             case let .path(.element(id: id, action: .recordMeeting(.delegate(action)))):
                 switch action {
-                case .saveMeeting:
+                case let .saveMeeting(transcript):
                     guard let detailId = state.path.ids.dropLast().last else {
                         XCTFail("Record meeting is the last element in the stack. A detail feature should proceed it.")
                         return .none
@@ -89,7 +96,7 @@ struct AppFeature {
                     let newMeeting = Meeting(
                         id: self.uuid(),
                         date: self.date,
-                        transcript: "N/A"
+                        transcript: transcript
                     )
                     
                     state.path[id: detailId, case: \.detail]?.standup.meetings.insert(newMeeting, at: 0)
@@ -113,6 +120,17 @@ struct AppFeature {
         .forEach(\.path, action: \.path) {
             Path()
         }
+        
+        Reduce { state, _ in
+                .run { [standups = state.standupList.standups] _ in
+                    enum CancelID { case saveDebounce }
+                    try await withTaskCancellation(id: CancelID.saveDebounce, cancelInFlight: true) {
+                        try await self.clock.sleep(for: .seconds(1))
+                        try JSONEncoder().encode(standups).write(to: .standups)
+                    }
+                }
+        }
+        
     }
 }
 
@@ -134,6 +152,8 @@ struct AppView: View {
                 CaseLet(\AppFeature.Path.State.recordMeeting, action: AppFeature.Path.Action.recordMeeting) { store in
                     RecordMeetingView(store: store)
                 }
+            case let .meeting(meeting, standup):
+                MeetingView(meeting: meeting, standup: standup)
             }
         }
     }
@@ -155,7 +175,7 @@ struct AppView: View {
     let recordPath: AppFeature.Path.State = .recordMeeting(.init(standup: standup))
     let stackState = StackState([detailPath, recordPath])
     
-    let standupListState = StandupsListFeature.State(standups: [standup])
+    let standupListState = StandupsListFeature.State()
     
     let state = AppFeature.State(
         path: StackState([detailPath, recordPath]),
