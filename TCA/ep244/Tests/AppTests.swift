@@ -14,13 +14,11 @@ import XCTest
 final class AppTests: XCTestCase {
     func testEdit() async {
         let standup = Standup.mock
-        let standupListState = StandupsListFeature.State()
+        let standupListState = StandupsListFeature.State(standups: [standup])
         let appState = AppFeature.State(standupList: standupListState)
         
         let store = TestStore(initialState: appState) {
             AppFeature()
-        } withDependencies: {
-            $0.dataManager = .mock(initialData: try? JSONEncoder().encode(standup))
         }
         
         
@@ -67,14 +65,11 @@ final class AppTests: XCTestCase {
     
     func testEdit_NonExhaustive() async {
         let standup = Standup.mock
-        let standupListState = StandupsListFeature.State()
+        let standupListState = StandupsListFeature.State(standups: [standup])
         let appState = AppFeature.State(standupList: standupListState)
         
         let store = TestStore(initialState: appState) {
             AppFeature()
-        } withDependencies: {
-            $0.continuousClock = ImmediateClock()
-            $0.dataManager = .mock(initialData: try? JSONEncoder().encode(standup))
         }
         
         store.exhaustivity = .off
@@ -117,7 +112,7 @@ final class AppTests: XCTestCase {
         
         let standupDetailState = StandupDetailFeature.State(standup: standup)
         let stackState: StackState<AppFeature.Path.State> = .init([.detail(standupDetailState)])
-        let standupListState = StandupsListFeature.State()
+        let standupListState = StandupsListFeature.State(standups: [standup])
         let appState = AppFeature.State(path: stackState, standupList: standupListState)
         
         let store = TestStore(initialState: appState) {
@@ -153,7 +148,7 @@ final class AppTests: XCTestCase {
         let recordMeetingState: RecordMeetingFeature.State = .init(standup: standup)
         let recordMeetingPath: AppFeature.Path.State = .recordMeeting(recordMeetingState)
         
-        let standupListState: StandupsListFeature.State = .init()
+        let standupListState: StandupsListFeature.State = .init(standups: [standup])
         
         let appState = AppFeature.State(path: StackState([detailPath, recordMeetingPath]), standupList: standupListState)
         
@@ -199,7 +194,7 @@ final class AppTests: XCTestCase {
         let recordMeetingState: RecordMeetingFeature.State = .init(standup: standup)
         let recordMeetingPath: AppFeature.Path.State = .recordMeeting(recordMeetingState)
         
-        let standupListState: StandupsListFeature.State = .init()
+        let standupListState: StandupsListFeature.State = .init(standups: [standup])
         
         let appState = AppFeature.State(path: StackState([detailPath, recordMeetingPath]), standupList: standupListState)
         
@@ -215,7 +210,6 @@ final class AppTests: XCTestCase {
             }
             $0.date.now = Date(timeIntervalSince1970: 123456789)
             $0.uuid = .incrementing
-            $0.dataManager = .mock(initialData: try? JSONEncoder().encode(standup))
         }
         
         store.exhaustivity = .off
@@ -255,7 +249,7 @@ final class AppTests: XCTestCase {
         let recordMeetingState: RecordMeetingFeature.State = .init(standup: standup)
         let recordMeetingPath: AppFeature.Path.State = .recordMeeting(recordMeetingState)
         
-        let standupListState: StandupsListFeature.State = .init()
+        let standupListState: StandupsListFeature.State = .init(standups: [standup])
         
         let appState = AppFeature.State(path: StackState([detailPath, recordMeetingPath]), standupList: standupListState)
         
@@ -265,12 +259,12 @@ final class AppTests: XCTestCase {
             $0.continuousClock = ImmediateClock()
             $0.speechClient.requestAuthorization = { .denied }
             $0.date.now = .now
-            $0.dataManager = .mock(initialData: try? JSONEncoder().encode(standup))
         }
         
         store.exhaustivity = .off
         
         await store.send(.path(.element(id: 1, action: .recordMeeting(.onTask))))
+        
         await store.send(.path(.element(id: 1, action: .recordMeeting(.endMeetingButtonTapped))))
         
         let recordMeetingCofirmDiscardAction: RecordMeetingFeature.Action = .alert(.presented(.confirmDiscard))

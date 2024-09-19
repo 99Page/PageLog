@@ -23,9 +23,8 @@ struct StandupsListFeature {
             self.addStandup = addStandup
             
             do {
-                @Dependency(\.dataManager.load) var loadData
-                
-                self.standups = try JSONDecoder().decode(IdentifiedArrayOf<Standup>.self, from: loadData(.standups))
+                let data = try Data(contentsOf: .standups)
+                self.standups = try JSONDecoder().decode(IdentifiedArrayOf<Standup>.self, from: data)
             } catch {
                 self.standups = []
             }

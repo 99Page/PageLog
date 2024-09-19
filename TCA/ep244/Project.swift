@@ -43,7 +43,7 @@ let testTarget = Target.target(
 )
 
 let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
-let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.15.0")
+let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.13.0")
 
 
 let project = Project(

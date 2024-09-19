@@ -54,7 +54,6 @@ struct AppFeature {
     }
     
     @Dependency(\.continuousClock) var clock
-    @Dependency(\.dataManager.save) var saveData
     
     var body: some ReducerOf<Self> {
         Scope(state: \.standupList, action: \.standupList) {
@@ -73,19 +72,19 @@ struct AppFeature {
                     return .none
                 }
                 // 아래 방식처럼 할 수도 있는데, delegate 방식으로 변경됐다.
-                //            case let .path(.popFrom(id: id)):
-                //                /// 내가 고민했던 Sibling끼리의 데이터 업데이트 상황에 대한 TCA의 해결책.
-                //                /// StackView가 모든 상태를 알고 있으니
-                //                /// pop됐을 때 여기서 상태를 업데이트해서 반영할 수 있다.
-                //                /// 이 아이디어를 Vanila Swift에서도 적용해볼만 할 것 같다.
-                //                ///
-                //                /// Sibling 업데이트는 Stack에서 관리하자.
-                //                guard case let .some(.detail(detailState)) = state.path[id: id]
-                //                else { return .none }
-                //
-                //                let detailStandupId = detailState.standup.id
-                //                state.standupList.standups[id: detailStandupId] = detailState.standup
-                //                return .none
+//            case let .path(.popFrom(id: id)):
+//                /// 내가 고민했던 Sibling끼리의 데이터 업데이트 상황에 대한 TCA의 해결책.
+//                /// StackView가 모든 상태를 알고 있으니
+//                /// pop됐을 때 여기서 상태를 업데이트해서 반영할 수 있다.
+//                /// 이 아이디어를 Vanila Swift에서도 적용해볼만 할 것 같다.
+//                ///
+//                /// Sibling 업데이트는 Stack에서 관리하자.
+//                guard case let .some(.detail(detailState)) = state.path[id: id]
+//                else { return .none }
+//                
+//                let detailStandupId = detailState.standup.id
+//                state.standupList.standups[id: detailStandupId] = detailState.standup
+//                return .none
             case let .path(.element(id: id, action: .recordMeeting(.delegate(action)))):
                 switch action {
                 case let .saveMeeting(transcript):
@@ -127,7 +126,7 @@ struct AppFeature {
                     enum CancelID { case saveDebounce }
                     try await withTaskCancellation(id: CancelID.saveDebounce, cancelInFlight: true) {
                         try await self.clock.sleep(for: .seconds(1))
-                        try self.saveData(JSONEncoder().encode(standups), .standups)
+                        try JSONEncoder().encode(standups).write(to: .standups)
                     }
                 }
         }
@@ -161,13 +160,10 @@ struct AppView: View {
 }
 
 #Preview {
-    AppView(store: Store(initialState: AppFeature.State()) {
+    AppView(store: Store(initialState: AppFeature.State(), reducer: {
         AppFeature()
             ._printChanges()
-    } withDependencies: {
-        $0.dataManager = .mock(initialData: try? JSONEncoder().encode([Standup.mock]))
-    }
-    )
+    }))
 }
 
 
