@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Int {
+private extension Int {
     /// 참고용 코드다.
     /// 숫자를 진수로 변환하는거 까먹을 경우 활용하자. 
     func converToRadixString(radix: Int) -> String {

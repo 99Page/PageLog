@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Double {
+private extension Double {
     /// 소수점 이하 특정 자리수까지 반올림하는 함수
     /// - Parameter decimalPlaces: 반올림할 소수점 이하 자리수
     /// 예시:
