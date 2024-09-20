@@ -50,6 +50,7 @@
 ## Dynamic programming
 * 2424CPC-32175
 * 1103: DFS + DP 활용 문제
+* 1949: DFS + DP 활용 
 
 ---
 
