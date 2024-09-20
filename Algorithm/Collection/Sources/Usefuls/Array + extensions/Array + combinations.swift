@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Array {
+private extension Array {
     /// 배열의 원소들로부터 원하는 개수의 조합을 생성합니다.
     /// - Parameter k: 선택할 원소의 개수
     /// - Returns: 생성된 조합들의 배열

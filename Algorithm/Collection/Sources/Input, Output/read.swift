@@ -8,23 +8,21 @@
 
 import Foundation
 
-struct Reader {
-    static func readGrid<T: LosslessStringConvertible>(_ k: Int) -> [[T]] {
-        var result: [[T]] = []
-            
-        (0..<k).forEach { _ in
-            let array: [T] = readArray()
-            result.append(array)
-        }
-        
-        return result
+private func readGrid<T: LosslessStringConvertible>(_ k: Int) -> [[T]] {
+    var result: [[T]] = []
+    
+    (0..<k).forEach { _ in
+        let array: [T] = readArray()
+        result.append(array)
     }
-
-    static func readArray<T: LosslessStringConvertible>() -> [T] {
-        let line = readLine()!
-        let splitedLine = line.split(separator: " ")
-        let array = splitedLine.map { T(String($0))! }
-        return array
-    }
-
+    
+    return result
 }
+
+private func readArray<T: LosslessStringConvertible>() -> [T] {
+    let line = readLine()!
+    let splitedLine = line.split(separator: " ")
+    let array = splitedLine.map { T(String($0))! }
+    return array
+}
+

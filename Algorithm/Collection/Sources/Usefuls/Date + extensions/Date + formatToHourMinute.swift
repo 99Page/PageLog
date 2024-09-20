@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Date {
+private extension Date {
     /// Date를 지정된 시간 형식과 시간대로 포맷하여 문자열로 반환하는 함수
     /// - Parameters:
     ///   - hourDigit: 표시할 시간의 자리수. ex) 7시 or 07시

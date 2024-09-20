@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Array where Element: Collection {
+private extension Array where Element: Collection {
     /// 2차원 배열의 카테시안 곱을 계산합니다.
     ///
     /// 카르테시안 곱(Cartesian Product)이란, 여러 집합에서 각각의 집합에서 하나씩 원소를 선택하여 만들 수 있는
