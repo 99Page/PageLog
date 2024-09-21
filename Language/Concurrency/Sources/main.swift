@@ -14,3 +14,6 @@ let task = Task {
 }
 
 RunLoop.current.run(mode: .default, before: .distantFuture)
+
+// MARK: Sendable
+
