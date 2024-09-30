@@ -1,9 +1,11 @@
 //
 //  Project.swift
-//  PageComponentManifests
+//  2023KakaoManifests
 //
-//  Created by 노우영 on 6/29/24.
+//  Created by 노우영 on 9/30/24.
 //
+
+import Foundation
 
 import ProjectDescription
 
@@ -16,17 +18,17 @@ let infoPlist: [String: Plist.Value] = [
 
 
 let target = Target.target(
-    name: "Concurrency",
+    name: "SwiftDocument",
     destinations: .macOS,
     product: .commandLineTool,
-    bundleId: "com.page.language.concurrency",
+    bundleId: "com.page.swift.document",
     deploymentTargets: .macOS("14.5"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"]
 )
 
 let project = Project(
-    name: "Concurrency",
+    name: "SwiftDocument",
     organizationName: "Page",
     targets: [target]
 )
