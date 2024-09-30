@@ -18,7 +18,7 @@ let infoPlist: [String: Plist.Value] = [
 
 
 let target = Target.target(
-    name: "Concurrency",
+    name: "SwiftDocument",
     destinations: .macOS,
     product: .commandLineTool,
     bundleId: "com.page.swift.document",
@@ -28,7 +28,7 @@ let target = Target.target(
 )
 
 let project = Project(
-    name: "Document",
+    name: "SwiftDocument",
     organizationName: "Page",
     targets: [target]
 )
