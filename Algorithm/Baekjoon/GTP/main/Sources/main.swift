@@ -1,93 +1,190 @@
 
-var solver = Solver2169()
+var solver = Solver21609()
 solver.solve()
 
-//3 3
-//100 -29 -25
-//-57 -33 99
-//-11 77 15
+/// 빈 블록 -2
+/// 검은 블록 -1
+/// 무지개블록 0
+/// 일반블록은 자연수
+///
+/// 중력작용: 오른쪽으로 이동
+/// 반시계 구현? 행열 간의 스왑.
+struct Solver21609 {
+    let gridSize: Int
+    let colorCount: Int
 
-/// 모든 케이스를 보면서 중복된 케이스를 줄여야한다. DFS + DP
-/// 지금까지 봤던 문제와 다른 점은, 배열 이동의 방향성이 한개가 아니라는 점.
-/// 어디서 왔느냐에 따라서 다음에 갈 수 있는 경로가 제한적이다.
-///
-/// 위로 갈 수 있는 경우는 없으니까
-/// 왼쪽과 오른쪽의 mem을 별도로 관리해서 풀이?
-///
-struct Solver2169 {
-    let rowSize: Int
-    let colSize: Int
-    let map: [[Int]]
-    
-    private let minCost = -2_000_000
-    
-    var cost: [[[Int]]]
-    var isVisited: [[Bool]]
+    var map: [[Int]]
+    var score: Int = 0
     
     init() {
         let input: [Int] = readArray()
-        self.rowSize = input[0]
-        self.colSize = input[1]
+        self.gridSize = input[0]
+        self.colorCount = input[1]
         
-        self.map = readGrid(rowSize)
-        
-        
-        let colCost: [Int] = Array(repeating: .min, count: colSize)
-        let rowCost: [[Int]] = Array(repeating: colCost, count: rowSize)
-        
-        let directionCount = Direction.allCases.count
-        self.cost = Array(repeating: rowCost, count: directionCount)
-        
-        let colVisit = Array(repeating: false, count: colSize)
-        self.isVisited = Array(repeating: colVisit, count: rowSize)
-        
-        for direction in Direction.allCases {
-            let targetCost = map[rowSize - 1][colSize - 1]
-            cost[direction.rawValue][rowSize - 1][colSize - 1] = targetCost
-        }
+        self.map = readGrid(gridSize)
     }
     
     mutating func solve() {
-        let initialCoordinate = Coordinate(row: 0, col: 0, distance: 0)
-        isVisited[0][0] = true
-        let result = search(coordinate: initialCoordinate, byDirection: .down)
-        print(result)
-    }
-    
-    mutating func search(coordinate: Coordinate, byDirection direction: Direction) -> Int {
-        
-        let row = coordinate.row
-        let col = coordinate.col
-        
-        guard cost[direction.rawValue][row][col] == .min else {
-            return cost[direction.rawValue][row][col]
+        while true {
+            let blockGroups = findLargestBlockGroup()
+            
+            /// 블록 그룹 = 블록의 개수가 2이상
+            if blockGroups.count > 1 {
+                getScoreByRemoving(blockGroups)
+            } else {
+                break
+            }
+            
+            executeGravity()
+            rotateCounterClockwise()
+            executeGravity()
         }
         
-        var maxCost: Int = .min
+        print(score)
+    }
+    
+    mutating func rotateCounterClockwise() {
+        var rotatedMap: [[Int]] = []
         
-        for nextCoordinate in coordinate.findValidNextPositions(rowSize: rowSize, colSize: colSize) {
-            if !isVisited[nextCoordinate.row][nextCoordinate.col] {
-                isVisited[nextCoordinate.row][nextCoordinate.col] = true
-                let newDirection = nextCoordinate.findDirection(oldCoordinate: coordinate)
-                let newCost = search(coordinate: nextCoordinate, byDirection: newDirection)
-                maxCost = max(newCost, maxCost)
-                isVisited[nextCoordinate.row][nextCoordinate.col] = false
+        for col in (0..<gridSize).reversed() {
+            var rotatedRow: [Int] = []
+            
+            for row in (0..<gridSize) {
+                rotatedRow.append(map[row][col])
+            }
+            
+            rotatedMap.append(rotatedRow)
+        }
+        
+        map = rotatedMap
+    }
+    mutating func executeGravity() {
+        for col in (0..<gridSize) {
+            executeGravity(inCol: col)
+        }
+    }
+    
+    mutating func executeGravity(inCol col: Int) {
+        var gravityTargets: [Coordinate] = []
+        
+        for row in (0..<gridSize) {
+            if map[row][col] != -1 {
+                gravityTargets.append(Coordinate(row: row, col: col, distance: 0))
+            } else {
+                pull(blocks: gravityTargets, inFrontOf: Coordinate(row: row, col: col, distance: 0))
+                gravityTargets = []
             }
         }
         
-        if maxCost != .min {
-            cost[direction.rawValue][row][col] = map[row][col] + maxCost
-        } else {
-            cost[direction.rawValue][row][col] = minCost
-        }
-        
-        return cost[direction.rawValue][row][col]
+        /// 검은색 블록을 만나지 못해 아직 중력을 작용하지 않은 블록들을 끌어옵니다.
+        pull(blocks: gravityTargets, inFrontOf: Coordinate(row: gridSize, col: col, distance: 0))
     }
     
-    enum Direction: Int, CaseIterable {
-        case left
-        case right
-        case down
+    mutating func pull(blocks: [Coordinate], inFrontOf coordinate: Coordinate) {
+        guard blocks.count > 0 else { return }
+        
+        var row = coordinate.row - 1
+        var colorBlocks: [Coordinate] = []
+        var colors: [Int] = []
+        
+        for block in blocks {
+            if map[block.row][block.col] >= 0 {
+                colorBlocks.append(block)
+                colors.append(map[block.row][block.col])
+            }
+        }
+        
+        let emptyBlockCount = blocks.count - colorBlocks.count
+        
+        /// 최하단에 있는 블록이 배열의 마지막에 위치하니 역순으로 위치를 옮깁니다.
+        for index in colorBlocks.indices.reversed() {
+            map[row][coordinate.col] = colors[index]
+            row -= 1
+        }
+        
+        /// 남은 칸을 모두 빈 칸으로 변경합니다.
+        for _ in 0..<emptyBlockCount {
+            map[row][coordinate.col] = -2
+            row -= 1
+        }
+    }
+    
+    /// 조건2번. 블록의 제거 및 B^2만큼의 점수
+    mutating func getScoreByRemoving(_ blockGroups: [Coordinate]) {
+        for coordinate in blockGroups {
+            map[coordinate.row][coordinate.col] = -2
+        }
+        
+        score += blockGroups.count * blockGroups.count
+    }
+    
+    mutating func findLargestBlockGroup() -> [Coordinate] {
+        let colVisit: [Bool] = Array(repeating: false, count: gridSize)
+        var visit: [[Bool]] = Array(repeating: colVisit, count: gridSize)
+        var searchResult = SearchResult()
+        
+        /// 조건1  에 의해 큰 행, 큰 열부터 확인.
+        for row in (0..<gridSize).reversed() {
+            for col in (0..<gridSize).reversed() {
+                if map[row][col] > 0 && !visit[row][col] {
+                    let coordinate = Coordinate(row: row, col: col, distance: 0)
+                    let newSearchResult = searchBlock(coordinate: coordinate, color: map[row][col], visit: &visit)
+                    selectValidSearchResult(current: &searchResult, new: newSearchResult)
+                    
+                    for rainbowBlock in newSearchResult.rainbowBlocks {
+                        visit[rainbowBlock.row][rainbowBlock.col] = false
+                    }
+                }
+            }
+        }
+        
+        return searchResult.coordinates
+    }
+    
+    mutating func selectValidSearchResult(current: inout SearchResult, new: SearchResult) {
+        if new.coordinates.count > current.coordinates.count {
+            current = new
+        } else if new.coordinates.count == current.coordinates.count
+                    && new.rainbowBlocks.count > current.rainbowBlocks.count {
+            current = new
+        }
+    }
+    
+    mutating func searchBlock(coordinate: Coordinate, color: Int, visit: inout [[Bool]]) -> SearchResult {
+        var visitQueue = Queue<Coordinate>()
+        var searchResult = SearchResult()
+        
+        visitQueue.enqueue(coordinate)
+        searchResult.coordinates.append(coordinate)
+        visit[coordinate.row][coordinate.col] = true
+        
+        while !visitQueue.isEmpty {
+            let currentCoordinate = visitQueue.dequeue()!
+            
+            for nextCoordinate in currentCoordinate.findValidNextPositions(rowSize: gridSize, colSize: gridSize) {
+                if canEnqueue(visit: visit, coordinate: nextCoordinate, color: color) {
+                    visit[nextCoordinate.row][nextCoordinate.col] = true
+                    visitQueue.enqueue(nextCoordinate)
+                    
+                    searchResult.coordinates.append(nextCoordinate)
+                    if map[nextCoordinate.row][nextCoordinate.col] == 0 {
+                        searchResult.rainbowBlocks.append(nextCoordinate)
+                    }
+                }
+            }
+        }
+        
+        return searchResult
+    }
+    
+    mutating func canEnqueue(visit: [[Bool]], coordinate: Coordinate, color: Int) -> Bool {
+        !visit[coordinate.row][coordinate.col]
+        && (map[coordinate.row][coordinate.col] == color || map[coordinate.row][coordinate.col] == 0)
+    }
+    
+    struct SearchResult {
+        var rainbowBlocks: [Coordinate] = []
+        var coordinates: [Coordinate] = []
     }
     
     struct Coordinate {
@@ -101,16 +198,6 @@ struct Solver2169 {
             self.col = col
             self.distance = distance
             self.arrayIndexBase = arrayIndexBase
-        }
-        
-        func findDirection(oldCoordinate: Coordinate) -> Direction {
-            if oldCoordinate.row < self.row {
-                return .down
-            } else if oldCoordinate.col < self.col {
-                return .right
-            } else {
-                return .left
-            }
         }
         
         /// 현재 위치에서 이동할 수 있는 모든 유효한 다음 위치를 반환합니다.
@@ -140,17 +227,18 @@ struct Solver2169 {
             return candidates.filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
         }
         
-        /// 현재 위치에서 이동할 수 있는 하, 좌, 우의 다음 위치를 반환합니다. 위로 가는 방향은 없습니다.
+        /// 현재 위치에서 이동할 수 있는 상, 하, 좌, 우의 다음 위치를 반환합니다.
         /// 반환되는 위치들은 0...rowSize-1, 0...colSize-1의 유효 범위 내에 있어야 합니다.
         ///
         /// - Parameters:
         ///   - rowSize: 그리드의 행 크기입니다.
         ///   - colSize: 그리드의 열 크기입니다.
-        /// - Returns: 하, 좌, 우로 이동한 유효한 좌표들을 반환합니다.
+        /// - Returns: 상, 하, 좌, 우로 이동한 유효한 좌표들을 반환합니다.
         func findValidNextPositions(rowSize: Int, colSize: Int) -> [Coordinate] {
             let candidates = [
                 Coordinate(row: row, col: col - 1, distance: distance + 1),
                 Coordinate(row: row, col: col + 1, distance: distance + 1),
+                Coordinate(row: row - 1, col: col, distance: distance + 1),
                 Coordinate(row: row + 1, col: col, distance: distance + 1)
             ]
             
@@ -199,14 +287,30 @@ struct Solver2169 {
             var additionalIndexToSize: Int { self.minIndex }
         }
     }
+    
+    struct Queue<Element> {
+        private var inStack = [Element]()
+        private var outStack = [Element]()
+        
+        var isEmpty: Bool {
+            inStack.isEmpty && outStack.isEmpty
+        }
+        
+        mutating func enqueue(_ newElement: Element) {
+            inStack.append(newElement)
+        }
+        
+        mutating func dequeue() -> Element? {
+            if outStack.isEmpty {
+                outStack = inStack.reversed()
+                inStack.removeAll()
+            }
+            
+            return outStack.popLast()
+        }
+    }
 
-}
 
-private func readArray<T: LosslessStringConvertible>() -> [T] {
-    let line = readLine()!
-    let splitedLine = line.split(separator: " ")
-    let array = splitedLine.map { T(String($0))! }
-    return array
 }
 
 private func readGrid<T: LosslessStringConvertible>(_ k: Int) -> [[T]] {
@@ -219,3 +323,12 @@ private func readGrid<T: LosslessStringConvertible>(_ k: Int) -> [[T]] {
     
     return result
 }
+
+private func readArray<T: LosslessStringConvertible>() -> [T] {
+    let line = readLine()!
+    let splitedLine = line.split(separator: " ")
+    let array = splitedLine.map { T(String($0))! }
+    return array
+}
+
+
