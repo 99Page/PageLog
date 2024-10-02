@@ -28,7 +28,6 @@ struct Solver21609 {
         while true {
             let blockGroups = findLargestBlockGroup()
             
-            /// 블록 그룹 = 블록의 개수가 2이상
             if blockGroups.count > 1 {
                 getScoreByRemoving(blockGroups)
             } else {
@@ -58,6 +57,7 @@ struct Solver21609 {
         
         map = rotatedMap
     }
+    
     mutating func executeGravity() {
         for col in (0..<gridSize) {
             executeGravity(inCol: col)
@@ -123,9 +123,8 @@ struct Solver21609 {
         var visit: [[Bool]] = Array(repeating: colVisit, count: gridSize)
         var searchResult = SearchResult()
         
-        /// 조건1  에 의해 큰 행, 큰 열부터 확인.
-        for row in (0..<gridSize).reversed() {
-            for col in (0..<gridSize).reversed() {
+        for row in (0..<gridSize) {
+            for col in (0..<gridSize) {
                 if map[row][col] > 0 && !visit[row][col] {
                     let coordinate = Coordinate(row: row, col: col, distance: 0)
                     let newSearchResult = searchBlock(coordinate: coordinate, color: map[row][col], visit: &visit)
@@ -142,11 +141,16 @@ struct Solver21609 {
     }
     
     mutating func selectValidSearchResult(current: inout SearchResult, new: SearchResult) {
+        guard new.coordinates.count >= 2 else { return }
+        
         if new.coordinates.count > current.coordinates.count {
             current = new
-        } else if new.coordinates.count == current.coordinates.count
-                    && new.rainbowBlocks.count > current.rainbowBlocks.count {
-            current = new
+        } else if new.coordinates.count == current.coordinates.count {
+            if new.rainbowBlocks.count > current.rainbowBlocks.count {
+                current = new
+            } else if new.rainbowBlocks.count == current.rainbowBlocks.count {
+                current = new
+            }
         }
     }
     
@@ -185,6 +189,8 @@ struct Solver21609 {
     struct SearchResult {
         var rainbowBlocks: [Coordinate] = []
         var coordinates: [Coordinate] = []
+        
+        var normalBlockCount: Int { coordinates.count - rainbowBlocks.count }
     }
     
     struct Coordinate {
