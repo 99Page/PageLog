@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Array where Element: Comparable {
+private extension Array where Element: Comparable {
     /// 이진 탐색을 사용하여 배열에서 주어진 값보다 크거나 같은 첫 번째 위치를 반환합니다.
     ///
     /// 배열은 미리 정렬되어 있어야 합니다.
