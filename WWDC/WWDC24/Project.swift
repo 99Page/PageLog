@@ -22,7 +22,7 @@ let target = Target.target(
     destinations: .iOS,
     product: .app,
     bundleId: "com.page.WWDC24",
-    deploymentTargets: .iOS("17.4"),
+    deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
     resources: ["../../SwiftUI/PageComponent/Resources/**"]
@@ -33,7 +33,7 @@ let testTarget = Target.target(
     destinations: .iOS,
     product: .unitTests,
     bundleId: "com.page.WWDC24.tests",
-    deploymentTargets: .iOS("17.4"),
+    deploymentTargets: .iOS("18.0"),
     sources: ["Tests/**"],
     dependencies: [
         .target(name: "WWDC24")
