@@ -11,7 +11,36 @@ import SwiftUI
 struct AppStackView: View {
     var body: some View {
         NavigationStack {
-            
+            List {
+                Section("Container") {
+                    NavigationLink("ForEach subviews API") {
+                        ContainerView {
+                            Text("ForEach")
+                                .containerForegroundColor(.blue)
+                            
+                            Text("API!")
+                                .containerForegroundColor(.cyan)
+                        }
+                    }
+                    
+                    NavigationLink("Section API") {
+                        SectionContainerView {
+                            Section {
+                                Text("New section api")
+                                Text("custom header")
+                            }
+                            
+                            Section {
+                                Text("Old section api")
+                            } header: {
+                                Text("Old header")
+                            }
+                            .containerForegroundColor(.green)
+
+                        }
+                    }
+                }
+            }
         }
     }
 }
