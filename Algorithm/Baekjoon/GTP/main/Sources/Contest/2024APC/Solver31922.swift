@@ -1,28 +1,31 @@
 //
-//  main.swift
-//  ApplePhotosEffectManifests
+//  Solver31922.swift
+//  gold-platinum-solver
 //
-//  Created by 노우영 on 8/29/24.
+//  Created by 노우영 on 10/8/24.
+//  Copyright © 2024 Page. All rights reserved.
 //
 
 import Foundation
 
-let prize: [Int] = readArray()
+struct Solver31922 {
+    mutating func solve() {
+        let prize: [Int] = readArray()
+        let case1 = prize[0] + prize[2]
 
-let case1 = prize[0] + prize[2]
+        print(max(case1, prize[1]))
+    }
+}
 
-print(max(case1, prize[1]))
 
-
-
-func readArray<T: LosslessStringConvertible>() -> [T] {
+private func readArray<T: LosslessStringConvertible>() -> [T] {
     let line = readLine()!
     let splitedLine = line.split(separator: " ")
     let array = splitedLine.map { T(String($0))! }
     return array
 }
 
-extension Array {
+private extension Array {
     /// 배열의 원소들로부터 원하는 개수의 조합을 생성합니다.
     /// - Parameter k: 선택할 원소의 개수
     /// - Returns: 생성된 조합들의 배열
@@ -41,5 +44,3 @@ extension Array {
         return withFirst + withoutFirst
     }
 }
-
-

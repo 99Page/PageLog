@@ -1,8 +1,8 @@
 //
-//  main.swift
-//  2024.APC
+//  Solver31926.swift
+//  gold-platinum-solver
 //
-//  Created by 노우영 on 8/29/24.
+//  Created by 노우영 on 10/8/24.
 //  Copyright © 2024 Page. All rights reserved.
 //
 
@@ -27,9 +27,6 @@ import Foundation
 // daldi = 5
 // dal = 1
 // go = 2
-let intialDaldidalgoSec = 10
-let daldidalgoCount = Int(readLine()!)!
-solve()
 
 /// daldidalgo daldidan
 /// 8                       9 10
@@ -52,22 +49,32 @@ solve()
 
 /// 1 -> 2 -> 4 -> 8로 갈때마다 1씩 증가
 
-
-func solve() {
-    var result: Int = 0
+struct Solver31926 {
+    let intialDaldidalgoSec = 10
+    let daldidalgoCount: Int 
     
-    result += calculateDaldidalgoTypingSec(1, value: intialDaldidalgoSec)
-    
-    print(result)
-}
-
-func calculateDaldidalgoTypingSec(_ count: Int, value: Int) -> Int {
-    let next = count * 2
-    
-    if next <= daldidalgoCount {
-        return calculateDaldidalgoTypingSec(next, value: value + 1)
-    } else {
-        return value
+    init() {
+        self.daldidalgoCount = Int(readLine()!)!
     }
-}
 
+
+    func solve() {
+        var result: Int = 0
+        
+        result += calculateDaldidalgoTypingSec(1, value: intialDaldidalgoSec)
+        
+        print(result)
+    }
+
+    func calculateDaldidalgoTypingSec(_ count: Int, value: Int) -> Int {
+        let next = count * 2
+        
+        if next <= daldidalgoCount {
+            return calculateDaldidalgoTypingSec(next, value: value + 1)
+        } else {
+            return value
+        }
+    }
+
+
+}
