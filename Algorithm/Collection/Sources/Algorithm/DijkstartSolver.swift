@@ -67,6 +67,7 @@ struct DijkstraSolver {
             lhs.cost < rhs.cost
         }
         
+        let source: Int
         let destination: Int
         let cost: Int
     }
