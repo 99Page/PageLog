@@ -19,6 +19,11 @@
 ### 벨만 포드
 
 * 11657
+
+### MST 
+
+* 1922: Prim 
+* 1197: Kruskal
 ---
 
 ## Brute force 
