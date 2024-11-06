@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+//var myDrinks = MyDrinks()
+//myDrinks[.coffee] = 3
+//print(myDrinks[.coffee])
