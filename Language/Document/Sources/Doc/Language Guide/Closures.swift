@@ -13,7 +13,7 @@ import Foundation
 /**
  # Closure
  
- 정의: 함께 실행될 이름 없는 함수
+ 정의: 이름 없는 함수
  다른 문법에서는 anonymous function, lambda 등으로 불린다.
  
  함수를 다른 곳에서 실행시키기 위해 값을 capture한다.
@@ -67,9 +67,8 @@ struct ClosureSortedTester {
     }
 }
 
-/**
- # Capturing Values & Closures Are Reference  Types
- */
+ // MARK: Capturing Values & Closures Are Reference  Types
+ 
 
 struct CaputureTester {
     
@@ -100,5 +99,28 @@ struct CaputureTester {
         }
         
         return incrementer
+    }
+}
+
+// MARK: Escaping closures
+
+/// Esacping Closure 기능을 실행하는 타입
+///
+/// # Escaping closure의 정의
+/// Argument로 전달된 클로져가 해당 함수가 끝난 뒤에 호출되는 것.
+struct EscapingClosureTester {
+    var completion: (() -> Void)?
+    
+    mutating func addCompletion(_ closure: @escaping () -> Void) {
+        /// escaping을 하는 예시.
+        /// 변수로 저장하거나, 다른 함수로 넘겨주는 경우.
+        /// 이 때 반드시 `@escaping` 을 선언해야한다.
+        self.completion = closure
+        
+        passClosure { closure() }
+    }
+    
+    mutating func passClosure(_ closure: () -> Void) {
+        closure()
     }
 }
