@@ -15,26 +15,51 @@ struct AppView: View {
     var body: some View {
         NavigationStack(path: $viewModel.state.path) {
             List {
-                Section {
-                    VStack {
-                        Button {
-                            viewModel.symbolAnimationTapped()
-                        } label: {
-                            Text("Symbol Animation")
-                        }
-
-                    }
-                } header: {
-                    Text("Symbol")
-                }
+                symbolSectionView()
+                chartSectionView()
             }
             .navigationDestination(for: AppPath.self) { path in
                 switch path {
-                case .symbol:
-                    SymbolAnimationView()
+                case let .symbol(symbolPath):
+                    switch symbolPath {
+                    case .animation:
+                        SymbolAnimationView()
+                    }
+                case let .swiftChart(path):
+                    switch path {
+                    case .basic:
+                        SwiftChartBasicView()
+                    case .linePlot:
+                        LinePlotView()
+                    }
                 }
             }
             .navigationTitle("Research")
+        }
+    }
+    
+    private func chartSectionView() -> some View {
+        Section {
+            Button("ChartBasic") {
+                viewModel.chartSectionTapped(.basic)
+            }
+            
+            Button("LinePlot") {
+                viewModel.chartSectionTapped(.linePlot)
+            }
+
+        } header: {
+            Text("SwiftCharts")
+        }
+    }
+    
+    private func symbolSectionView() -> some View {
+        Section {
+            Button("Symbol Animation") {
+                viewModel.symbolSectionTapped(.animation)
+            }
+        } header: {
+            Text("Symbol")
         }
     }
 }
