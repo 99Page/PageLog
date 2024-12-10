@@ -8,8 +8,9 @@
 
 import Foundation
 
-enum AppPath {
-    case symbol
+enum AppPath: Hashable {
+    case symbol(SymbolPath)
+    case swiftChart(SwiftChartPath)
 }
 
 @Observable
@@ -20,7 +21,11 @@ final class AppState {
 struct AppViewModel {
     var state = AppState()
     
-    func symbolAnimationTapped() {
-        state.path.append(.symbol)
+    func symbolSectionTapped(_ symbolPath: SymbolPath) {
+        state.path.append(.symbol(symbolPath))
+    }
+    
+    func chartSectionTapped(_ chartPath: SwiftChartPath) {
+        state.path.append(.swiftChart(chartPath))
     }
 }
