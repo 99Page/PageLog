@@ -10,4 +10,5 @@ import Foundation
 
 enum AnimationPath: Hashable {
     case zoomTransition
+    case uiView
 }

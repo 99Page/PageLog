@@ -37,6 +37,8 @@ struct AppView: View {
                     switch path {
                     case .zoomTransition:
                         ZoomTransitionView()
+                    case .uiView:
+                        UIViewAnimationView() 
                     }
                 }
             }
@@ -48,6 +50,10 @@ struct AppView: View {
         Section {
             Button("Zoom transition") {
                 viewModel.animationSectionTapped(.zoomTransition)
+            }
+            
+            Button("UIView Animation") {
+                viewModel.animationSectionTapped(.uiView)
             }
         } header: {
             Text("Animations")
