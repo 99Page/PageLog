@@ -17,6 +17,7 @@ struct AppView: View {
             List {
                 symbolSectionView()
                 chartSectionView()
+                animationSectionView()
             }
             .navigationDestination(for: AppPath.self) { path in
                 switch path {
@@ -32,9 +33,30 @@ struct AppView: View {
                     case .linePlot:
                         LinePlotView()
                     }
+                case let .animation(path):
+                    switch path {
+                    case .zoomTransition:
+                        ZoomTransitionView()
+                    case .uiView:
+                        UIViewAnimationView() 
+                    }
                 }
             }
             .navigationTitle("Research")
+        }
+    }
+    
+    private func animationSectionView() -> some View {
+        Section {
+            Button("Zoom transition") {
+                viewModel.animationSectionTapped(.zoomTransition)
+            }
+            
+            Button("UIView Animation") {
+                viewModel.animationSectionTapped(.uiView)
+            }
+        } header: {
+            Text("Animations")
         }
     }
     
