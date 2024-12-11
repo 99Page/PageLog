@@ -12,3 +12,5 @@
 [Creating a chart using Swift charts](https://developer.apple.com/documentation/charts/creating-a-chart-using-swift-charts)
 
 [SF symbols 6의 새로운 기능](https://developer.apple.com/kr/videos/play/wwdc2024/10188/)
+
+[Meet the Translation API](https://developer.apple.com/kr/videos/play/wwdc2024/10117/)
