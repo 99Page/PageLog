@@ -18,6 +18,7 @@ struct AppView: View {
                 symbolSectionView()
                 chartSectionView()
                 animationSectionView()
+                frameworkSectionView()
             }
             .navigationDestination(for: AppPath.self) { path in
                 switch path {
@@ -39,6 +40,11 @@ struct AppView: View {
                         ZoomTransitionView()
                     case .uiView:
                         UIViewAnimationView() 
+                    }
+                case let .framework(path):
+                    switch path {
+                    case .translation:
+                        TranslationView()
                     }
                 }
             }
@@ -82,6 +88,16 @@ struct AppView: View {
             }
         } header: {
             Text("Symbol")
+        }
+    }
+    
+    private func frameworkSectionView() -> some View {
+        Section {
+            Button("Translation") {
+                viewModel.frameworkSectionTapped(.translation)
+            }
+        } header: {
+            Text("Frameworks")
         }
     }
 }

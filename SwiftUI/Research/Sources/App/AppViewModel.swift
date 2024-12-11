@@ -27,4 +27,8 @@ struct AppViewModel {
     func animationSectionTapped(_ animationPath: AnimationPath) {
         state.path.append(.animation(animationPath))
     }
+    
+    func frameworkSectionTapped(_ frameworkPath: FrameworkPath) {
+        state.path.append(.framework(frameworkPath))
+    }
 }
