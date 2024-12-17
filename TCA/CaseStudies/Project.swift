@@ -7,21 +7,20 @@
 
 import ProjectDescription
 
-let value: Plist.Value = .dictionary(["NSAllowsArbitraryLoads": true])
-
 let infoPlist: [String: Plist.Value] = [
     "CFBundleShortVersionString": "1.0",
     "CFBundleVersion": "1",
     "UIMainStoryboardFile": "",
-    "UILaunchStoryboardName": "LaunchScreen",
-    "NSAppTransportSecurity": value
+    "UILaunchStoryboardName": "LaunchScreen"
 ]
 
+let projectName = "CaseStudies"
+
 let target = Target.target(
-    name: "TCA-243",
+    name: "CaseStudies",
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.tca.episode.243",
+    bundleId: "com.page.case.studies",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
@@ -32,23 +31,23 @@ let target = Target.target(
 )
 
 let testTarget = Target.target(
-    name: "TCA-243Tests",
+    name: "CaseStudiesTests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.tca.episode.243.tests",
+    bundleId: "com.page.case.stuides.test",
     deploymentTargets: .iOS("17.4"),
     sources: ["Tests/**"],
     dependencies: [
-        .target(name: "TCA-243")
+        .target(name: "CaseStudies")
     ]
 )
 
 let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
-let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.13.0")
+let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.17.0")
 
 
 let project = Project(
-    name: "TCA-243",
+    name: "CaseStudies",
     organizationName: "Page",
     packages: [
         .remote(url: tcaURL, requirement: tcaVersion),
