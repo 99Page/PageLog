@@ -9,6 +9,9 @@
 import ComposableArchitecture
 import SwiftUI
 
+/// Composable Architecture로 Alert 띄우는 예제 연습
+///
+/// [깃허브](https://github.com/pointfreeco/swift-composable-architecture)에 있는 예제 중, SyncUps를 참고.
 @Reducer
 struct AlertCaseFeature: Equatable {
     
