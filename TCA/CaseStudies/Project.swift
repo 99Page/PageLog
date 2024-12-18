@@ -23,7 +23,7 @@ let target = Target.target(
     bundleId: "com.page.case.studies",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
-    sources: ["Sources/**"],
+    sources: ["Sources/**", "Docs/**"],
     resources: ["../../SwiftUI/PageComponent/Resources/**"],
     dependencies: [
         .package(product: "ComposableArchitecture")
