@@ -19,6 +19,7 @@ struct AppView: View {
                 chartSectionView()
                 animationSectionView()
                 frameworkSectionView()
+                toolbarSectionView()
             }
             .navigationDestination(for: AppPath.self) { path in
                 switch path {
@@ -45,6 +46,11 @@ struct AppView: View {
                     switch path {
                     case .translation:
                         TranslationView()
+                    }
+                case let .toolbar(path):
+                    switch path {
+                    case .toolbar:
+                        ToolbarRemovingView()
                     }
                 }
             }
@@ -98,6 +104,16 @@ struct AppView: View {
             }
         } header: {
             Text("Frameworks")
+        }
+    }
+    
+    private func toolbarSectionView() -> some View {
+        Section {
+            Button("Removing") {
+                viewModel.toolbarSectionTapped(.toolbar)
+            }
+        } header: {
+            Text("Toolbar")
         }
     }
 }

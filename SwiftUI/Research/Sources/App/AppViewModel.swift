@@ -31,4 +31,8 @@ struct AppViewModel {
     func frameworkSectionTapped(_ frameworkPath: FrameworkPath) {
         state.path.append(.framework(frameworkPath))
     }
+    
+    func toolbarSectionTapped(_ viewPath: ToolbarPath) {
+        state.path.append(.toolbar(viewPath))
+    }
 }
