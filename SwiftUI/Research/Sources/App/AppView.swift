@@ -20,6 +20,7 @@ struct AppView: View {
                 animationSectionView()
                 frameworkSectionView()
                 toolbarSectionView()
+                tabSectionView()
             }
             .navigationDestination(for: AppPath.self) { path in
                 switch path {
@@ -51,6 +52,11 @@ struct AppView: View {
                     switch path {
                     case .toolbar:
                         ToolbarRemovingView()
+                    }
+                case let .tab(path):
+                    switch path {
+                    case .customTab:
+                        TabCustomView()
                     }
                 }
             }
@@ -114,6 +120,16 @@ struct AppView: View {
             }
         } header: {
             Text("Toolbar")
+        }
+    }
+    
+    private func tabSectionView() -> some View {
+        Section {
+            Button("Tab custom") {
+                viewModel.tabSectionTapped(.customTab)
+            }
+        } header: {
+            Text("Tab")
         }
     }
 }

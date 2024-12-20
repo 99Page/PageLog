@@ -35,4 +35,8 @@ struct AppViewModel {
     func toolbarSectionTapped(_ viewPath: ToolbarPath) {
         state.path.append(.toolbar(viewPath))
     }
+    
+    func tabSectionTapped(_ tabPath: TabPath) {
+        state.path.append(.tab(tabPath))
+    }
 }
