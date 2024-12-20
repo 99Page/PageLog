@@ -13,4 +13,6 @@ enum AppPath: Hashable {
     case swiftChart(SwiftChartPath)
     case animation(AnimationPath)
     case framework(FrameworkPath)
+    case toolbar(ToolbarPath)
+    case tab(TabPath)
 }
