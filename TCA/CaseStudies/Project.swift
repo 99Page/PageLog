@@ -14,10 +14,10 @@ let infoPlist: [String: Plist.Value] = [
     "UILaunchStoryboardName": "LaunchScreen"
 ]
 
-let projectName = "CaseStudies"
+let projectName = "CaseStudies-TCA"
 
 let target = Target.target(
-    name: "CaseStudies",
+    name: projectName,
     destinations: .iOS,
     product: .app,
     bundleId: "com.page.case.studies",
@@ -31,14 +31,14 @@ let target = Target.target(
 )
 
 let testTarget = Target.target(
-    name: "CaseStudiesTests",
+    name: "\(projectName)Tests",
     destinations: .iOS,
     product: .unitTests,
     bundleId: "com.page.case.stuides.test",
     deploymentTargets: .iOS("17.4"),
     sources: ["Tests/**"],
     dependencies: [
-        .target(name: "CaseStudies")
+        .target(name: projectName)
     ]
 )
 
@@ -47,7 +47,7 @@ let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.17.0")
 
 
 let project = Project(
-    name: "CaseStudies",
+    name: projectName,
     organizationName: "Page",
     packages: [
         .remote(url: tcaURL, requirement: tcaVersion),

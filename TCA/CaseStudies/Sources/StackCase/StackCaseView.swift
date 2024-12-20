@@ -15,6 +15,7 @@ struct StackCaseFeature {
     @Reducer
     enum Path: Equatable {
         case alert(AlertCaseFeature)
+        case debugViewInit(ViewInitCaseFeature)
     }
     
     @ObservableState
@@ -48,12 +49,18 @@ struct StackCaseView: View {
                     NavigationLink(state: StackCaseFeature.Path.State.alert(AlertCaseFeature.State())) {
                         Text("Alert")
                     }
+                    
+                    NavigationLink(state: StackCaseFeature.Path.State.debugViewInit(ViewInitCaseFeature.State())) {
+                        Text("Debug-ViewInit")
+                    }
                 }
             }
         } destination: { store in
             switch store.case {
             case let .alert(store):
                 AlertCaseView(store: store)
+            case let .debugViewInit(store):
+                ViewInitCaseView(store: store)
             }
         }
 
