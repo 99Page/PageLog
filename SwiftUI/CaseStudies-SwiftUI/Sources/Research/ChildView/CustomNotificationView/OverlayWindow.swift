@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-
-import SwiftUI
 import UIKit
 
 class OverlayWindow {
@@ -70,6 +68,14 @@ class OverlayWindow {
     }
 }
 
+/// SwiftUI 뷰가 추가된 영역을 제외한 곳의 event를 무시하기 위한 UIWindow
+///
+/// ## UIWindow란?
+/// RootViewController에 의해 제어되는 여러 뷰를 갖는 앱의 기본 구성 요소. 다음의 상황에서 사용할 수 있다. 디바이스에 z축으로 뷰를 구성할 때 유용하다.
+///
+///
+/// ## Reference
+/// [UIWindow](https://developer.apple.com/documentation/uikit/uiwindow)
 class PassthroughWindow: UIWindow {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // rootView: ``TransparentHostingController`` 에서 초기화한 `rootView`와 동일한 뷰.
@@ -77,11 +83,11 @@ class PassthroughWindow: UIWindow {
               let rootView = view.subviews.first else {
             return nil
         }
-
+        
         
         // 상호작용이 가능한 영역
         let hitPoint = convert(point, to: rootView)
-
+        
         if view.bounds.contains(hitPoint) {
             return view.hitTest(hitPoint, with: event)
         } else {
@@ -92,14 +98,32 @@ class PassthroughWindow: UIWindow {
     }
 }
 
+/// SwiftUI 뷰를 추가시키며 뒤의 영역을 투명하게 만드는 ViewController
+///
+/// ## UIHostringController란?
+///
+/// SwiftUI 뷰를 UIKit 뷰 계층에 포함시키고 싶을 때 사용하는 타입.
+/// 주어진 뷰를 RootViewController의 RootView로 사용한다.
+///
+/// ## UIViewController란?
+/// UIViewController는  다음의 기능을 한다.
+///
+/// 1. 사용자 상호작용에 응답.
+/// 2. 인터페이스 관리
+/// 3. 다른 뷰 컨트롤러와 상호작용
+/// 4. 데이터 변경에 따른 뷰 업데이트
+///
+/// ## Reference
+/// [UIViewController](https://developer.apple.com/documentation/uikit/uiviewcontroller)
+/// [UIHostingContoller](https://www.google.com/search?client=safari&rls=en&q=UIHostringController&ie=UTF-8&oe=UTF-8&safe=active)
 class TransparentHostingController<Content: View>: UIHostingController<Content> {
     
     /// rootView: Generic 타입의 View
     /// view: UIHostingController가 갖는 뷰. view 내부에 rootView가 포함된다. 따라서 이후에 SwiftUI 뷰를 찾고 싶다면 view에 있는 subview를 뒤져야한다.
     override init(rootView: Content) {
-          super.init(rootView: rootView)
-          view.backgroundColor = .clear
-      }
+        super.init(rootView: rootView)
+        view.backgroundColor = .clear
+    }
     
     @MainActor @preconcurrency required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
