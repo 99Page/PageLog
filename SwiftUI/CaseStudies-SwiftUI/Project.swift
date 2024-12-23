@@ -10,7 +10,7 @@ import Foundation
 
 import ProjectDescription
 
-let projectName = "PageResearch"
+let projectName = "CaseStudies-SwiftUI"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
