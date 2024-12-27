@@ -165,3 +165,4 @@
 * 7568: 2중 for문 기본 문제
 * 1764: Set 사용
 * 1157: Dictionary 활용
+* 10816: Dictionary 활용 
