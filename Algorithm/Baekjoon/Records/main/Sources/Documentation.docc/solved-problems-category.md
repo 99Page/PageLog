@@ -166,3 +166,4 @@
 * 1764: Set 사용
 * 1157: Dictionary 활용
 * 10816: Dictionary 활용 
+* 10799
