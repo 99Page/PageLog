@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-
 import ProjectDescription
 
 let projectName = "CaseStudies-SwiftUI"
