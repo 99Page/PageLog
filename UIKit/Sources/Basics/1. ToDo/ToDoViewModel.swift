@@ -11,7 +11,11 @@ import Combine
 
 class ToDoViewModel: InputFieldDelegate {
     @Published var inputFieldViewModel: InputFieldViewModel
-    @Published var textList: [String] = ["Hello"]
+    
+    @Published var textList: [ToDoCellState] = [
+        ToDoCellState(toDo: ToDo(description: "Hello", number: 1))
+    ]
+    var count = 2
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -20,7 +24,7 @@ class ToDoViewModel: InputFieldDelegate {
         
         inputFieldViewModel.addTextSubject
             .sink { [weak self] text in
-                self?.textList.append(text)
+                self?.didAddTextTapped(text)
             }
             .store(in: &cancellables)
     }
@@ -28,7 +32,11 @@ class ToDoViewModel: InputFieldDelegate {
     func didAddTextTapped(_ text: String) {
         guard !text.isEmpty else { return }
         
-        textList.append(text)
+        let toDo = ToDo(description: text, number: count)
+        
+        textList.append(ToDoCellState(toDo: toDo))
+        
+        count += 1
         
     }
 }

@@ -105,18 +105,12 @@ class ToDoViewController: UIViewController {
         contentView.addSubview(textStackView)
         
         setUpScrollView()
-        setUpContentView()
         setUpTextStackView()
-    }
-    
-    private func setUpContentView() {
-        contentView.backgroundColor = .red
     }
     
     private func setUpTextStackView() {
         textStackView.axis = .vertical
-        textStackView.spacing = 8
-        textStackView.alignment = .fill
+        textStackView.spacing = 12
         textStackView.distribution = .equalSpacing
     }
     
@@ -162,15 +156,21 @@ class ToDoViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    private func updateStackView(with texts: [String]) {
+    private func updateStackView(with texts: [ToDoCellState]) {
         textStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
-        texts.forEach { text in
-            let label = UILabel()
-            label.text = text
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.numberOfLines = 0
-            textStackView.addArrangedSubview(label)
+        texts.forEach { state in
+//            let label = UILabel()
+//            label.text = text.description
+//            label.font = UIFont.systemFont(ofSize: 16)
+//            label.numberOfLines = 0
+//            textStackView.addArrangedSubview(label)
+            let toDoCellView = ToDoCellView(state: state)
+            textStackView.addArrangedSubview(toDoCellView)
+            
+            toDoCellView.snp.makeConstraints { make in
+                make.leading.equalTo(textStackView.snp.leading)
+            }
         }
     }
 }

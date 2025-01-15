@@ -66,7 +66,6 @@ class InputFieldView: UIView {
         
         addButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
-            
             make.bottom.equalToSuperview()
             make.height.equalTo(50)
         }
