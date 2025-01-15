@@ -28,18 +28,46 @@ let target = Target.target(
     sources: ["Sources/**"],
     resources: ["../SwiftUI/PageComponent/Resources/**"],
     dependencies: [
-        .package(product: "SnapKit")
+        .package(product: "SnapKit"),
+        .package(product: "MessageKit"),
+        .package(product: "Starscream"),
+        .package(product: "ComposableArchitecture")
+    ]
+)
+
+let testTarget = Target.target(
+    name: "\(projectName)Tests",
+    destinations: .iOS,
+    product: .unitTests,
+    bundleId: "com.page.case.stuides.test",
+    deploymentTargets: .iOS("18.0"),
+    sources: ["Tests/**"],
+    dependencies: [
+        .target(name: projectName)
     ]
 )
 
 let snapKitURL = "https://github.com/SnapKit/SnapKit.git"
 let snapKitVersion: Package.Requirement = .exact("5.7.1")
 
+let messageKitURL = "https://github.com/MessageKit/MessageKit.git"
+let messageVersion: Package.Requirement = .exact("5.0.0")
+
+let starscreamURL = "https://github.com/daltoniam/Starscream.git"
+let starscreamVersion: Package.Requirement = .exact("4.0.8")
+
+
+let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
+let tcaVersion: Package.Requirement = .exact("1.17.1")
+
 let project = Project(
     name: projectName,
     organizationName: "Page",
     packages: [
-        .remote(url: snapKitURL, requirement: snapKitVersion)
+        .remote(url: snapKitURL, requirement: snapKitVersion),
+        .remote(url: messageKitURL, requirement: messageVersion),
+        .remote(url: starscreamURL, requirement: starscreamVersion),
+        .remote(url: tcaURL, requirement: tcaVersion)
     ],
-    targets: [target]
+    targets: [target, testTarget]
 )

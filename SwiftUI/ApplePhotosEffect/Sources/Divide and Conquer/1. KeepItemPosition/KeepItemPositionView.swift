@@ -75,9 +75,6 @@ struct KeepItemPositionView: View {
             .scrollTargetLayout()
         }
         .scrollPosition(id: $position, anchor: .bottom)
-        .onChange(of: position, { oldValue, newValue in
-            debugPrint("position: \(newValue)")
-        })
         .overlay {
             Button {
                 isItemAdded.toggle()

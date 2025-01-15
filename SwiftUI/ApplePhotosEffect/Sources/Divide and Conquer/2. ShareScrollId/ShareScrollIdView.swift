@@ -91,9 +91,6 @@ struct ShareScrollIdView: View {
                 }
             }
         }
-        .onChange(of: id) { oldValue, newValue in
-            debugPrint("newValue: \(id)")
-        }
     }
 }
 
