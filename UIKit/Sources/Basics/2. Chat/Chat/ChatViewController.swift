@@ -29,7 +29,12 @@ struct ChatFeature {
     
     enum Action {
         case chatInput(ChatInputFeature.Action)
+        case viewDidAppear
+        case receivedMessage(Result<WebSocketClient.Message, any Error>)
     }
+    
+    @Dependency(\.continuousClock) var clock
+    @Dependency(\.webSocket) var webSocket
     
     var body: some ReducerOf<Self> {
         
@@ -45,10 +50,53 @@ struct ChatFeature {
                     guard !text.isEmpty else { return .none }
                     let newChat = ChatState(text: text, sendDate: .now, isMyMessage: true)
                     state.chats.append(newChat)
-                    return .none
+                    
+                    return .run { send in
+                        try await self.webSocket.send(WebSocketClient.ID(), .string(text))
+                    }
                 case .textDidChange:
                     return .none
                 }
+            case .viewDidAppear:
+                return .run { send in
+                    let actions = await self.webSocket.open(
+                        WebSocketClient.ID(),
+                        URL(string: "wss://echo.websocket.events")!,
+                        []
+                    )
+                    await withThrowingTaskGroup(of: Void.self) { group in
+                        for await action in actions {
+                            // NB: Can't call `await send` here outside of `group.addTask` due to task local
+                            //     dependency mutation in `Effect.{task,run}`. Can maybe remove that explicit task
+                            //     local mutation (and this `addTask`?) in a world with
+                            //     `Effect(operation: .run { ... })`?
+                            switch action {
+                            case .didOpen:
+                                group.addTask {
+                                    while !Task.isCancelled {
+                                        try await self.clock.sleep(for: .seconds(10))
+                                        try? await self.webSocket.sendPing(WebSocketClient.ID())
+                                    }
+                                }
+                                group.addTask {
+                                    for await result in try await self.webSocket.receive(WebSocketClient.ID()) {
+                                        await send(.receivedMessage(result))
+                                    }
+                                }
+                            case .didClose:
+                                return
+                            }
+                        }
+                    }
+                }
+            case .receivedMessage(.failure):
+              return .none
+            case let .receivedMessage(.success(message)):
+                if case let .string(string) = message {
+                    let newChat = ChatState(text: string, sendDate: .now, isMyMessage: false)
+                    state.chats.append(newChat)
+                }
+                return .none
             }
         }
     }
@@ -143,6 +191,11 @@ class ChatViewController: UIViewController {
             }
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        store.send(.viewDidAppear)
+    }
 }
 
 #Preview {
@@ -152,8 +205,8 @@ class ChatViewController: UIViewController {
         ChatState(text: "World", sendDate: .now, isMyMessage: false)
     ])
     
-        ChatViewController(store: Store(initialState: state) {
-            ChatFeature()
-                ._printChanges()
-        })
+    ChatViewController(store: Store(initialState: state) {
+        ChatFeature()
+            ._printChanges()
+    })
 }
