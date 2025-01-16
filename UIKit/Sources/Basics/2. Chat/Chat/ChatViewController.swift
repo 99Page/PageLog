@@ -24,15 +24,32 @@ struct ChatFeature {
     @ObservableState
     struct State: Equatable {
         var chats: [ChatState]
+        var chatInput = ChatInputFeature.State()
     }
     
     enum Action {
-        
+        case chatInput(ChatInputFeature.Action)
     }
     
     var body: some ReducerOf<Self> {
+        
+        Scope(state: \.chatInput, action: \.chatInput) {
+            ChatInputFeature()
+        }
+        
         Reduce { state, action in
-            return .none
+            switch action {
+            case let .chatInput(action):
+                switch action {
+                case let .sendButtonTapped(text):
+                    guard !text.isEmpty else { return .none }
+                    let newChat = ChatState(text: text, sendDate: .now, isMyMessage: true)
+                    state.chats.append(newChat)
+                    return .none
+                case .textDidChange:
+                    return .none
+                }
+            }
         }
     }
 }
@@ -41,11 +58,13 @@ class ChatViewController: UIViewController {
     
     private let scrollView = UIScrollView()
     private let chatStackView = UIStackView()
+    private let chatInputView: ChatInputView
     
     private let store: StoreOf<ChatFeature>
     
     init(store: StoreOf<ChatFeature>) {
         self.store = store
+        self.chatInputView = ChatInputView(store: store.scope(state: \.chatInput, action: \.chatInput))
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -63,8 +82,9 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(scrollView)
-        scrollView.addSubview(chatStackView)
+        view.addSubview(chatInputView)
         
+        scrollView.addSubview(chatStackView)
         setUpChatStackView()
     }
     
@@ -75,9 +95,16 @@ class ChatViewController: UIViewController {
     }
     
     private func setUpConstraints() {
+        chatInputView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.height.equalTo(50)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview()
+        }
+        
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(chatInputView.snp.top)
             make.left.trailing.equalToSuperview()
         }
         
@@ -91,13 +118,15 @@ class ChatViewController: UIViewController {
     }
     
     private func bind() {
-        
-        chatStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
         observe { [weak self] in
             guard let self else { return }
             
-            // Add new chat messages
+            /// 제거해주는건데 observe 내부에서 해줘야한다.
+            self.chatStackView.arrangedSubviews.forEach { subview in
+                self.chatStackView.removeArrangedSubview(subview)
+                subview.removeFromSuperview()
+            }
+            
             store.chats.forEach { chat in
                 let label = UILabel()
                 label.text = chat.text
@@ -123,9 +152,8 @@ class ChatViewController: UIViewController {
         ChatState(text: "World", sendDate: .now, isMyMessage: false)
     ])
     
-    UIViewControllerPreview {
         ChatViewController(store: Store(initialState: state) {
             ChatFeature()
+                ._printChanges()
         })
-    }
 }
