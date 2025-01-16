@@ -18,11 +18,13 @@ struct ChatInputFeature {
     struct State: Equatable, Identifiable {
         let id = UUID()
         var text = ""
+        var isEditing = false
     }
     
     enum Action {
         case sendButtonTapped(text: String)
         case textDidChange(text: String) // UIKit은 Binding이 없다. 따라서 BindableAction 같은거 없다!
+        case editingStateDidChange(isEditing: Bool)
     }
     
     var body: some ReducerOf<Self> {
@@ -33,6 +35,9 @@ struct ChatInputFeature {
                 return .none
             case let .textDidChange(text):
                 state.text = text
+                return .none
+            case .editingStateDidChange(isEditing: let isEditing):
+                state.isEditing = isEditing
                 return .none
             }
         }
@@ -95,7 +100,17 @@ class ChatInputView: UIView, UITextFieldDelegate {
             guard let self else { return }
             
             inputField.text = "\(self.store.text)"
+            
+            if self.store.isEditing {
+                inputField.becomeFirstResponder()
+            } else {
+                inputField.resignFirstResponder()
+            }
         }
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {

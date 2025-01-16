@@ -64,6 +64,7 @@ struct ChatFeature {
                         URL(string: "wss://echo.websocket.events")!,
                         []
                     )
+                    
                     await withThrowingTaskGroup(of: Void.self) { group in
                         for await action in actions {
                             // NB: Can't call `await send` here outside of `group.addTask` due to task local
@@ -90,7 +91,7 @@ struct ChatFeature {
                     }
                 }
             case .receivedMessage(.failure):
-              return .none
+                return .none
             case let .receivedMessage(.success(message)):
                 if case let .string(string) = message {
                     let newChat = ChatState(text: string, sendDate: .now, isMyMessage: false)
@@ -104,6 +105,7 @@ struct ChatFeature {
 
 class ChatViewController: UIViewController {
     
+    private let containerView = UIView()
     private let scrollView = UIScrollView()
     private let chatStackView = UIStackView()
     private let chatInputView: ChatInputView
@@ -129,11 +131,17 @@ class ChatViewController: UIViewController {
     private func setUpViewController() {
         view.backgroundColor = .white
         
-        view.addSubview(scrollView)
-        view.addSubview(chatInputView)
+        view.addSubview(containerView)
+        containerView.addSubview(scrollView)
+        containerView.addSubview(chatInputView)
         
         scrollView.addSubview(chatStackView)
+        
         setUpChatStackView()
+        
+        // Register for keyboard notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func setUpChatStackView() {
@@ -143,6 +151,12 @@ class ChatViewController: UIViewController {
     }
     
     private func setUpConstraints() {
+        containerView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+            make.left.trailing.equalToSuperview()
+        }
+        
         chatInputView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
             make.height.equalTo(50)
@@ -151,9 +165,9 @@ class ChatViewController: UIViewController {
         }
         
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalToSuperview()
             make.bottom.equalTo(chatInputView.snp.top)
-            make.left.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
         
         chatStackView.snp.makeConstraints { make in
@@ -195,6 +209,31 @@ class ChatViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         store.send(.viewDidAppear)
+    }
+    
+    /// Handle keyboard appearance
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        adjustForKeyboard(notification: notification, isShowing: true)
+    }
+    
+    /// Handle keyboard disappearance
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        adjustForKeyboard(notification: notification, isShowing: false)
+    }
+    
+    /// Adjust the view for the keyboard
+    private func adjustForKeyboard(notification: Notification, isShowing: Bool) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
+            return
+        }
+        
+        // Adjust the bottom constraint
+        let keyboardHeight = isShowing ? keyboardFrame.height : 0
+        UIView.animate(withDuration: animationDuration) {
+            self.containerView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+        }
     }
 }
 
