@@ -11,69 +11,6 @@ import UIKit
 import ComposableArchitecture
 import SwiftUI
 
-@Reducer
-struct ChatInputFeature {
-    
-    @ObservableState
-    struct State: Equatable, Identifiable {
-        let id = UUID()
-        var text = ""
-        var isEditing = false
-        
-        /// 텍스트가 편집 전인 경우 nil 값입니다
-        var utf16StartOffset: Int?
-        var utf16EndOffset: Int?
-        
-        /// `text`를 호출하면 항상 `textFieldDidChangeSelection`이 호출됩니다.
-        /// 이 경우, Programmatic 하게 텍스트를 변경 후 selectedRange가 제대로 적용되지 않습니다.
-        /// 따라서 텍스트 변경이 키보드에 의한 변경인지, 프로그래머틱한 변경인지 구분해야합니다.
-        var isTextUpdateByKeyboard = true
-    }
-    
-    enum Action {
-        case sendButtonTapped(text: String)
-        case textFieldDidChangeSelection(text: String, utft16StartOffset: Int, utf16EndOffset: Int) // UIKit은 Binding이 없다. 따라서 BindableAction 같은거 없다!
-        case editingStateDidChange(isEditing: Bool)
-        case asteriskButtonTapped
-        case receiveProgrammaticTextUpdate
-    }
-    
-    var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case .sendButtonTapped:
-                state.text = ""
-                return .none
-            case let .textFieldDidChangeSelection(text, utf16StartOffset, utf16EndOffset):
-                state.text = text
-                state.utf16StartOffset = utf16StartOffset
-                state.utf16EndOffset = utf16EndOffset
-                return .none
-            case .editingStateDidChange(isEditing: let isEditing):
-                state.isEditing = isEditing
-                return .none
-            case .asteriskButtonTapped:
-                addAsterisk(state: &state)
-                return .none
-            case .receiveProgrammaticTextUpdate:
-                state.isTextUpdateByKeyboard = true
-                return .none
-            }
-        }
-    }
-    
-    private func addAsterisk(state: inout State) {
-        guard let utf16StartOffset = state.utf16StartOffset else { return }
-        
-        let stringIndex = String.Index(utf16Offset: utf16StartOffset, in: state.text)
-        state.text.insert("*", at: stringIndex)
-        
-        state.utf16StartOffset = utf16StartOffset + 1
-        state.utf16EndOffset = state.utf16StartOffset
-        state.isTextUpdateByKeyboard = false
-    }
-}
-
 class ChatInputView: UIView, UITextFieldDelegate {
     private let inputField = UITextField()
     private let sendButton = UIButton(type: .custom)
@@ -170,10 +107,9 @@ class ChatInputView: UIView, UITextFieldDelegate {
     }
     
     private func updateSelectedTextRange() {
-        guard let startOffset = self.store.utf16StartOffset,
-              let endOffset = self.store.utf16EndOffset,
-              let start = inputField.position(from: inputField.beginningOfDocument, offset: startOffset),
-              let end = inputField.position(from: inputField.beginningOfDocument, offset: endOffset) else {
+        guard let selectedRange = self.store.selectedRange,
+              let start = inputField.position(from: inputField.beginningOfDocument, offset: selectedRange.startOffset),
+              let end = inputField.position(from: inputField.beginningOfDocument, offset: selectedRange.endOffset) else {
             return
         }
         
@@ -217,7 +153,12 @@ class ChatInputView: UIView, UITextFieldDelegate {
         let utf16StartOffset = textField.offset(from: textField.beginningOfDocument, to: selectedRange.start)
         let utf16EndOffset = textField.offset(from: textField.beginningOfDocument, to: selectedRange.end)
         
-        store.send(.textFieldDidChangeSelection(text: text, utft16StartOffset: utf16StartOffset, utf16EndOffset: utf16EndOffset))
+        let selectedRangeUTF16 = UTF16Offsets(startOffset: utf16StartOffset, endOffset: utf16EndOffset)
+        
+        store.send(.textFieldDidChangeSelection(
+            text: text,
+            selectedRange: selectedRangeUTF16)
+        )
     }
 }
 
