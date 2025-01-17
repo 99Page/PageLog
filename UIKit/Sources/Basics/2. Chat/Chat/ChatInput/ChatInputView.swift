@@ -63,7 +63,8 @@ class ChatInputView: UIView, UITextFieldDelegate {
     
     private func setUpSendButton() {
         sendButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        sendButton.backgroundColor = .gray
+        sendButton.tintColor = .white
+        sendButton.backgroundColor = UIColor(resource: .reppleyGreen)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
@@ -79,7 +80,7 @@ class ChatInputView: UIView, UITextFieldDelegate {
     private func setUpConstraints() {
         sendButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
-            make.width.equalTo(40)
+            make.width.equalTo(60)
             make.top.bottom.equalToSuperview()
         }
         
