@@ -231,7 +231,7 @@ class ChatViewController: UIViewController {
         }
         
         chatInputView.snp.makeConstraints { make in
-            make.bottom.equalTo(containerView.snp.bottom)
+            make.bottom.equalTo(containerView.safeAreaLayoutGuide)
             make.height.equalTo(50)
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview()

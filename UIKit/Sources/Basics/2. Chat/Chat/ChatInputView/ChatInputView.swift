@@ -19,12 +19,14 @@ struct ChatInputFeature {
         let id = UUID()
         var text = ""
         var isEditing = false
+        var startOffset = 0
     }
     
     enum Action {
         case sendButtonTapped(text: String)
-        case textDidChange(text: String) // UIKit은 Binding이 없다. 따라서 BindableAction 같은거 없다!
+        case textFieldDidChangeSelection(text: String, startOffset: Int) // UIKit은 Binding이 없다. 따라서 BindableAction 같은거 없다!
         case editingStateDidChange(isEditing: Bool)
+        case asterinkButtonTapped
     }
     
     var body: some ReducerOf<Self> {
@@ -33,11 +35,17 @@ struct ChatInputFeature {
             case .sendButtonTapped:
                 state.text = ""
                 return .none
-            case let .textDidChange(text):
+            case let .textFieldDidChangeSelection(text, startOffset):
                 state.text = text
+                state.startOffset = startOffset
                 return .none
             case .editingStateDidChange(isEditing: let isEditing):
                 state.isEditing = isEditing
+                return .none
+            case .asterinkButtonTapped:
+                let startIndex = state.text.startIndex
+                let offset = state.text.index(startIndex, offsetBy: state.startOffset)
+                state.text.insert("*", at: offset)
                 return .none
             }
         }
@@ -47,6 +55,7 @@ struct ChatInputFeature {
 class ChatInputView: UIView, UITextFieldDelegate {
     private let inputField = UITextField()
     private let sendButton = UIButton(type: .custom)
+    private let asteriskButton = UIButton(type: .custom)
     
     var store: StoreOf<ChatInputFeature>
     
@@ -64,15 +73,28 @@ class ChatInputView: UIView, UITextFieldDelegate {
     
     private func setUpView() {
         addSubview(inputField)
+        addSubview(asteriskButton)
         addSubview(sendButton)
         
         setUpInputField()
+        setUpAsteriskButton()
         setUpSendButton()
     }
     
     private func setUpInputField() {
         inputField.placeholder = "Input text here!"
         inputField.delegate = self
+        inputField.tintColor = .black
+    }
+    
+    private func setUpAsteriskButton() {
+        let image = UIImage(systemName: "asterisk")
+        image?.withRenderingMode(.alwaysTemplate)
+        
+        asteriskButton.setImage(image, for: .normal)
+        asteriskButton.tintColor = .gray
+        asteriskButton.backgroundColor = .clear
+        asteriskButton.addTarget(self, action: #selector(asteriskButtonTapped), for: .touchUpInside)
     }
     
     private func setUpSendButton() {
@@ -88,9 +110,15 @@ class ChatInputView: UIView, UITextFieldDelegate {
             make.top.bottom.equalToSuperview()
         }
         
+        asteriskButton.snp.makeConstraints { make in
+            make.trailing.equalTo(sendButton.snp.leading)
+            make.top.bottom.equalToSuperview()
+            make.width.equalTo(40)
+        }
+        
         inputField.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.trailing.equalTo(sendButton.snp.leading)
+            make.trailing.equalTo(asteriskButton.snp.leading)
             make.top.bottom.equalToSuperview()
         }
     }
@@ -109,6 +137,19 @@ class ChatInputView: UIView, UITextFieldDelegate {
         }
     }
     
+    // MARK: Action
+    
+    @objc func asteriskButtonTapped() {
+        store.send(.asterinkButtonTapped)
+    }
+    
+    @objc func sendButtonTapped() {
+        store.send(.sendButtonTapped(text: inputField.text ?? ""))
+    }
+    
+    // MARK: Text Delegate
+    
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         store.send(.editingStateDidChange(isEditing: true))
         return true
@@ -120,14 +161,12 @@ class ChatInputView: UIView, UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        store.send(.textDidChange(text: textField.text ?? ""))
+        guard let selectedRange = textField.selectedTextRange else { return }
+        guard let text = textField.text else { return }
+        
+        let startOffset = textField.offset(from: textField.beginningOfDocument, to: selectedRange.start)
+        store.send(.textFieldDidChangeSelection(text: text, startOffset: startOffset))
     }
-    
-    @objc func sendButtonTapped() {
-        store.send(.sendButtonTapped(text: inputField.text ?? ""))
-    }
-    
-    
 }
 
 #Preview {
