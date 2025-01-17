@@ -35,6 +35,18 @@ let target = Target.target(
     ]
 )
 
+let testTarget = Target.target(
+    name: "\(projectName)Tests",
+    destinations: .iOS,
+    product: .unitTests,
+    bundleId: "com.page.case.stuides.test",
+    deploymentTargets: .iOS("18.0"),
+    sources: ["Tests/**"],
+    dependencies: [
+        .target(name: projectName)
+    ]
+)
+
 let snapKitURL = "https://github.com/SnapKit/SnapKit.git"
 let snapKitVersion: Package.Requirement = .exact("5.7.1")
 
@@ -57,5 +69,5 @@ let project = Project(
         .remote(url: starscreamURL, requirement: starscreamVersion),
         .remote(url: tcaURL, requirement: tcaVersion)
     ],
-    targets: [target]
+    targets: [target, testTarget]
 )
