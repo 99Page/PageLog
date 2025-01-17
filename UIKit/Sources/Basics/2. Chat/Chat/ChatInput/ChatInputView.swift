@@ -38,12 +38,17 @@ class ChatInputView: UIView, UITextFieldDelegate {
         setUpInputField()
         setUpAsteriskButton()
         setUpSendButton()
+        setUpShadow()
     }
     
     private func setUpInputField() {
         inputField.placeholder = "Input text here!"
         inputField.delegate = self
         inputField.tintColor = .black
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        inputField.leftView = paddingView
+        inputField.leftViewMode = .always
     }
     
     private func setUpAsteriskButton() {
@@ -60,6 +65,15 @@ class ChatInputView: UIView, UITextFieldDelegate {
         sendButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         sendButton.backgroundColor = .gray
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setUpShadow() {
+        self.backgroundColor = .white
+        self.layer.masksToBounds = false // 그림자를 표시하려면 필수
+        
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.2
+        self.layer.shadowOffset = CGSize(width: 0, height: -4) // 그림자를 위로 이동
     }
     
     private func setUpConstraints() {
