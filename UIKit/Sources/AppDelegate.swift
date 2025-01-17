@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // 시작할 ViewController 설정
-        let rootViewController = ChatViewController(store: Store(initialState: ChatFeature.State(chats: []), reducer: {
+        let rootViewController = ChatViewController(store: Store(initialState: ChatFeature.State(chats: ChatState.stubs), reducer: {
             ChatFeature()
         })) // 메인 화면
         let navigationController = UINavigationController(rootViewController: rootViewController) // 네비게이션 컨트롤러

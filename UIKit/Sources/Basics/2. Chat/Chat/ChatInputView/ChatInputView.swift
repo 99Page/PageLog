@@ -110,6 +110,12 @@ class ChatInputView: UIView, UITextFieldDelegate {
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        store.send(.editingStateDidChange(isEditing: true))
+        return true
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        store.send(.editingStateDidChange(isEditing: false))
         return true
     }
     

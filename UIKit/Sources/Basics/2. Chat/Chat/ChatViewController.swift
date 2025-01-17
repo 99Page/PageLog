@@ -13,17 +13,64 @@ import Combine
 import SwiftUI
 import MessageKit
 
-struct ChatState: Equatable {
+struct ChatState: Equatable, Identifiable {
+    let id = UUID()
     let text: String
     let sendDate: Date
     let isMyMessage: Bool
+    
+    static var stubs: [ChatState] {
+        [
+            ChatState(text: "Hello1", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World1", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello2", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World2", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello3", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World3", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello4", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World4", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello5", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World5", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello6", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World6", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello7", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World7", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello8", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World8", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello9", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World9", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello10", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World10", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello11", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World11", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello12", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World12", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello13", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World13", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello14", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World14", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello15", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World15", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello16", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World16", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello17", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World17", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello18", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World18", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello19", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World19", sendDate: .now, isMyMessage: false),
+            ChatState(text: "Hello20", sendDate: .now, isMyMessage: true),
+            ChatState(text: "World20", sendDate: .now, isMyMessage: false),
+            
+        ]
+    }
 }
 
 @Reducer
 struct ChatFeature {
     @ObservableState
     struct State: Equatable {
-        var chats: [ChatState]
+        var chats: [ChatState] 
         var chatInput = ChatInputFeature.State()
     }
     
@@ -31,6 +78,7 @@ struct ChatFeature {
         case chatInput(ChatInputFeature.Action)
         case viewDidAppear
         case receivedMessage(Result<WebSocketClient.Message, any Error>)
+        case scrollTapped
     }
     
     @Dependency(\.continuousClock) var clock
@@ -54,7 +102,7 @@ struct ChatFeature {
                     return .run { send in
                         try await self.webSocket.send(WebSocketClient.ID(), .string(text))
                     }
-                case .textDidChange:
+                default:
                     return .none
                 }
             case .viewDidAppear:
@@ -98,6 +146,9 @@ struct ChatFeature {
                     state.chats.append(newChat)
                 }
                 return .none
+            case .scrollTapped:
+                state.chatInput.isEditing = false
+                return .none
             }
         }
     }
@@ -112,6 +163,8 @@ class ChatViewController: UIViewController {
     
     private let store: StoreOf<ChatFeature>
     
+    private var containerViewBottomConstraint: NSLayoutConstraint?
+    
     init(store: StoreOf<ChatFeature>) {
         self.store = store
         self.chatInputView = ChatInputView(store: store.scope(state: \.chatInput, action: \.chatInput))
@@ -120,6 +173,16 @@ class ChatViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func viewDidLoad() {
@@ -134,14 +197,24 @@ class ChatViewController: UIViewController {
         view.addSubview(containerView)
         containerView.addSubview(scrollView)
         containerView.addSubview(chatInputView)
-        
         scrollView.addSubview(chatStackView)
         
+        setUpScrollView()
         setUpChatStackView()
-        
+        addKeyboardObserver()
+    }
+    
+    private func addKeyboardObserver() {
         // Register for keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func setUpScrollView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+        tapGesture.cancelsTouchesInView = false // Allow scroll view to handle touches
+        scrollView.addGestureRecognizer(tapGesture)
+        scrollView.alwaysBounceVertical = true
     }
     
     private func setUpChatStackView() {
@@ -153,19 +226,19 @@ class ChatViewController: UIViewController {
     private func setUpConstraints() {
         containerView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalToSuperview()
             make.left.trailing.equalToSuperview()
+            self.containerViewBottomConstraint = make.bottom.equalToSuperview().constraint.layoutConstraints.first
         }
         
         chatInputView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(containerView.snp.bottom)
             make.height.equalTo(50)
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview()
         }
         
         scrollView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalTo(containerView.snp.top)
             make.bottom.equalTo(chatInputView.snp.top)
             make.leading.trailing.equalToSuperview()
         }
@@ -211,29 +284,78 @@ class ChatViewController: UIViewController {
         store.send(.viewDidAppear)
     }
     
-    /// Handle keyboard appearance
     @objc private func keyboardWillShow(_ notification: Notification) {
-        adjustForKeyboard(notification: notification, isShowing: true)
-    }
-    
-    /// Handle keyboard disappearance
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        adjustForKeyboard(notification: notification, isShowing: false)
-    }
-    
-    /// Adjust the view for the keyboard
-    private func adjustForKeyboard(notification: Notification, isShowing: Bool) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
               let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
         
-        // Adjust the bottom constraint
-        let keyboardHeight = isShowing ? keyboardFrame.height : 0
+        let scrollViewHeight = scrollView.bounds.size.height
+        let keyboardHeight = keyboardFrame.height
+
         UIView.animate(withDuration: animationDuration) {
-            self.containerView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+            // Scroll adjustment
+            self.adjustScrollForKeyboardAppearance(scrollHeight: scrollViewHeight, keyboardHeight: keyboardHeight)
+            self.adjustContainerViewForKeyboard(height: keyboardHeight, animationDuration: animationDuration)
+            self.view.layoutIfNeeded() // Recalculate layout changes
         }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
+            return
+        }
+        
+        let scrollContentOffsetBefore = scrollView.contentOffset.y
+        // Adjust containerView bottom constraint
+        adjustContainerViewForKeyboard(height: 0, animationDuration: animationDuration)
+        adjustScrollForKeyboardDisappearance(currentOffsetY: scrollContentOffsetBefore, keyboardHeight: keyboardFrame.height, animationDuration: animationDuration)
+    }
+
+    /// Adjusts the containerView bottom constraint for the keyboard
+    private func adjustContainerViewForKeyboard(height: CGFloat, animationDuration: TimeInterval) {
+        containerViewBottomConstraint?.constant = -height
+        self.view.layoutIfNeeded()
+    }
+
+    /// Adjusts the scrollView content offset for the keyboard appearance.
+    private func adjustScrollForKeyboardAppearance(scrollHeight: CGFloat, keyboardHeight: CGFloat) {
+        let currentOffset = scrollView.contentOffset
+        let contentBottomY = scrollView.contentSize.height
+        let remainingVisibleArea = scrollHeight - contentBottomY
+
+        if currentOffset.y == 0 && remainingVisibleArea < keyboardHeight && remainingVisibleArea > 0{
+            let newOffsetY = max(0, keyboardHeight - remainingVisibleArea)
+            let newOffset = CGPoint(x: currentOffset.x, y: newOffsetY)
+            scrollView.setContentOffset(newOffset, animated: true)
+        } else if currentOffset.y > 0 {
+            let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardHeight)
+            scrollView.setContentOffset(newOffset, animated: true)
+        }
+    }
+    
+    /// Adjusts the scrollView content offset when the keyboard disappears.
+    ///
+    /// - Parameters:
+    ///   - currentOffsetY: The current vertical offset of the scrollView.
+    ///   - keyboardHeight: The height of the keyboard that was dismissed.
+    ///   - animationDuration: The duration of the keyboard dismissal animation.
+    private func adjustScrollForKeyboardDisappearance(currentOffsetY: CGFloat, keyboardHeight: CGFloat, animationDuration: TimeInterval) {
+        // Ensure the keyboard height is valid and there is enough offset to adjust
+        guard keyboardHeight > 0, currentOffsetY >= keyboardHeight else {
+            return
+        }
+        
+        let newContentOffset = CGPoint(x: 0, y: currentOffsetY - keyboardHeight)
+        
+        self.scrollView.setContentOffset(newContentOffset, animated: false)
+    }
+    
+    @objc private func handleTapGesture(_ gesture: UITapGestureRecognizer) {
+        store.send(.scrollTapped)
     }
 }
 
