@@ -42,7 +42,6 @@ class ChatInputView: UIView, UITextFieldDelegate {
     }
     
     private func setUpInputField() {
-        inputField.placeholder = "Input text here!"
         inputField.delegate = self
         inputField.tintColor = .black
         
@@ -74,7 +73,7 @@ class ChatInputView: UIView, UITextFieldDelegate {
         
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.2
-        self.layer.shadowOffset = CGSize(width: 0, height: -4) // 그림자를 위로 이동
+        self.layer.shadowOffset = CGSize(width: 0, height: -5) // 그림자를 위로 이동
     }
     
     private func setUpConstraints() {
