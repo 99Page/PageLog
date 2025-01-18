@@ -122,18 +122,18 @@ class ChatViewController: UIViewController {
             }
             
             store.chats.forEach { chat in
-                let label = UILabel()
-                label.text = chat.text
-                label.numberOfLines = 0
-                label.textColor = .black
                 
                 if chat.isMyMessage {
-                    label.textAlignment = .right
+                    let myChatBubbleView = MyChatView(state: chat)
+                    self.chatStackView.addArrangedSubview(myChatBubbleView)
                 } else {
+                    let label = UILabel()
+                    label.text = chat.text
+                    label.numberOfLines = 0
+                    label.textColor = .black
                     label.textAlignment = .left
+                    self.chatStackView.addArrangedSubview(label)
                 }
-                
-                self.chatStackView.addArrangedSubview(label)
             }
         }
     }
@@ -221,8 +221,8 @@ class ChatViewController: UIViewController {
 #Preview {
     
     let state = ChatFeature.State(chats: [
-        ChatBubbleState(text: "Hello", sendDate: .now, isMyMessage: true),
-        ChatBubbleState(text: "World", sendDate: .now, isMyMessage: false)
+        ChatState(text: "Hello", sendDate: .now, isMyMessage: true),
+        ChatState(text: "World", sendDate: .now, isMyMessage: false)
     ])
     
     ChatViewController(store: Store(initialState: state) {

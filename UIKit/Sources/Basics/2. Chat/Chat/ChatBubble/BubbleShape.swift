@@ -11,45 +11,11 @@ import SwiftUI
 
 /// 채팅 버블 모양을 정의하는 타입
 struct BubbleShape {
-    enum Direction {
-        case left
-        case right
-    }
-    
     let cornerRadius: CGFloat
-    let tailWidth: CGFloat
-    let tailHeight: CGFloat
-    let direction: Direction
     
     func createPath(in rect: CGRect) -> UIBezierPath {
         let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
-        let tailPath = createTailPath(in: rect)
-        
-        path.append(tailPath)
-
         return path
-    }
-    
-    func createTailPath(in rect: CGRect) -> UIBezierPath {
-        let tailPath = UIBezierPath()
-        
-        // 꼬리 시작점 (Rounded Rectangle 경계에서 시작)
-        let tailStartPoint = CGPoint(x: rect.maxX - cornerRadius / 2, y: rect.minY + cornerRadius / 2)
-        let tailMiddlePoint = CGPoint(x: rect.maxX + tailWidth, y: tailStartPoint.y)
-        
-        // 제어점: Start → Middle 커브
-        let controlPoint = CGPoint(x: (tailStartPoint.x + tailMiddlePoint.x) / 2, y: tailStartPoint.y + tailWidth / 2) // 위쪽으로 약간 휘는 곡선
-
-        // 꼬리 끝점
-        let tailEndPoint = CGPoint(x: rect.maxX, y: rect.minY + cornerRadius + tailHeight)
-        let endPointCurve = CGPoint(x: tailMiddlePoint.x - 5, y: tailEndPoint.y - 5)
-
-        // 곡선 추가: Start → Middle
-        tailPath.move(to: tailStartPoint)
-        tailPath.addQuadCurve(to: tailMiddlePoint, controlPoint: controlPoint) // Start → Middle 커브
-        tailPath.addQuadCurve(to: tailEndPoint, controlPoint: endPointCurve)
-
-        return tailPath
     }
 }
 
@@ -85,11 +51,11 @@ class BubbleShapeView: UIView {
 }
 
 #Preview {
+    let shape = BubbleShape(cornerRadius: 15)
+    let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+    
     UIViewPreview {
-        BubbleShapeView(
-            shape: BubbleShape(cornerRadius: 20, tailWidth: 30, tailHeight: 15, direction: .right),
-            frame: CGRect(x: 0, y: 0, width: 100, height: 200)
-        )
+        BubbleShapeView(shape: shape, frame: frame)
     }
     .frame(width: 100, height: 100)
 }
