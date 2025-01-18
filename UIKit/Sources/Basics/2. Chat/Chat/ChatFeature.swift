@@ -13,7 +13,7 @@ import ComposableArchitecture
 struct ChatFeature {
     @ObservableState
     struct State: Equatable {
-        var chats: [MessageState]
+        var chats: IdentifiedArrayOf<MessageState> = []
         var chatInput = ChatInputFeature.State()
     }
     

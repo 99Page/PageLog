@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import IdentifiedCollections
 
 struct MessageState: Equatable, Identifiable {
     let id = UUID()
@@ -18,7 +19,7 @@ struct MessageState: Equatable, Identifiable {
     let messageViewOffset: CGFloat = 10
     let backgroundCornerRadius: CGFloat = 10
     
-    static var stubs: [MessageState] {
+    static var stubs: IdentifiedArrayOf<MessageState> {
         [
             MessageState(
                 text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",

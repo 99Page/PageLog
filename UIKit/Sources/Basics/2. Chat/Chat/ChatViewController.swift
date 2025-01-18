@@ -13,11 +13,9 @@ import Combine
 import SwiftUI
 import MessageKit
 
-class ChatViewController: UIViewController {
-    
+class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let containerView = UIView()
-    private let scrollView = UIScrollView()
-    private let chatStackView = UIStackView()
+    private let tableView = UITableView()
     private let chatInputView: ChatInputView
     
     private let store: StoreOf<ChatFeature>
@@ -47,20 +45,28 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         setUpViewController()
         setUpConstraints()
-        bind()
+//        bind()
     }
     
     private func setUpViewController() {
         view.backgroundColor = .white
         
         view.addSubview(containerView)
-        containerView.addSubview(scrollView)
+        containerView.addSubview(tableView)
         containerView.addSubview(chatInputView)
-        scrollView.addSubview(chatStackView)
         
-        setUpScrollView()
-        setUpChatStackView()
+//        setUpScrollView()
+//        setUpChatStackView()
+        setUpTableView()
         addKeyboardObserver()
+    }
+    
+    private func setUpTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(MyMessageView.self, forCellReuseIdentifier: "MyMessageCell")
+        tableView.register(PeerMessageView.self, forCellReuseIdentifier: "PeerMessageCell")
+        tableView.separatorStyle = .none
     }
     
     private func addKeyboardObserver() {
@@ -69,18 +75,18 @@ class ChatViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    private func setUpScrollView() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
-        tapGesture.cancelsTouchesInView = false // Allow scroll view to handle touches
-        scrollView.addGestureRecognizer(tapGesture)
-        scrollView.alwaysBounceVertical = true
-    }
-    
-    private func setUpChatStackView() {
-        chatStackView.axis = .vertical
-        chatStackView.spacing = 12
-        chatStackView.distribution = .equalSpacing
-    }
+//    private func setUpScrollView() {
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+//        tapGesture.cancelsTouchesInView = false // Allow scroll view to handle touches
+//        scrollView.addGestureRecognizer(tapGesture)
+//        scrollView.alwaysBounceVertical = true
+//    }
+//    
+//    private func setUpChatStackView() {
+//        chatStackView.axis = .vertical
+//        chatStackView.spacing = 12
+//        chatStackView.distribution = .equalSpacing
+//    }
     
     private func setUpConstraints() {
         containerView.snp.makeConstraints { make in
@@ -92,47 +98,38 @@ class ChatViewController: UIViewController {
         chatInputView.snp.makeConstraints { make in
             make.bottom.equalTo(containerView.safeAreaLayoutGuide)
             make.height.equalTo(50)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
         
-        scrollView.snp.makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.top.equalTo(containerView.snp.top)
             make.bottom.equalTo(chatInputView.snp.top)
             make.leading.trailing.equalToSuperview()
         }
-        
-        chatStackView.snp.makeConstraints { make in
-            make.top.equalTo(scrollView.contentLayoutGuide.snp.top)
-            make.bottom.equalTo(scrollView.contentLayoutGuide.snp.bottom)
-            make.leading.equalTo(scrollView.snp.leading).offset(10)
-            make.trailing.equalTo(scrollView.snp.trailing).offset(-10)
-            make.width.equalTo(scrollView.frameLayoutGuide.snp.width).offset(-20)
-        }
     }
     
-    private func bind() {
-        observe { [weak self] in
-            guard let self else { return }
-            
-            /// 제거해주는건데 observe 내부에서 해줘야한다.
-            self.chatStackView.arrangedSubviews.forEach { subview in
-                self.chatStackView.removeArrangedSubview(subview)
-                subview.removeFromSuperview()
-            }
-            
-            store.chats.forEach { chat in
-                
-                if chat.isMyMessage {
-                    let myChatView = MyMessageView(state: chat)
-                    self.chatStackView.addArrangedSubview(myChatView)
-                } else {
-                    let peerChatView = PeerMessageView(state: chat)
-                    self.chatStackView.addArrangedSubview(peerChatView)
-                }
-            }
-        }
-    }
+//    private func bind() {
+//        observe { [weak self] in
+//            guard let self else { return }
+//            
+//            /// 제거해주는건데 observe 내부에서 해줘야한다.
+//            self.chatStackView.arrangedSubviews.forEach { subview in
+//                self.chatStackView.removeArrangedSubview(subview)
+//                subview.removeFromSuperview()
+//            }
+//            
+//            store.chats.forEach { chat in
+//                
+//                if chat.isMyMessage {
+//                    let myChatView = MyMessageView(state: chat, reuseIdentifier: "MyMessageView")
+//                    self.chatStackView.addArrangedSubview(myChatView)
+//                } else {
+//                    let peerChatView = PeerMessageView(state: chat, reuseIdentifier: "PeerMessageView")
+//                    self.chatStackView.addArrangedSubview(peerChatView)
+//                }
+//            }
+//        }
+//    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -145,16 +142,16 @@ class ChatViewController: UIViewController {
               let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
-        
-        let scrollViewHeight = scrollView.bounds.size.height
-        let keyboardHeight = keyboardFrame.height
-
-        UIView.animate(withDuration: animationDuration) {
-            // Scroll adjustment
-            self.adjustScrollForKeyboardAppearance(scrollHeight: scrollViewHeight, keyboardHeight: keyboardHeight)
-            self.adjustContainerViewForKeyboard(height: keyboardHeight, animationDuration: animationDuration)
-            self.view.layoutIfNeeded() // Recalculate layout changes
-        }
+//        
+//        let scrollViewHeight = scrollView.bounds.size.height
+//        let keyboardHeight = keyboardFrame.height
+//
+//        UIView.animate(withDuration: animationDuration) {
+//            // Scroll adjustment
+//            self.adjustScrollForKeyboardAppearance(scrollHeight: scrollViewHeight, keyboardHeight: keyboardHeight)
+//            self.adjustContainerViewForKeyboard(height: keyboardHeight, animationDuration: animationDuration)
+//            self.view.layoutIfNeeded() // Recalculate layout changes
+//        }
     }
 
     @objc private func keyboardWillHide(_ notification: Notification) {
@@ -164,10 +161,10 @@ class ChatViewController: UIViewController {
             return
         }
         
-        let scrollContentOffsetBefore = scrollView.contentOffset.y
-        // Adjust containerView bottom constraint
-        adjustContainerViewForKeyboard(height: 0, animationDuration: animationDuration)
-        adjustScrollForKeyboardDisappearance(currentOffsetY: scrollContentOffsetBefore, keyboardHeight: keyboardFrame.height, animationDuration: animationDuration)
+//        let scrollContentOffsetBefore = scrollView.contentOffset.y
+//        // Adjust containerView bottom constraint
+//        adjustContainerViewForKeyboard(height: 0, animationDuration: animationDuration)
+//        adjustScrollForKeyboardDisappearance(currentOffsetY: scrollContentOffsetBefore, keyboardHeight: keyboardFrame.height, animationDuration: animationDuration)
     }
 
     /// Adjusts the containerView bottom constraint for the keyboard
@@ -178,18 +175,18 @@ class ChatViewController: UIViewController {
 
     /// Adjusts the scrollView content offset for the keyboard appearance.
     private func adjustScrollForKeyboardAppearance(scrollHeight: CGFloat, keyboardHeight: CGFloat) {
-        let currentOffset = scrollView.contentOffset
-        let contentBottomY = scrollView.contentSize.height
-        let remainingVisibleArea = scrollHeight - contentBottomY
-
-        if currentOffset.y == 0 && remainingVisibleArea < keyboardHeight && remainingVisibleArea > 0{
-            let newOffsetY = max(0, keyboardHeight - remainingVisibleArea)
-            let newOffset = CGPoint(x: currentOffset.x, y: newOffsetY)
-            scrollView.setContentOffset(newOffset, animated: true)
-        } else if currentOffset.y > 0 {
-            let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardHeight)
-            scrollView.setContentOffset(newOffset, animated: true)
-        }
+//        let currentOffset = scrollView.contentOffset
+//        let contentBottomY = scrollView.contentSize.height
+//        let remainingVisibleArea = scrollHeight - contentBottomY
+//
+//        if currentOffset.y == 0 && remainingVisibleArea < keyboardHeight && remainingVisibleArea > 0{
+//            let newOffsetY = max(0, keyboardHeight - remainingVisibleArea)
+//            let newOffset = CGPoint(x: currentOffset.x, y: newOffsetY)
+//            scrollView.setContentOffset(newOffset, animated: true)
+//        } else if currentOffset.y > 0 {
+//            let newOffset = CGPoint(x: currentOffset.x, y: currentOffset.y + keyboardHeight)
+//            scrollView.setContentOffset(newOffset, animated: true)
+//        }
     }
     
     /// Adjusts the scrollView content offset when the keyboard disappears.
@@ -206,11 +203,30 @@ class ChatViewController: UIViewController {
         
         let newContentOffset = CGPoint(x: 0, y: currentOffsetY - keyboardHeight)
         
-        self.scrollView.setContentOffset(newContentOffset, animated: false)
+//        self.scrollView.setContentOffset(newContentOffset, animated: false)
     }
     
     @objc private func handleTapGesture(_ gesture: UITapGestureRecognizer) {
         store.send(.scrollTapped)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return store.chats.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let messageState = store.chats[indexPath.row]
+        
+        if messageState.isMyMessage {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MyMessageCell", for: indexPath) as! MyMessageView
+            cell.configure(state: messageState)
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PeerMessageCell", for: indexPath) as! PeerMessageView
+            cell.configure(state: messageState)
+            return cell
+        }
     }
 }
 

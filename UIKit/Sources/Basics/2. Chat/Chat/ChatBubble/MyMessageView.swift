@@ -6,20 +6,18 @@
 //  Copyright © 2025 Page. All rights reserved.
 //
 
+import ComposableArchitecture
 import Foundation
 import UIKit
 
-class MyMessageView: UIView {
-    let state: MessageState
-    
+class MyMessageView: UITableViewCell {
     private let sendTimeView = UILabel()
     private let messageView = PaddedLabel()
     private let bubbleBackgroundView = UIView()
     
-    init(state: MessageState) {
-        self.state = state
-        super.init(frame: .zero)
-        
+    // 기본 생성자 구현
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setUpView()
         setUpConstraints()
     }
@@ -29,6 +27,8 @@ class MyMessageView: UIView {
     }
     
     private func setUpView() {
+        self.selectionStyle = .none
+        
         addSubview(sendTimeView)
         addSubview(messageView)
         insertSubview(bubbleBackgroundView, belowSubview: messageView)
@@ -38,9 +38,13 @@ class MyMessageView: UIView {
         setUpBubbleBackgroundView()
     }
     
+    func configure(state: MessageState) {
+        sendTimeView.text = state.messageSendDate.formatToHourAndMinute(timeZone: .current)
+        messageView.text = state.text
+    }
+    
     private func setUpSendTimeView() {
         sendTimeView.textColor = .gray
-        sendTimeView.text = state.messageSendDate.formatToHourAndMinute(timeZone: .current)
         sendTimeView.font = .systemFont(ofSize: 10)
     }
     
@@ -48,7 +52,6 @@ class MyMessageView: UIView {
     private func setUpMessageView() {
         // 기본 텍스트뷰 속성 설정
         messageView.textColor = .white
-        messageView.text = state.text
         messageView.font = .systemFont(ofSize: 20)
         messageView.backgroundColor = .clear
         messageView.numberOfLines = 0 // 여러 줄 텍스트 허용
@@ -66,8 +69,7 @@ class MyMessageView: UIView {
         bubbleBackgroundView.frame = messageView.frame.insetBy(dx: 0, dy: 0)
         
         // Bubble 모양 생성
-        let cornerRadius = state.backgroundCornerRadius
-        let bubblePath = BubbleShape(cornerRadius: cornerRadius).createPath(in: bubbleBackgroundView.bounds)
+        let bubblePath = BubbleShape(cornerRadius: 10).createPath(in: bubbleBackgroundView.bounds)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = bubblePath.cgPath
         shapeLayer.fillColor = UIColor(resource: .reppleyGreen).cgColor
@@ -79,25 +81,22 @@ class MyMessageView: UIView {
     
     private func setUpConstraints() {
         sendTimeView.snp.makeConstraints { make in
-            make.leading.greaterThanOrEqualToSuperview().offset(state.dateViewOffset)
-            make.trailing.equalTo(messageView.snp.leading).offset(-state.messageViewOffset)
+            make.leading.greaterThanOrEqualToSuperview().offset(30)
+            make.trailing.equalTo(messageView.snp.leading).offset(-10)
             make.bottom.equalTo(messageView.snp.bottom)
         }
 
         
         messageView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
             make.trailing.equalToSuperview()
         }
     }
 }
 
 #Preview {
-    let state = MessageState(
-        text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",
-        messageSendDate: .now,
-        isMyMessage: true
-    )
-        
-    MyMessageView(state: state)
+    ChatViewController(store: Store(initialState: ChatFeature.State(chats: MessageState.stubs), reducer: {
+        ChatFeature()
+    }))
 }
