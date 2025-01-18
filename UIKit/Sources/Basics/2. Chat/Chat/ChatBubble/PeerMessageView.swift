@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-class PeerChatView: UIView {
-    let state: ChatState
+class PeerMessageView: UIView {
+    let state: MessageState
     
     private let sendTimeView = UILabel()
-    private let textView = PaddedLabel()
+    private let messageView = PaddedLabel()
     private let bubbleBackgroundView = UIView()
     
-    init(state: ChatState) {
+    init(state: MessageState) {
         self.state = state
         super.init(frame: .zero)
         
@@ -30,28 +30,28 @@ class PeerChatView: UIView {
     
     private func setUpView() {
         addSubview(sendTimeView)
-        addSubview(textView)
-        insertSubview(bubbleBackgroundView, belowSubview: textView)
+        addSubview(messageView)
+        insertSubview(bubbleBackgroundView, belowSubview: messageView)
         
         setUpSendTimeView()
-        setUpTextView()
+        setUpMessageView()
         setUpBubbleBackgroundView()
     }
     
     private func setUpSendTimeView() {
         sendTimeView.textColor = .gray
-        sendTimeView.text = state.sendDate.formatToHourAndMinute(timeZone: .current)
+        sendTimeView.text = state.messageSendDate.formatToHourAndMinute(timeZone: .current)
         sendTimeView.font = .systemFont(ofSize: 10)
     }
     
     
-    private func setUpTextView() {
+    private func setUpMessageView() {
         // 기본 텍스트뷰 속성 설정
-        textView.textColor = .black
-        textView.text = state.text
-        textView.font = .systemFont(ofSize: 20)
-        textView.backgroundColor = .clear // 기존 배경 제거
-        textView.numberOfLines = 0 // 여러 줄 텍스트 허용
+        messageView.textColor = .black
+        messageView.text = state.text
+        messageView.font = .systemFont(ofSize: 20)
+        messageView.backgroundColor = .clear // 기존 배경 제거
+        messageView.numberOfLines = 0 // 여러 줄 텍스트 허용
     }
     
     private func setUpBubbleBackgroundView() {
@@ -63,10 +63,11 @@ class PeerChatView: UIView {
         super.layoutSubviews()
         
         // bubbleBackgroundView의 프레임 업데이트
-        bubbleBackgroundView.frame = textView.frame.insetBy(dx: 0, dy: 0)
+        bubbleBackgroundView.frame = messageView.frame.insetBy(dx: 0, dy: 0)
         
         // Bubble 모양 생성
-        let bubblePath = BubbleShape(cornerRadius: 10).createPath(in: bubbleBackgroundView.bounds)
+        let cornerRadius = state.backgroundCornerRadius
+        let bubblePath = BubbleShape(cornerRadius: cornerRadius).createPath(in: bubbleBackgroundView.bounds)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = bubblePath.cgPath
         shapeLayer.fillColor = UIColor(resource: .reppleyGray).cgColor
@@ -78,13 +79,13 @@ class PeerChatView: UIView {
     
     private func setUpConstraints() {
         sendTimeView.snp.makeConstraints { make in
-            make.trailing.lessThanOrEqualToSuperview().offset(-30)
-            make.leading.equalTo(textView.snp.trailing).offset(10)
-            make.bottom.equalTo(textView.snp.bottom)
+            make.trailing.lessThanOrEqualToSuperview().offset(-state.dateViewOffset)
+            make.leading.equalTo(messageView.snp.trailing).offset(state.messageViewOffset)
+            make.bottom.equalTo(messageView.snp.bottom)
         }
 
         
-        textView.snp.makeConstraints { make in
+        messageView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalToSuperview()
         }
@@ -92,11 +93,11 @@ class PeerChatView: UIView {
 }
 
 #Preview("Long Text") {
-    let state = ChatState(
+    let state = MessageState(
         text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",
-        sendDate: .now,
+        messageSendDate: .now,
         isMyMessage: false
     )
     
-    PeerChatView(state: state)
+    PeerMessageView(state: state)
 }

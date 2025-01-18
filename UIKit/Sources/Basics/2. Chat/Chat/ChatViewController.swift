@@ -124,10 +124,10 @@ class ChatViewController: UIViewController {
             store.chats.forEach { chat in
                 
                 if chat.isMyMessage {
-                    let myChatView = MyChatView(state: chat)
+                    let myChatView = MyMessageView(state: chat)
                     self.chatStackView.addArrangedSubview(myChatView)
                 } else {
-                    let peerChatView = PeerChatView(state: chat)
+                    let peerChatView = PeerMessageView(state: chat)
                     self.chatStackView.addArrangedSubview(peerChatView)
                 }
             }
@@ -217,8 +217,8 @@ class ChatViewController: UIViewController {
 #Preview {
     
     let state = ChatFeature.State(chats: [
-        ChatState(text: "Hello", sendDate: .now, isMyMessage: true),
-        ChatState(text: "World", sendDate: .now, isMyMessage: false)
+        MessageState(text: "Hello", messageSendDate: .now, isMyMessage: true),
+        MessageState(text: "World", messageSendDate: .now, isMyMessage: false)
     ])
     
     ChatViewController(store: Store(initialState: state) {

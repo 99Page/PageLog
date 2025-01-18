@@ -13,7 +13,7 @@ import ComposableArchitecture
 struct ChatFeature {
     @ObservableState
     struct State: Equatable {
-        var chats: [ChatState]
+        var chats: [MessageState]
         var chatInput = ChatInputFeature.State()
     }
     
@@ -39,7 +39,7 @@ struct ChatFeature {
                 switch action {
                 case let .sendButtonTapped(text):
                     guard !text.isEmpty else { return .none }
-                    let newChat = ChatState(text: text, sendDate: .now, isMyMessage: true)
+                    let newChat = MessageState(text: text, messageSendDate: .now, isMyMessage: true)
                     state.chats.append(newChat)
                     
                     return .run { send in
@@ -85,7 +85,7 @@ struct ChatFeature {
                 return .none
             case let .receivedMessage(.success(message)):
                 if case let .string(string) = message {
-                    let newChat = ChatState(text: string, sendDate: .now, isMyMessage: false)
+                    let newChat = MessageState(text: string, messageSendDate: .now, isMyMessage: false)
                     state.chats.append(newChat)
                 }
                 return .none
