@@ -16,7 +16,16 @@ struct ChatState: Equatable, Identifiable {
     
     static var stubs: [ChatState] {
         [
-            ChatState(text: "Hello1", sendDate: .now, isMyMessage: true),
+            ChatState(
+                text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",
+                sendDate: .now,
+                isMyMessage: true
+            ),
+            ChatState(
+                text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",
+                sendDate: .now,
+                isMyMessage: false
+            ),
             ChatState(text: "World1", sendDate: .now, isMyMessage: false),
             ChatState(text: "Hello2", sendDate: .now, isMyMessage: true),
             ChatState(text: "World2", sendDate: .now, isMyMessage: false),

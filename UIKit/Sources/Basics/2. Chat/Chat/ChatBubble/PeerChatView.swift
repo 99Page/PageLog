@@ -1,15 +1,15 @@
 //
-//  ChatBubbleView.swift
+//  PeerChatView.swift
 //  CaseStudies-UIKit
 //
-//  Created by 노우영 on 1/17/25.
+//  Created by 노우영 on 1/18/25.
 //  Copyright © 2025 Page. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class MyChatView: UIView {
+class PeerChatView: UIView {
     let state: ChatState
     
     private let sendTimeView = UILabel()
@@ -47,10 +47,10 @@ class MyChatView: UIView {
     
     private func setUpTextView() {
         // 기본 텍스트뷰 속성 설정
-        textView.textColor = .white
+        textView.textColor = .black
         textView.text = state.text
         textView.font = .systemFont(ofSize: 20)
-        textView.backgroundColor = .clear
+        textView.backgroundColor = .clear // 기존 배경 제거
         textView.numberOfLines = 0 // 여러 줄 텍스트 허용
     }
     
@@ -69,7 +69,7 @@ class MyChatView: UIView {
         let bubblePath = BubbleShape(cornerRadius: 10).createPath(in: bubbleBackgroundView.bounds)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = bubblePath.cgPath
-        shapeLayer.fillColor = UIColor(resource: .reppleyGreen).cgColor
+        shapeLayer.fillColor = UIColor(resource: .reppleyGray).cgColor
         
         // 기존 레이어 제거 후 새 레이어 추가
         bubbleBackgroundView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
@@ -78,25 +78,25 @@ class MyChatView: UIView {
     
     private func setUpConstraints() {
         sendTimeView.snp.makeConstraints { make in
-            make.leading.greaterThanOrEqualToSuperview().offset(30)
-            make.trailing.equalTo(textView.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualToSuperview().offset(-30)
+            make.leading.equalTo(textView.snp.trailing).offset(10)
             make.bottom.equalTo(textView.snp.bottom)
         }
 
         
         textView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
         }
     }
 }
 
-#Preview {
+#Preview("Long Text") {
     let state = ChatState(
         text: "Imagine there's no heaven. It's easy if you tryNo hell below us Above us, only sky Imagine all the people Living for today",
         sendDate: .now,
-        isMyMessage: true
+        isMyMessage: false
     )
-        
-    MyChatView(state: state)
+    
+    PeerChatView(state: state)
 }

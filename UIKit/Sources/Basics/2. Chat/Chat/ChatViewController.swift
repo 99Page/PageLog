@@ -124,15 +124,11 @@ class ChatViewController: UIViewController {
             store.chats.forEach { chat in
                 
                 if chat.isMyMessage {
-                    let myChatBubbleView = MyChatView(state: chat)
-                    self.chatStackView.addArrangedSubview(myChatBubbleView)
+                    let myChatView = MyChatView(state: chat)
+                    self.chatStackView.addArrangedSubview(myChatView)
                 } else {
-                    let label = UILabel()
-                    label.text = chat.text
-                    label.numberOfLines = 0
-                    label.textColor = .black
-                    label.textAlignment = .left
-                    self.chatStackView.addArrangedSubview(label)
+                    let peerChatView = PeerChatView(state: chat)
+                    self.chatStackView.addArrangedSubview(peerChatView)
                 }
             }
         }
