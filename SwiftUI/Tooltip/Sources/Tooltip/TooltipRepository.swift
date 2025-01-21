@@ -46,8 +46,6 @@ class TooltipRepository {
             
             let result = try context.fetch(description)
             
-            debugPrint("result: \(result.description)")
-            
             if let first = result.first {
                 return !first.isChecked
             } else {

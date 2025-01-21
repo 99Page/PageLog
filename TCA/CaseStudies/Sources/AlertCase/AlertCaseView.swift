@@ -38,7 +38,6 @@ struct AlertCaseFeature: Equatable {
                 debugPrint("ok tapped")
                 return .none
             case .alert(.presented(.cancel)):
-                debugPrint("cancel tapped")
                 return .none
             case .alert:
                 return .none

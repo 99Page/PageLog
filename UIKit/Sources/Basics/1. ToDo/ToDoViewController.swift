@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import Combine
+import SwiftUI
 
 /// UIKit의 기본 사용 방법을 알기위해 만든 To Do 화면 UIViewController.
 ///
@@ -160,11 +161,6 @@ class ToDoViewController: UIViewController {
         textStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         texts.forEach { state in
-//            let label = UILabel()
-//            label.text = text.description
-//            label.font = UIFont.systemFont(ofSize: 16)
-//            label.numberOfLines = 0
-//            textStackView.addArrangedSubview(label)
             let toDoCellView = ToDoCellView(state: state)
             textStackView.addArrangedSubview(toDoCellView)
             
@@ -172,5 +168,11 @@ class ToDoViewController: UIViewController {
                 make.leading.equalTo(textStackView.snp.leading)
             }
         }
+    }
+}
+
+#Preview {
+    UIViewControllerPreview {
+        ToDoViewController()
     }
 }
