@@ -14,3 +14,7 @@
 [SF symbols 6의 새로운 기능](https://developer.apple.com/kr/videos/play/wwdc2024/10188/)
 
 [Meet the Translation API](https://developer.apple.com/kr/videos/play/wwdc2024/10117/)
+
+## Point-free
+
+[Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
