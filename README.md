@@ -17,4 +17,8 @@
 
 ## Point-free
 
+[Ep#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)
+
 [Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
+
+[Ep#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
