@@ -33,23 +33,48 @@ struct AppleClinet: SomeClient {
 
 
 ```
-struct MockClientt: SomeClient {
-    var _read: String 
-    func read() { _read }
+struct SomeClient {
+    var read: () -> String 
 }
 
-let pageMock = MockClient {
-    _read: { "Page" }
+let pageMock = SomeClient {
+    read: { "Page" }
 }
 
-let appleMock = MockClient {
-    _read: { "Apple" }
+let appleMock = SomeClient {
+    read: { "Apple" }
 }
 ```
 
+이런 방식을 클로저 기반 설계라고 부르겠습니다. 
+
 Point-Free는 위 문제를 해결하기 위해 클로저를 활용한 Mock 타입을 제안합니다. 프로토콜의 메서드를 클로저로 대체할 수 있도록 설계하면, 단 하나의 타입으로 다양한 케이스를 처리할 수 있습니다. 
+
+## Modularization
+
+Point-free에서는 이 방식을 사용해서 컴파일을 효율적으로 할 수 있는 방법도 제시합니다. 이 방법은 클로저 기반 설계에서만 가능한 방식은 아니고 프로토콜로도 충분히 가능한 방식입니다. 
+
+API를 호출하기 위한 거대한 프레임워크, LargeFramework가 있다고 가정하겠습니다. 이 LargeFramework에 의존하는 기능이 변경되면 전체를 다시 컴파일 하면서 속도가 저하됩니다. Mock으로 사용할 기능을 변경해도 LargeFramework를 다시 컴파일해야합니다.
+
+Point-free는 이 문제를 해결하기 위해 아래 방식으로 모듈화를 진행했습니다.
+
+Project 
+|--Feature
+|   |--SomeClient
+|
+|--LiveClient
+    |--SomeClient
+    |--LargeFramework
+
+개발하는 프로젝트는, 어떤 개별 기능을 구현한 Feature에 의존합니다. 이 Feature는 DI를 위한 클로저를 정의한 SomeClient에 의존합니다. 이런 설계를 통해서 Feature는 LargeFramework의 의존성을 제거할 수 있습니다. SomeClient에 정의된 클로저를 사용해서, Mock 데이터만 만들어 Feature의 기능을 확인할 수 있습니다. 
+
+실제 프로젝트에서는 LargeFramework가 필요한데, 이 프레임워크에 의존하는 기능을 구현한 프레임워크를 LiveClient에 모듈화했습니다. LargeFramework 기능이 필요하면 LiveClient만 수정하면 됩니다. 
+
+
 
 
 ## References
 
  [Ep#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)
+
+ [Ep#111 Designing Dependencies: Modularization](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep111-designing-dependencies-modularization)
