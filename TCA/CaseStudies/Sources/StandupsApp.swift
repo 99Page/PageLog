@@ -24,10 +24,10 @@ struct StandupsApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            FactView(model: model)
-//            StackCaseView(store: Store(initialState: StackCaseFeature.State()) {
-//                StackCaseFeature()
-//            })
+//            FactView(model: model)
+            StackCaseView(store: Store(initialState: StackCaseFeature.State()) {
+                StackCaseFeature()
+            })
         }
     }
 }
