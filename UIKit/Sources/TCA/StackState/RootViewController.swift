@@ -21,7 +21,7 @@ struct RootFeature {
     }
     
     enum Action {
-
+        case count(CountFeature.Action)
     }
     
     var body: some ReducerOf<Self> {

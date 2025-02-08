@@ -16,6 +16,7 @@ struct StackCaseFeature {
     enum Path: Equatable {
         case alert(AlertCaseFeature)
         case debugViewInit(ViewInitCaseFeature)
+        case delegate(DelegateFeature)
     }
     
     @ObservableState
@@ -30,11 +31,15 @@ struct StackCaseFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .path(.element(_, action: .delegate(.delegate(.onAppear)))):
+                debugPrint("onAppear recieved!")
+                return .none
             case .path:
                 return .none
             }
         }
         .forEach(\.path, action: \.path)
+        ._printChanges()
     }
 }
 
@@ -53,6 +58,10 @@ struct StackCaseView: View {
                     NavigationLink(state: StackCaseFeature.Path.State.debugViewInit(ViewInitCaseFeature.State())) {
                         Text("Debug-ViewInit")
                     }
+                    
+                    NavigationLink(state: StackCaseFeature.Path.State.delegate(DelegateFeature.State())) {
+                        Text("Delegate")
+                    }
                 }
             }
         } destination: { store in
@@ -61,6 +70,8 @@ struct StackCaseView: View {
                 AlertCaseView(store: store)
             case let .debugViewInit(store):
                 ViewInitCaseView(store: store)
+            case let .delegate(store):
+                DelegateView(store: store)
             }
         }
 
