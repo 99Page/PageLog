@@ -78,10 +78,11 @@ class RootViewController: UIViewController {
     }
     
     @objc private func loadOptionalCounterTapped() {
-        navigationController?.pushViewController(
-            CountViewController(store: store.scope(state: \.countState, action: \.count)),
-            animated: true
-        )
+        guard let nav = navigationController as? AppController else {
+            fatalError("fail to cast")
+        }
+        
+        nav.push(state: .count(CountFeature.State()))
     }
     
     required init?(coder: NSCoder) {
