@@ -12,8 +12,7 @@ import SwiftUI
 struct ResearcPreferenceKeyApp: App {
     var body: some Scene {
         WindowGroup {
-//            AppView()
-            CustomNotificationView()
+            AppView()
         }
     }
 }
