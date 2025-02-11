@@ -6,6 +6,10 @@
 
 # References
 
+## WWDC
+
+[Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)
+
 ## WWDC24
 [UI 애니메이션 및 전환 효과 향상하기](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
 
