@@ -11,20 +11,21 @@ import UIKit
 
 @Reducer
 struct AppFeature {
+    @Reducer
+    enum Path {
+        case count(CountFeature)
+    }
+    
     @ObservableState
     struct State {
         var path = StackState<Path.State>()
         var rootFeature = RootFeature.State()
     }
     
-    @Reducer
-    enum Path {
-        case count(CountFeature)
-    }
-    
     enum Action {
         case path(StackActionOf<Path>)
         case rootFeature(RootFeature.Action)
+        case push(Path.State)
     }
     
     var body: some ReducerOf<Self> {
@@ -34,28 +35,21 @@ struct AppFeature {
         
         Reduce { state, action in
             switch action {
-                
-                // UIKit에서는 아래 액션이 발생하지 않는다.
-                // SwiftUI에서는 .push라는 액션이 발생하면서, 아래 delegate도 활용이 가능하지만
-                // UIKit에서는 어렵다.
-                // 일단, 이게 되려면 push를 동작시킬 방법부터 알아야한다.
-            case let .path(.element(_, .count(.delegate(delegateAction)))):
-                switch delegateAction {
-                case .increase:
-                    state.rootFeature.count += 1
-                    return .none
-                }
-                
-                // 굳이 위 방식처럼 하지 않더라도 이런식으로 우회해서 할 수는 있다.
+            case let .push(pathValue):
+                state.path.append(pathValue)
+                return .none
             case .rootFeature(.count(.viewDidLoad)):
+                return .none
+                
+            case .path(.element(_, action: .count(.viewDidLoad))):
                 state.rootFeature.count += 1
+                debugPrint("StackAction Sended!")
                 return .none
             default:
                 return .none
             }
         }
         .forEach(\.path, action: \.path)
-        ._printChanges()
     }
 }
 
@@ -78,5 +72,9 @@ class AppController: NavigationStackController {
         
         
         self.store = store
+    }
+    
+    func push(state: AppFeature.Path.State) {
+        store.send(.push(state))
     }
 }

@@ -13,26 +13,16 @@ import UIKit
 @Reducer
 struct CountFeature {
     @ObservableState
-    struct State {
-        
-    }
+    struct State { }
     
     enum Action {
         case viewDidLoad
-        case delegate(Delegate)
-        
-        @CasePathable
-        enum Delegate {
-            case increase
-        }
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .viewDidLoad:
-                return .none
-            case .delegate(_):
                 return .none
             }
         }
@@ -51,7 +41,6 @@ class CountViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         store.send(.viewDidLoad)
-        store.send(.delegate(.increase))
     }
     
     required init?(coder: NSCoder) {

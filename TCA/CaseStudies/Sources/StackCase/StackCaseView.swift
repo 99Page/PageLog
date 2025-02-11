@@ -32,7 +32,7 @@ struct StackCaseFeature {
         Reduce { state, action in
             switch action {
             case .path(.element(_, action: .delegate(.delegate(.onAppear)))):
-                debugPrint("onAppear recieved!")
+                state.path.append(.delegate(.init()))
                 return .none
             case .path:
                 return .none
@@ -42,6 +42,7 @@ struct StackCaseFeature {
         ._printChanges()
     }
 }
+
 
 struct StackCaseView: View {
     
