@@ -10,8 +10,7 @@ import UIKit
 import SwiftUI
 import ComposableArchitecture
 
-@Observable
-class ColorState {
+struct ColorState {
     var color: UIColor = .red
 }
 
@@ -21,7 +20,6 @@ class ColorBindingView: UIView {
     init(color: UIBinding<UIColor>) {
         self._color = color
         super.init(frame: .zero)
-        
         updateView()
     }
     
@@ -34,13 +32,11 @@ class ColorBindingView: UIView {
             guard let self else { return }
             self.backgroundColor = color
         }
-        
-        
     }
 }
 
 #Preview {
-    @Previewable @UIBindable var color = ColorState()
+    @Previewable @UIBinding var color = ColorState()
 
     UIViewPreview {
         ColorBindingView(color: $color.color)
