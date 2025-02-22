@@ -9,10 +9,13 @@
 import SwiftUI
 import ComposableArchitecture
 
+
 @Reducer
 struct DelegateFeature: Equatable {
     @ObservableState
-    struct State: Equatable { }
+    struct State: Equatable {
+        
+    }
     
     enum Action: Equatable {
         case delegate(Delegate)
@@ -34,9 +37,11 @@ struct DelegateFeature: Equatable {
 
 struct DelegateView: View {
     
-    let store: StoreOf<DelegateFeature>
+    @Bindable var store: StoreOf<DelegateFeature>
     
     var body: some View {
+        
+        
         Text("onAppear Action called!")
             .onAppear {
                 store.send(.delegate(.onAppear))
