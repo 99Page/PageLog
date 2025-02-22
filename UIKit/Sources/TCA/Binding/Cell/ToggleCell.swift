@@ -10,7 +10,10 @@ import UIKit
 import SwiftUI
 import SwiftNavigation
 
-struct ToggleState {
+
+/// ToggleCell의 상태값
+struct ToggleState: Identifiable, Equatable {
+    let id = UUID()
     var isOn: Bool = false
     var color: UIColor = .red
 }
@@ -84,7 +87,10 @@ class ToggleCell: UITableViewCell {
     
     func configure(_ binding: UIBinding<ToggleState>) {
         self.state = binding
-        
+        updateView()
+    }
+    
+    private func updateView() {
         observer = observe { [weak self] in
             guard let self else { return }
             guard let state else { return }
