@@ -8,7 +8,7 @@
 import Foundation
 import ProjectDescription
 
-let projectName = "CaseStudies-UIKit"
+let projectName = "CaseStudies-TCA-UIKit"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -26,7 +26,7 @@ let target = Target.target(
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../SwiftUI/PageComponent/Resources/**"],
+    resources: ["../../SwiftUI/PageComponent/Resources/**"],
     dependencies: [
         .package(product: "SnapKit"),
         .package(product: "MessageKit"),
@@ -39,7 +39,7 @@ let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.case.stuides.test",
+    bundleId: "com.page.tca.uikit",
     deploymentTargets: .iOS("18.0"),
     sources: ["Tests/**"],
     dependencies: [

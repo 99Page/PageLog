@@ -14,7 +14,7 @@ let infoPlist: [String: Plist.Value] = [
     "UILaunchStoryboardName": "LaunchScreen"
 ]
 
-let projectName = "CaseStudies-TCA"
+let projectName = "CaseStudies-TCA-SwiftUI"
 
 let target = Target.target(
     name: projectName,
@@ -36,7 +36,7 @@ let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.case.stuides.test",
+    bundleId: "com.page.tca.swiftui",
     deploymentTargets: .iOS("17.4"),
     sources: ["Tests/**"],
     dependencies: [
