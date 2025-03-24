@@ -1,4 +1,4 @@
-# ``CaseStudies-TCA``
+# README
 
 Point-free의 Dependencies에 대해서 정리한 글
 
@@ -71,6 +71,15 @@ Project
 실제 프로젝트에서는 LargeFramework가 필요한데, 이 프레임워크에 의존하는 기능을 구현한 프레임워크를 LiveClient에 모듈화했습니다. LargeFramework 기능이 필요하면 LiveClient만 수정하면 됩니다. 
 
 
+## 의문점 
+
+* @Dependency를 사용함으로써 원하는 기능을 주입하기가 어려워졌는데 이는 어떤 것과 trade-off 관계가 있을까? 
+
+*  struct를 사용함으로써 타입 캐스팅은 불가능해 졌는데 실제 프로덕트에서 타입 캐스팅을 사용할 상황은 별로 없나?
+
+## 후기 
+
+point-free가 ep 110 근처를 녹화할 때 쯤에는 async await이 도입되기 전이었나 보다. 
 
 
 ## References
@@ -80,3 +89,5 @@ Project
  [Ep#111 Designing Dependencies: Modularization](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep111-designing-dependencies-modularization)
 
  [Ep#112 Designing Dependencies: Reachability](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep112-designing-dependencies-reachability)
+
+[Ep#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)

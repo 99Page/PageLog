@@ -4,7 +4,7 @@
 
 ## Tuist 설치
 
-개인 프로젝트지만 학습을 위해 `tuist`를 사용했습니다. `tuist` 가 설치되어 있다면, 터미널에 아래 커맨드를 순차적으로 입력 후 프로젝트를 확인할 수 있습니다. 
+개인 프로젝트지만 학습을 위해 `tuist`를 사용했습니다. `tuist` 가 설치되어있지 있다면, 터미널에 아래 커맨드를 순차적으로 입력 후 프로젝트를 확인할 수 있습니다. 
 
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -50,6 +50,8 @@ tuist generate
 [Ep#111 Designing Dependencies: Modularization](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep111-designing-dependencies-modularization)
 
 [Ep#112 Designing Dependencies: Reachability](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep112-designing-dependencies-reachability)
+
+[Ep#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)
 
 [Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
 
