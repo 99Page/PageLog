@@ -13,7 +13,7 @@ import SwiftUI
 struct StackCaseFeature {
     
     @Reducer
-    enum Path: Equatable {
+    enum Path {
         case alert(AlertCaseFeature)
         case debugViewInit(ViewInitCaseFeature)
         case delegate(DelegateFeature)
