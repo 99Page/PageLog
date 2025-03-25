@@ -30,7 +30,11 @@ struct PlaceholderStackFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .path(_):
+            case .path(.element(id: _, action: .product(.view(.buttonTapped)))):
+                return .none
+            case .path(.element(id: _, action: .mockPlaceholder(.placeholder(.view(.buttonTapped))))):
+                return .none
+            case .path:
                 return .none
             }
         }
@@ -45,7 +49,7 @@ struct PlaceholderStackCaseView: View {
     var body: some View {
         NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             List {
-                NavigationLink(state: PlaceholderStackFeature.Path.State.mockPlaceholder(.init())) {
+                NavigationLink(state: PlaceholderStackFeature.Path.State.product(.init())) {
                     Text("product")
                 }
 
