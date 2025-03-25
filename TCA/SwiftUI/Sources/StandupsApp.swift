@@ -12,22 +12,11 @@ import GRDB
 
 @main
 struct StandupsApp: App {
-    
-    let model: FactModel
-    
-    init() {
-        prepareDependencies {
-            $0.defaultDatabase = DatabaseQueue.appDatabase
-        }
-        
-        self.model = FactModel()
-    }
     var body: some Scene {
         WindowGroup {
-//            FactView(model: model)
-            StackCaseView(store: Store(initialState: StackCaseFeature.State()) {
-                StackCaseFeature()
-            })
+            PlaceholderStackCaseView(store: Store(initialState: PlaceholderStackFeature.State(), reducer: {
+                PlaceholderStackFeature()
+            }))
         }
     }
 }
