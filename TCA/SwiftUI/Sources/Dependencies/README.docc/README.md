@@ -91,3 +91,5 @@ point-free가 ep 110 근처를 녹화할 때 쯤에는 async await이 도입되�
  [Ep#112 Designing Dependencies: Reachability](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep112-designing-dependencies-reachability)
 
 [Ep#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)
+
+[Ep#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)

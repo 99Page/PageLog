@@ -56,3 +56,5 @@ tuist generate
 [Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
 
 [Ep#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
+
+[Ep#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)
