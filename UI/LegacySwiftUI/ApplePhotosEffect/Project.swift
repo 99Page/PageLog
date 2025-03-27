@@ -1,4 +1,13 @@
+//
+//  ApplePhotosEffect.swift
+//  ConcurrencyManifests
+//
+//  Created by 노우영 on 8/9/24.
+//
+
 import ProjectDescription
+
+let projectName = "ApplePhotosEffect"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -8,22 +17,19 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let pageResourceTarget = Target.target(
-    name: "PageComponent",
+let target = Target.target(
+    name: projectName,
     destinations: .iOS,
-    product: .framework,
-    bundleId: "com.page.page.component",
+    product: .app,
+    bundleId: "com.page.apple.photos.effect",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
-    resources: ["Resources/**"]
+    sources: ["Sources/**"],
+    resources: ["../../../Resource/Resources/**"]
 )
 
 let project = Project(
-    name: "PageComponent",
+    name: projectName,
     organizationName: "Page",
-    settings: nil,
-    targets: [pageResourceTarget]
+    targets: [target]
 )
-
-
-

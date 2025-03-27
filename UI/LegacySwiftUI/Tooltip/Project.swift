@@ -1,13 +1,4 @@
-//
-//  CommunicationApp.swift
-//  ApplePhotosEffectManifests
-//
-//  Created by 노우영 on 9/3/24.
-//
-
 import ProjectDescription
-
-let projectName = "Communication"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -17,21 +8,21 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let target = Target.target(
-    name: projectName,
+let tooltipTarget = Target.target(
+    name: "Tooltip",
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.communication",
+    bundleId: "com.page.tooltip",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../../Resource/Resources/**"]
 )
 
-let project = Project(
-    name: projectName,
+let tooltipProject = Project(
+    name: "Tooltip",
     organizationName: "Page",
-    targets: [target]
+    targets: [tooltipTarget]
 )
 
 

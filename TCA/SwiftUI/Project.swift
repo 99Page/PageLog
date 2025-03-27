@@ -24,7 +24,7 @@ let target = Target.target(
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**", "Docs/**"],
-    resources: ["../../SwiftUI/PageComponent/Resources/**"],
+    resources: ["../../Resource/Resources/**"],
     dependencies: [
         .package(product: "ComposableArchitecture"),
         .package(product: "GRDB"),

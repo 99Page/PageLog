@@ -1,10 +1,3 @@
-//
-//  Project.swift
-//  PageComponentManifests
-//
-//  Created by wooyoung on 7/25/24.
-//
-
 import ProjectDescription
 
 let infoPlist: [String: Plist.Value] = [
@@ -15,21 +8,21 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let target = Target.target(
-    name: "ReseachPreferenceKey",
+let pageResourceTarget = Target.target(
+    name: "PageResources",
     destinations: .iOS,
-    product: .app,
-    bundleId: "com.page.research.preferenceKey",
+    product: .framework,
+    bundleId: "com.page.page.component",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
-    sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["Resources/**"]
 )
 
 let project = Project(
-    name: "ReseachPreferenceKey",
+    name: "PageResource",
     organizationName: "Page",
-    targets: [target]
+    settings: nil,
+    targets: [pageResourceTarget]
 )
 
 

@@ -43,6 +43,10 @@ tuist generate
 
 [Meet the Translation API](https://developer.apple.com/kr/videos/play/wwdc2024/10117/)
 
+[Demystify SwiftUI containers](https://developer.apple.com/videos/play/wwdc2024/10146/)
+
+[Go further with Swift Testing](https://developer.apple.com/videos/play/wwdc2024/10195/)
+
 ### Point-free
 
 [Ep#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)

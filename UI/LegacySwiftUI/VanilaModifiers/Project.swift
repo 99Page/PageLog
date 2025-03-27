@@ -1,4 +1,14 @@
+//
+//  Project.swift
+//  ApplePhotosEffectManifests
+//
+//  Created by 노우영 on 8/14/24.
+//
+
 import ProjectDescription
+
+let projectName = "VanilaModifiers"
+let additionalBundleId = "vanila.modifiers"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -8,21 +18,20 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let tooltipTarget = Target.target(
-    name: "Tooltip",
+let target = Target.target(
+    name: projectName,
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.tooltip",
+    bundleId: "com.page.\(additionalBundleId)",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../../Resource/Resources/**"]
 )
 
-let tooltipProject = Project(
-    name: "Tooltip",
+let project = Project(
+    name: projectName,
     organizationName: "Page",
-    targets: [tooltipTarget]
+    targets: [target]
 )
-
 
