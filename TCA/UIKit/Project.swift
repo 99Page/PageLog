@@ -26,7 +26,7 @@ let target = Target.target(
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../SwiftUI/PageComponent/Resources/**"],
+    resources: ["../../UI/SwiftUI/PageComponent/Resources/**"],
     dependencies: [
         .package(product: "SnapKit"),
         .package(product: "MessageKit"),

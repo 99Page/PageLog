@@ -2,12 +2,13 @@
 //  Project.swift
 //  2023KakaoManifests
 //
-//  Created by 노우영 on 9/20/24.
+//  Created by 노우영 on 12/10/24.
 //
 
+import Foundation
 import ProjectDescription
 
-let projectName = "WWDC24"
+let projectName = "CaseStudies-SwiftUI"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -21,29 +22,28 @@ let target = Target.target(
     name: projectName,
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.WWDC24",
+    bundleId: "com.page.ui.case-studies-swiftui",
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../SwiftUI/PageComponent/Resources/**"]
+    resources: ["../PageComponent/Resources/**"]
 )
 
 let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.WWDC24.tests",
+    bundleId: "com.page.ui.case-studies-swiftui.test",
     deploymentTargets: .iOS("18.0"),
     sources: ["Tests/**"],
     dependencies: [
-        .target(name: "WWDC24")
+        .target(name: projectName)
     ]
 )
+
 
 let project = Project(
     name: projectName,
     organizationName: "Page",
     targets: [target, testTarget]
 )
-
-
