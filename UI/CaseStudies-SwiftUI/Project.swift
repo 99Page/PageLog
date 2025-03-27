@@ -26,7 +26,7 @@ let target = Target.target(
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../Resource/Resources/**"]
 )
 
 let testTarget = Target.target(

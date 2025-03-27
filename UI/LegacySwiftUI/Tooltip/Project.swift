@@ -1,7 +1,5 @@
 import ProjectDescription
 
-let projectName = "EnvironmentNavigation"
-
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
     "UILaunchStoryboardName": "Launch Screen",
@@ -10,22 +8,21 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let target = Target.target(
-    name: projectName,
+let tooltipTarget = Target.target(
+    name: "Tooltip",
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.environment.navigation",
+    bundleId: "com.page.tooltip",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../../Resource/Resources/**"]
 )
 
-let project = Project(
-    name: projectName,
+let tooltipProject = Project(
+    name: "Tooltip",
     organizationName: "Page",
-    targets: [target]
+    targets: [tooltipTarget]
 )
-
 
 

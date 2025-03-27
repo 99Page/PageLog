@@ -1,14 +1,11 @@
 //
 //  Project.swift
-//  ApplePhotosEffectManifests
+//  PageComponentManifests
 //
-//  Created by 노우영 on 8/14/24.
+//  Created by wooyoung on 7/25/24.
 //
 
 import ProjectDescription
-
-let projectName = "VanilaModifiers"
-let additionalBundleId = "vanila.modifiers"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -19,19 +16,21 @@ let infoPlist: [String: Plist.Value] = [
 
 
 let target = Target.target(
-    name: projectName,
+    name: "ReseachPreferenceKey",
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.\(additionalBundleId)",
+    bundleId: "com.page.research.preferenceKey",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../../Resource/Resources/**"]
 )
 
 let project = Project(
-    name: projectName,
+    name: "ReseachPreferenceKey",
     organizationName: "Page",
     targets: [target]
 )
+
+
 

@@ -1,13 +1,13 @@
 //
-//  Project.swift
-//  TooltipManifests
+//  CommunicationApp.swift
+//  ApplePhotosEffectManifests
 //
-//  Created by wooyoung on 7/19/24.
+//  Created by 노우영 on 9/3/24.
 //
 
 import ProjectDescription
 
-let projectName = "DragAndDrop"
+let projectName = "Communication"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -17,20 +17,21 @@ let infoPlist: [String: Plist.Value] = [
 ]
 
 
-let dragAndDropTarget = Target.target(
+let target = Target.target(
     name: projectName,
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.drag.and.drop",
+    bundleId: "com.page.communication",
     deploymentTargets: .iOS("17.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../PageComponent/Resources/**"]
+    resources: ["../../../Resource/Resources/**"]
 )
 
-let dragAndDropProject = Project(
+let project = Project(
     name: projectName,
     organizationName: "Page",
-    targets: [dragAndDropTarget]
+    targets: [target]
 )
+
 
