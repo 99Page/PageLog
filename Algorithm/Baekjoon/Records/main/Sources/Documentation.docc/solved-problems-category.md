@@ -83,7 +83,8 @@
 * 2637: DFS + DP. 
 
 ### 점화식 
-* 9461: 점화식 DP
+* 9461
+* 1309
 
 ### Index Sequence
 * 7570: Index Sequence 를 찾는데 헤맨 문제
