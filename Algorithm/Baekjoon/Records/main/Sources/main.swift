@@ -12,11 +12,20 @@ solver.solve()
 //0110
 //0111
 //0011
+
+//2 3
+//111
+//111
+
+//3 2
+//11
+//11
+//11
 struct Solver1915 {
     var contRow: [[Int]] = []
     var contCol: [[Int]] = []
     var map: [[Character]]
-    var isVisited: [[Bool]]
+    var maxSquare: [[Int]]
     let n: Int
     let m: Int
     
@@ -27,10 +36,10 @@ struct Solver1915 {
         n = sizeInput[0]
         m = sizeInput[1]
         
-        contRow = Array(repeating: Array(repeating: -1, count: n), count: m)
-        contCol = Array(repeating: Array(repeating: -1, count: n), count: m)
+        contRow = Array(repeating: Array(repeating: -1, count: m), count: n)
+        contCol = Array(repeating: Array(repeating: -1, count: m), count: n)
         map = []
-        isVisited = Array(repeating: Array(repeating: false, count: n), count: m)
+        maxSquare = Array(repeating: Array(repeating: 0, count: m), count: n)
     }
     
     mutating func solve() {
@@ -43,31 +52,23 @@ struct Solver1915 {
     private mutating func findLargestSquare() {
         var largests = 0
         
-        for row in 0..<n {
-            for col in 0..<m {
-                if !isVisited[row][col] {
-                    let minCont = minContValue(row: row, col: col)
-                    let maxCont = findLargestSquare(row: row + 1, col: col + 1, remainValue: minCont, cont: 1)
-                    largests = max(largests, maxCont)
+        for row in (0..<n).reversed() {
+            for col in (0..<m).reversed() {
+                let current = min(contRow[row][col], contCol[row][col])
+                
+                if current > 0 {
+                    maxSquare[row][col] = 1
+                    largests = max(maxSquare[row][col], largests)
+                }
+                
+                if isValidRange(row: row+1, col: col+1) {
+                    maxSquare[row][col] = min(maxSquare[row+1][col+1] + 1, current)
+                    largests = max(maxSquare[row][col], largests)
                 }
             }
         }
         
-        print("\(largests * largests)")
-//        print(visitCount)
-    }
-    
-    private mutating func findLargestSquare(row: Int, col: Int, remainValue: Int, cont: Int) -> Int {
-        guard isValidRange(row: row, col: col) else { return 0 }
-                
-        visitCount += 1
-        isVisited[row][col] = true
-        
-        if remainValue == 0 {
-            
-        }
-        
-        var remainValue = min(remainValue, minContValue(row: row, col: col)) - 1
+        print(largests * largests)
     }
     
     private func minContValue(row: Int, col: Int) -> Int {
