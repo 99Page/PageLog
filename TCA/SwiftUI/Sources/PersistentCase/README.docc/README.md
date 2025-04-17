@@ -1,4 +1,4 @@
-# ``CaseStudies-TCA``
+# CaseStudies-TCA
 
 ComposableArchictecture 중, PersitentData에 대해서 정리한 파일
 
