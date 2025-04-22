@@ -18,17 +18,17 @@ let infoPlist: [String: Plist.Value] = [
 
 
 let target = Target.target(
-    name: "SwiftDocument",
+    name: "Swift",
     destinations: .macOS,
     product: .commandLineTool,
-    bundleId: "com.page.swift.document",
+    bundleId: "com.page.swift",
     deploymentTargets: .macOS("14.5"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"]
 )
 
 let project = Project(
-    name: "SwiftDocument",
+    name: "Swift",
     organizationName: "Page",
     targets: [target]
 )
