@@ -69,6 +69,6 @@ class ToDoCellView: UIView {
     }
     
     @objc private func handleSwipe(_ gesture: UIPanGestureRecognizer) {
-        debugPrint("handleSwipe")
+        
     }
 }
