@@ -6,13 +6,13 @@
 
 import ProjectDescription
 
-let projectName = "PageCollection"
+let projectName = "PageKit"
 
 let target = Target.target(
     name: projectName,
     destinations: .macOS,
     product: .staticFramework,
-    bundleId: "com.page.page.collection",
+    bundleId: "com.page.pageKit",
     deploymentTargets: .macOS("14.5"),
     sources: ["Sources/**"]
 )
@@ -21,7 +21,7 @@ let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .macOS,
     product: .unitTests,
-    bundleId: "com.page.collection.tests",
+    bundleId: "com.page.pageKit.tests",
     deploymentTargets: .macOS("14.5"),
     sources: ["Tests/**"],
     dependencies: [
