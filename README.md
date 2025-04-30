@@ -54,15 +54,29 @@ tuist generate
 
 ### Point-free
 
-[Ep#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)
+[EP#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)
 
-[Ep#111 Designing Dependencies: Modularization](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep111-designing-dependencies-modularization)
+[EP#111 Designing Dependencies: Modularization](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep111-designing-dependencies-modularization)
 
-[Ep#112 Designing Dependencies: Reachability](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep112-designing-dependencies-reachability)
+[EP#112 Designing Dependencies: Reachability](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep112-designing-dependencies-reachability)
 
-[Ep#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)
+[EP#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)
 
-[Ep#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)
+[EP#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)
+
+[EP#243 Tour of the Composable Architecture: The Basics](https://www.pointfree.co/episodes/ep243-tour-of-the-composable-architecture-1-0-the-basics)
+
+[EP#244 Tour of the Composable Architecture: Introducing Standups](https://www.pointfree.co/episodes/ep244-tour-of-the-composable-architecture-1-0-standups-part-1)
+
+[EP#245 Tour of the Composable Architecture: Navigation](https://www.pointfree.co/episodes/ep245-tour-of-the-composable-architecture-1-0-navigation)
+
+[EP#246 Tour of the Composable Architecture: Stacks](https://www.pointfree.co/episodes/ep246-tour-of-the-composable-architecture-1-0-stacks)
+
+[EP#247 Tour of the Composable Architecture: Domain Modeling](https://www.pointfree.co/episodes/ep247-tour-of-the-composable-architecture-1-0-correctness)
+
+[EP#248 Tour of the Composable Architecture: Dependencies](https://www.pointfree.co/episodes/ep248-tour-of-the-composable-architecture-1-0-dependencies)
+
+[EP#249 Tour of the Composable Architecture: Persistence](https://www.pointfree.co/episodes/ep249-tour-of-the-composable-architecture-1-0-persistence)
 
 [Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
 
