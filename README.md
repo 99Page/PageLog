@@ -78,8 +78,8 @@ tuist generate
 
 [EP#249 Tour of the Composable Architecture: Persistence](https://www.pointfree.co/episodes/ep249-tour-of-the-composable-architecture-1-0-persistence)
 
-[Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
+[EP#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
 
-[Ep#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
+[EP#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
 
  [EP#316 SQL Builders: Selects](https://www.pointfree.co/episodes/ep316-sql-builders-selects)
