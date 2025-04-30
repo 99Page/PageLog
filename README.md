@@ -68,3 +68,4 @@ tuist generate
 
 [Ep#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
 
+ [EP#316 SQL Builders: Selects](https://www.pointfree.co/episodes/ep316-sql-builders-selects)
