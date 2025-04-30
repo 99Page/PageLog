@@ -30,16 +30,21 @@ tuist generate
 
 학습에 참고했던 자료들입니다. 자료가 방대하거나 영상인 경우만 기록했습니다.
 
+### Documentation provided by Apple
+
+
+[The Swift Programming Language(6.1) - Language Guide](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/#Language-Guide)
+
 ### WWDC 23
 
 [Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)
 
 ### WWDC24
-[UI 애니메이션 및 전환 효과 향상하기](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
+[Enhance your UI animations and transitions](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
 
 [Creating a chart using Swift charts](https://developer.apple.com/documentation/charts/creating-a-chart-using-swift-charts)
 
-[SF symbols 6의 새로운 기능](https://developer.apple.com/kr/videos/play/wwdc2024/10188/)
+[What’s new in SF Symbols 6](https://developer.apple.com/kr/videos/play/wwdc2024/10188/)
 
 [Meet the Translation API](https://developer.apple.com/kr/videos/play/wwdc2024/10117/)
 
@@ -57,8 +62,9 @@ tuist generate
 
 [Ep#113 Designing Dependencies: Core Location](https://www.pointfree.co/episodes/ep113-designing-dependencies-core-location)
 
+[Ep#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)
+
 [Ep#309 Sharing with SQLite: The Problems](https://www.pointfree.co/episodes/ep309-sharing-with-sqlite-the-problems#downloads)
 
 [Ep#310 Sharing with SQLite: The Solution](https://www.pointfree.co/episodes/ep310-sharing-with-sqlite-the-solution)
 
-[Ep#114 Designing Dependencies: The Point](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep114-designing-dependencies-the-point)
