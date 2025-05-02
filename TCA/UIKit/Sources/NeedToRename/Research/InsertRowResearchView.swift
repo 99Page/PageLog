@@ -73,10 +73,8 @@ class InsertRowResearchView: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @objc private func printButtonTapped() {
-        debugPrint("[before] \(rowData.count)")
         rowData.insert(.red, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-        debugPrint("[after] \(rowData.count)")
     }
     
     // MARK: - UITableViewDataSource

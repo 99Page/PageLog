@@ -35,7 +35,6 @@ struct AlertCaseFeature: Equatable {
         Reduce { state, action in
             switch action {
             case .alert(.presented(.ok)):
-                debugPrint("ok tapped")
                 return .none
             case .alert(.presented(.cancel)):
                 return .none

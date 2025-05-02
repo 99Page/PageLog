@@ -42,7 +42,6 @@ class ColorBindingView: UIView {
         ColorBindingView(color: $color.color)
     }
     .onTapGesture {
-        debugPrint("tap")
         color.color = .green
     }
 }

@@ -19,14 +19,12 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 class PhotoCollectionViewCell: UICollectionViewCell {
     func configure() {
         view.configure() 
-        debugPrunt(self.bounds) // OK!
     }
 }
 
 class PhotoCellView: UICollectionViewCell {
     func configure() {
         view.configure() 
-        debugPrunt(self.bounds) // Fail!
     }
 }
 ```

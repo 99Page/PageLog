@@ -26,7 +26,10 @@ let target = Target.target(
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../Resource/Resources/**"]
+    resources: ["../../Resource/Resources/**"],
+    dependencies: [
+        .package(product: "SnapKit"),
+    ]
 )
 
 let testTarget = Target.target(
@@ -41,9 +44,14 @@ let testTarget = Target.target(
     ]
 )
 
+let snapKitURL = "https://github.com/SnapKit/SnapKit.git"
+let snapKitVersion: Package.Requirement = .exact("5.7.1")
 
 let project = Project(
     name: projectName,
     organizationName: "Page",
+    packages: [
+        .remote(url: snapKitURL, requirement: snapKitVersion),
+    ],
     targets: [target, testTarget]
 )
