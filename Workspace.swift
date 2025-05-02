@@ -9,5 +9,5 @@ import ProjectDescription
 
 let workspace = Workspace(
     name: "PageLog",
-    projects: ["UI/**", "Language/**", "Algorithm/**", "TCA/**", "Resource/**", "TIL/**", "PageKit/**"]
+    projects: ["UI/**", "Language/**", "Algorithm/**", "TCA/**", "Resource/**", "JustDoc/**", "PageKit/**"]
 )
