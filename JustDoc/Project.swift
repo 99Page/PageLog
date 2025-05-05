@@ -8,7 +8,7 @@
 import Foundation
 import ProjectDescription
 
-let projectName = "TIL"
+let projectName = "JustDoc"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -22,7 +22,7 @@ let target = Target.target(
     name: projectName,
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.today.i.learned",
+    bundleId: "com.page.justDoc",
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"]
