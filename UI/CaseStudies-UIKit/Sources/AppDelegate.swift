@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // 윈도우의 루트 뷰 컨트롤러 설정
-        window?.rootViewController = ExpandableCollectionViewController(nibName: nil, bundle: nil)
+        window?.rootViewController = ImageViewController()
         window?.makeKeyAndVisible()
         
         return true
