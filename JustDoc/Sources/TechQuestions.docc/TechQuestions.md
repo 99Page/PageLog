@@ -16,15 +16,16 @@
     }
     
     @Column(size: 2) {
-        1. 클래스와 구조체의 차이점은 무엇인가요?
-        2. Closure란 무엇인가요?
-        3. escaping 클로저와 non-escaping 클로저의 차이는 무엇인가요?
-        4. Trailing Closure란 무엇인가요?
-        5. Generics이란 무엇인가요?
+        
 
     }
 } 
 
+1. 클래스와 구조체의 차이점은 무엇인가요?
+2. Closure란 무엇인가요?
+3. escaping 클로저와 non-escaping 클로저의 차이는 무엇인가요?
+4. Trailing Closure란 무엇인가요?
+5. Generics이란 무엇인가요?
 6. Protocol이란 무엇인가요?
 7. Associated Types이란 무엇인가요?
 8. Delegation, Notification, Closure의 차이를 설명해주세요.
@@ -32,9 +33,10 @@
 10. Capture List란 무엇인가요?
 11. Property Wrapper란 무엇인가요?
 12. 싱글톤의 장점과 단점은 무엇인가요?
+13. Sendable이란 무엇인가요? 
 
-## Topics
+## UI 
 
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
+1. UIKit과 SwiftUI의 차이점은 무엇인가요? 
 
 
