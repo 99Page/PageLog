@@ -29,23 +29,17 @@ struct Coordinate {
     ///   - rowSize: 그리드의 행 크기입니다.
     ///   - colSize: 그리드의 열 크기입니다.
     /// - Returns: 모든 방향으로 이동한 유효한 좌표들을 반환합니다.
-    func findValidNextPositionsIncludingDiagonals(rowSize: Int, colSize: Int) -> [Coordinate] {
-        let candidates = [
-            // 상하좌우
-            Coordinate(row: row, col: col - 1, distance: distance + 1), // 왼쪽
-            Coordinate(row: row, col: col + 1, distance: distance + 1), // 오른쪽
-            Coordinate(row: row - 1, col: col, distance: distance + 1), // 위쪽
-            Coordinate(row: row + 1, col: col, distance: distance + 1), // 아래쪽
-            
-            // 대각선
-            Coordinate(row: row - 1, col: col - 1, distance: distance + 1), // 왼쪽 위 대각선
-            Coordinate(row: row - 1, col: col + 1, distance: distance + 1), // 오른쪽 위 대각선
-            Coordinate(row: row + 1, col: col - 1, distance: distance + 1), // 왼쪽 아래 대각선
-            Coordinate(row: row + 1, col: col + 1, distance: distance + 1)  // 오른쪽 아래 대각선
+    func neighborsIncludingDiagonals(rowSize: Int, colSize: Int) -> [Coordinate] {
+        let directions = [
+            (-1, 0), (1, 0), (0, -1), (0, 1),     // 상, 하, 좌, 우
+            (-1, -1), (-1, 1), (1, -1), (1, 1)    // 대각선
         ]
         
-        /// 유효한 좌표만 필터링하여 반환
-        return candidates.filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
+        return directions
+            .map { (dr, dc) in
+                Coordinate(row: row + dr, col: col + dc, distance: distance + 1, arrayIndexBase: arrayIndexBase)
+            }
+            .filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
     }
     
     /// 현재 위치에서 이동할 수 있는 상, 하, 좌, 우의 다음 위치를 반환합니다.
@@ -55,16 +49,14 @@ struct Coordinate {
     ///   - rowSize: 그리드의 행 크기입니다.
     ///   - colSize: 그리드의 열 크기입니다.
     /// - Returns: 상, 하, 좌, 우로 이동한 유효한 좌표들을 반환합니다.
-    func findValidNextPositions(rowSize: Int, colSize: Int) -> [Coordinate] {
-        let candidates = [
-            Coordinate(row: row, col: col - 1, distance: distance + 1),
-            Coordinate(row: row, col: col + 1, distance: distance + 1),
-            Coordinate(row: row - 1, col: col, distance: distance + 1),
-            Coordinate(row: row + 1, col: col, distance: distance + 1)
-        ]
+    func neighbors(rowSize: Int, colSize: Int) -> [Coordinate] {
+        let directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         
-        /// 유효한 좌표만 필터링하여 반환
-        return candidates.filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
+        return directions
+            .map { (dr, dc) in
+                Coordinate(row: row + dr, col: col + dc, distance: distance + 1, arrayIndexBase: arrayIndexBase)
+            }
+            .filter { $0.isValidCoordinate(rowSize: rowSize, colSize: colSize) }
         
     }
     
