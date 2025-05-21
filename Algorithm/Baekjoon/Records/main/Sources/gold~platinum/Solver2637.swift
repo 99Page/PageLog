@@ -1,14 +1,3 @@
-//
-//  Solver2637.swift
-//  gold-platinum-solver
-//
-//  Created by 노우영 on 10/8/24.
-//  Copyright © 2024 Page. All rights reserved.
-//
-
-import Foundation
-
-
 struct Solver2637 {
     let finalProduct: Int
     let combinations: [[Int: Int]]
@@ -78,4 +67,5 @@ private func readArray<T: LosslessStringConvertible>() -> [T] {
     let array = splitedLine.map { T(String($0))! }
     return array
 }
+
 
