@@ -175,6 +175,14 @@ createClosureCycle()
 
 위 코드는 Strong reference cycle이 발생하는 두가지 상황에 대한 예시입니다. 
 
+## Dictionary
+
+```swift
+var dict = [String: Int]()
+dict["apple", default: 0] += 1
+```
+
+초기값을 주는 방법입니다. 
 
 ## Reference
 

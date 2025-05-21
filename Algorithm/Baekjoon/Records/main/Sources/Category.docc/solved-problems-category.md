@@ -23,9 +23,11 @@
 
 ### MST 
 
-* 1922: Prim 
-* 1197: Kruskal
----
+| 문제 번호 | 설명 |
+| --- | --- |
+| 1922 | Prim |
+| 1197 | Kruskal | 
+| 17472 | Prim + 문제 분석 후 Edge 직접 만들기 |
 
 ## Brute force 
 
