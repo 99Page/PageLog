@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 /// 외판원 문제(Traveling Salesman Problem, TSP)를 Bitmask + DP 방식으로 해결하는 구조체입니다.
 struct TravelingSalesman {
     
