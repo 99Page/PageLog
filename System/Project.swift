@@ -7,12 +7,22 @@
 
 import ProjectDescription
 
+/// Macro를 활용하기 위한 프로젝트 설정
+///
+/// [Add macro dependency type to ProjectDescription](https://github.com/tuist/tuist/pulls?q=macro)
+///
+/// 이곳의 내용을 참고해서 프로젝트를 설정했습니다.
+///
+/// ```swift
+///  .external(product: "SwiftSyntaxMacros") // ❌ 동작하지 않은 코드
+///  .package(product: "SwiftSyntaxMacros") // ✅ 대체 코드
+/// ```
 let project = Project(
-    name: "ios_app_with_tuist_macro",
+    name: "MacroKit",
     targets: [
         // MARK: Macro Targets + Tests
         .target(
-            name: "TuistMacroMacros",
+            name: "MacroKitMacros",
             destinations: .macOS,
             product: .macro,
             bundleId: "io.tuist.TuistMacroMacros",
@@ -24,23 +34,23 @@ let project = Project(
             ]
         ),
         .target(
-            name: "TuistMacro",
+            name: "MacroKit",
             destinations: [.iPhone, .iPad, .mac],
             product: .framework,
             bundleId: "io.tuist.TuistMacro",
             sources: ["TuistMacro/Sources/TuistMacro/**"],
             dependencies: [
-                .target(name: "TuistMacroMacros"),
+                .target(name: "MacroKitMacros"),
             ]
         ),
         .target(
-            name: "TuistMacroClient",
+            name: "MacroKitClient",
             destinations: .macOS,
             product: .commandLineTool,
             bundleId: "io.tuist.TuistMacroClient",
             sources: ["TuistMacro/Sources/TuistMacroClient/**"],
             dependencies: [
-                .target(name: "TuistMacro"),
+                .target(name: "MacroKit"),
             ]
         ),
         .target(
@@ -52,7 +62,7 @@ let project = Project(
             infoPlist: .default,
             sources: ["TuistMacro/Tests/**"],
             dependencies: [
-                .target(name: "TuistMacroMacros"),
+                .target(name: "MacroKitMacros"),
                 .package(product: "SwiftSyntaxMacrosTestSupport"),
             ]
         ),
