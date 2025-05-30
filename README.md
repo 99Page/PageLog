@@ -39,6 +39,8 @@ tuist generate
 
 [Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)
 
+[Write Swift macros](https://developer.apple.com/kr/videos/play/wwdc2023/10166/)
+
 ### WWDC24
 [Enhance your UI animations and transitions](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
 
