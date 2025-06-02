@@ -52,7 +52,7 @@ let project = Project(
             infoPlist: .default,
             sources: ["TuistMacro/Tests/**"],
             dependencies: [
-                .target(name: "TuistMacroMacros"),
+                .macro(name: "TuistMacroMacros"),
                 .package(product: "SwiftSyntaxMacrosTestSupport"),
             ]
         ),
