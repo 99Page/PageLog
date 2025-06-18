@@ -21,7 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // 윈도우의 루트 뷰 컨트롤러 설정
-        window?.rootViewController = InsertRowResearchView()
+        window?.rootViewController = MyAlertViewController(store: Store(initialState: AlertFeature.State(), reducer: {
+            AlertFeature()
+        }))
+        
         window?.makeKeyAndVisible()
         
         return true

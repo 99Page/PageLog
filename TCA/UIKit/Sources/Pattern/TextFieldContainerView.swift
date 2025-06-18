@@ -82,6 +82,7 @@ class TextFieldContainerView: UIViewController {
     
     private func updateView() {
         observe { [weak self] in
+            guard let self else { return }
             view.backgroundColor = store.backgroundColor
         }
     }
