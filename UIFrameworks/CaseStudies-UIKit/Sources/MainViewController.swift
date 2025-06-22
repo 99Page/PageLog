@@ -22,7 +22,6 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "리스트"
         setupTableView()
         
         addSection(section: "View", title: "Observation", destination: ObservationViewController.self)
