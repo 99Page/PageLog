@@ -8,6 +8,9 @@
 
 import UIKit
 
+// iOS 26부터는 SceneDelegate가 강제됩니다.
+// reference: https://developer.apple.com/videos/play/wwdc2025/243/?time=1238
+// -page, 2025. 06. 22 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
