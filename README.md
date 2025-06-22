@@ -54,6 +54,8 @@ tuist generate
 
 ## WWDC25 
 
+[Meet Liquid Glass](https://developer.apple.com/videos/play/wwdc2025/219/)
+
 [What’s new in UIKit](https://developer.apple.com/videos/play/wwdc2025/243/)
 
 ### Point-free
