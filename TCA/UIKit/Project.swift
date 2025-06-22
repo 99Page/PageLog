@@ -57,7 +57,7 @@ let starscreamURL = "https://github.com/daltoniam/Starscream.git"
 let starscreamVersion: Package.Requirement = .exact("4.0.8")
 
 let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
-let tcaVersion: Package.Requirement = .exact("1.17.1")
+let tcaVersion: Package.Requirement = .exact("1.20.2")
 
 let project = Project(
     name: projectName,
