@@ -15,6 +15,18 @@ let infoPlist: [String: Plist.Value] = [
     "UILaunchStoryboardName": "Launch Screen",
     "ITSAppUsesNonExemptEncryption": false,
     "UIUserInterfaceStyle": "Light", // 다크 모드를 사용하지 않습니다.
+    "UIApplicationSceneManifest": [
+        "UIApplicationSupportsMultipleScenes": true,
+        "UISceneConfigurations": [
+            // SceneDelegate가 동작하기 위해 필요한 키 값입니다.
+            "UIWindowSceneSessionRoleApplication": [
+                [
+                    "UISceneConfigurationName": "Default Configuration",
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                ]
+            ]
+        ]
+    ]
 ]
 
 
