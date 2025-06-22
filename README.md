@@ -52,6 +52,10 @@ tuist generate
 
 [Go further with Swift Testing](https://developer.apple.com/videos/play/wwdc2024/10195/)
 
+## WWDC25 
+
+[What’s new in UIKit](https://developer.apple.com/videos/play/wwdc2025/243/)
+
 ### Point-free
 
 [EP#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)
