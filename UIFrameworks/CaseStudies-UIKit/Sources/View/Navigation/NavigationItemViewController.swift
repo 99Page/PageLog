@@ -20,7 +20,7 @@ class NavigationItemViewController: UIViewController {
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(image: UIImage(systemName: "pencil"), style: .plain, target: nil, action: nil),
             UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: nil, action: nil),
-            .fixedSpace(0), // fixedSpace를 넣어서 아이템들을 분리할 수 있다   
+            .fixedSpace(0), // fixedSpace를 넣어서 아이템들을 분리할 수 있다
             UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: nil, action: nil)
         ]
     }
