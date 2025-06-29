@@ -11,6 +11,9 @@ import UIKit
 
 @available(iOS 26.0, *)
 class TabbarAccessoryController: UIViewController {
+    
+    let scrollView = UIScrollView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         buildAccessory()

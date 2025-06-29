@@ -22,6 +22,13 @@ class TabBarController: UITabBarController {
         buildTabbar()
     }
     
+    private func setupTabbar() {
+        if #available(iOS 26.0, *) {
+            // 탭바가 최소화됐을 때 Accessory 뷰가 이동한다.
+            self.tabBarMinimizeBehavior = .onScrollDown
+        }
+    }
+    
     private func buildTabbar() {
         
         let viewController = MainViewController()
@@ -35,11 +42,18 @@ class TabBarController: UITabBarController {
         if #available(iOS 26.0, *) {
             let accessoryVC = TabbarAccessoryController()
             accessoryVC.title  = "Accessory"
-            accessoryVC.tabBarItem = UITabBarItem(title: "View", image: UIImage(systemName: "house"), selectedImage: nil)
+            accessoryVC.tabBarItem = UITabBarItem(title: "Accessory", image: UIImage(systemName: "plus.app"), selectedImage: nil)
             
             viewControllers = [firstVC, secondVC, accessoryVC]
         } else {
             viewControllers = [firstVC, secondVC]
+        }
+    }
+    
+    override func updateProperties() {
+        if #available(iOS 26.0, *) {
+            super.updateProperties()
+            let isInlineAccessory = traitCollection.tabAccessoryEnvironment == .inline
         }
         
     }
