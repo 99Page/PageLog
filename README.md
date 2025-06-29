@@ -58,6 +58,8 @@ tuist generate
 
 [What’s new in UIKit](https://developer.apple.com/videos/play/wwdc2025/243/)
 
+[Build a UIKit app with the new design](https://developer.apple.com/videos/play/wwdc2025/284/)
+
 ### Point-free
 
 [EP#110 Designing Dependencies: The Problem](https://www.pointfree.co/collections/dependencies/designing-dependencies/ep110-designing-dependencies-the-problem)

@@ -22,11 +22,12 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "리스트"
         setupTableView()
         
         addSection(section: "View", title: "Observation", destination: ObservationViewController.self)
         addSection(section: "View", title: "Image", destination: ImageViewController.self)
+        addSection(section: "View", title: "NavigationItem", destination: NavigationItemViewController.self)
+        addSection(section: "View", title: "Present", destination: DynamicPresentationViewController.self)
         
         addSection(section: "Event", title: "Notification", destination: KeyboardViewController.self)
     }
