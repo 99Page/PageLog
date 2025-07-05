@@ -10,24 +10,24 @@ import Foundation
 
 struct Heap<Element: Comparable> {
     private let comparator: (Element, Element) -> Bool
-    private(set) var storage: [Element] = []
+    private(set) var elements: [Element] = []
     
     init(comparator: @escaping (Element, Element) -> Bool) {
         self.comparator = comparator
     }
     
     var isEmpty: Bool {
-        storage.isEmpty
+        elements.isEmpty
     }
     
     func peek() -> Element? {
-        storage.first
+        elements.first
     }
     
     /// - Complexity: O(log n)
     mutating func insert(_ element: Element) {
-        storage.append(element)
-        let insertedIndex = storage.count - 1
+        elements.append(element)
+        let insertedIndex = elements.count - 1
         siftUp(startIndex: insertedIndex)
     }
     
@@ -36,31 +36,31 @@ struct Heap<Element: Comparable> {
         
         while hasHigherPriorityThanParent(index: currentIndex) {
             let parentIndex = parentIndex(childIndex: currentIndex)
-            storage.swapAt(currentIndex, parentIndex)
+            elements.swapAt(currentIndex, parentIndex)
             currentIndex = parentIndex
         }
     }
     
     
     private func hasHigherPriorityThanParent(index: Int) -> Bool {
-        guard index < storage.endIndex else { return false }
+        guard index < elements.endIndex else { return false }
         
         let parentIndex = parentIndex(childIndex: index)
-        let parentElement = storage[parentIndex]
-        let childElement = storage[index]
+        let parentElement = elements[parentIndex]
+        let childElement = elements[index]
         
         return comparator(childElement, parentElement)
     }
     
     mutating func pop() -> Element? {
-        guard !storage.isEmpty else { return nil }
+        guard !elements.isEmpty else { return nil }
         
-        guard storage.count != 1 else { return storage.removeLast()}
+        guard elements.count != 1 else { return elements.removeLast()}
         
-        let lastIndex = storage.count - 1
+        let lastIndex = elements.count - 1
         
-        storage.swapAt(0, lastIndex)
-        let result = storage.removeLast()
+        elements.swapAt(0, lastIndex)
+        let result = elements.removeLast()
         
         siftDown(currentIndex: 0)
         
@@ -78,13 +78,13 @@ struct Heap<Element: Comparable> {
             isSwap = true
         }
         
-        if rightIndex < storage.endIndex && comparator(storage[rightIndex], storage[swapIndex]) {
+        if rightIndex < elements.endIndex && comparator(elements[rightIndex], elements[swapIndex]) {
             swapIndex = rightIndex
             isSwap = true
         }
         
         if isSwap {
-            storage.swapAt(swapIndex, currentIndex)
+            elements.swapAt(swapIndex, currentIndex)
             siftDown(currentIndex: swapIndex)
         }
     }
