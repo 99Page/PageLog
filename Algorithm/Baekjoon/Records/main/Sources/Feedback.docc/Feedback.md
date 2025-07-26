@@ -59,8 +59,6 @@
 
 언제 방문할 수 있는지
 
-언제 방문해야하는지 
-
 방문후 무엇을 처리해야하는지도 함께 고민합니다. 
 
 ### 부적절한 상황 
@@ -88,11 +86,24 @@ Edge를 입력한 순서에 따라서 특정 케이스는 확인하지 못하는
 대표적인 문제가 카카오 코테의 [주사위 고르기 문제](https://school.programmers.co.kr/learn/courses/30/lessons/258709) 문제입니다. 
  
 
-### DFS 상태 분리
+### 케이스의 상태
 
-DFS로 문제를 풀 때는 그 경로만의 unique한 상태를 사용합니다. 
+DFS로 문제 풀이 시, 해당 경로만의 정보인지 아니면 전역적으로 관리할 수 있는 정보인지 판단해야 합니다. 
 
-즉, 내부 프로퍼티로 상태를 관리할게 아니라 모든 걸 Parameter로 넘겨주어야합니다. 
+```swift 
+visitMap[next.r][next.c] = true
+visit(next)
+visitMap[next.r][next.c] = false 
+```
+
+전역적으로 관리할 수 있는 정보인 경우, 방문을 시작하고 나올 때 상태를 처리해서 call stack의 메모리를 아낄 수 있습니다. 
+
+```swift 
+visitMap[next.r][next.c] = true
+visit(next, visitMap) 
+```
+
+전역적으로 관리하기 어려운 경우는 parameter에 추가해서 다른 경로와 충돌되지 않게 구분해줘야 합니다. 
 
 ## Dynamic programming 
 
