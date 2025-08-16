@@ -13,7 +13,7 @@ struct LineSweeper<T: Comparable> {
     var ends: [T]
     
     
-    /// 시작 시간, 종료 시간을 정렬하고 탐색하는 구간을 하나씩 옮기면서 확인합니다.
+    /// 시작 시간, 종료 시간을 정렬하고 탐색하는 구간을 하나씩 옮기면서 최대 겹치는 구간을 센다.
     mutating func sweep() -> Int {
         starts.sort()
         ends.sort()
