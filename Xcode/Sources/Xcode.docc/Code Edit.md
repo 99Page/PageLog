@@ -36,3 +36,8 @@ func plus(a: Int, b: Int) -> Int {
 
 좌측 코드를 입력하면 Canvas에서 우측의 결과를 시각적으로 확인 가능합니다. 
 
+## Intelligence
+
+[Writing code with intelligence in Xcode](https://developer.apple.com/documentation/Xcode/writing-code-with-intelligence-in-xcode) 
+
+문서에는 나와있지만 아직 베타버전의 Xcode에는 적용되지 않았습니다. 문서 작성일인 2025. 08. 17에는 Xcode > Settings에 Intelligence 항목이 제공되지 않았습니다. 
