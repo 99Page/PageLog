@@ -10,7 +10,8 @@ import ProjectDescription
 let workspace = Workspace(
     name: "PageLog",
     projects: [
-        "UIFrameworks/**", 
+        "UIFrameworks/CaseStudies-SwiftUI/**",
+        "UIFrameworks/CaseStudies-UIKit/**",
         "Language/**",
         "Algorithm/**",
         "TCA/**",

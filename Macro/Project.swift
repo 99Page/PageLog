@@ -43,28 +43,26 @@ let macroClient = Target.target(
     deploymentTargets: .macOS("13.0"),
     sources: ["Targets/MyMacroClient/Sources/**"],
     dependencies: [
-        .target(name: "MyMacro", status: .required, condition: nil)
+        .target(name: "MyMacro")
     ]
 )
 
 let macroTest = Target.target(
     name: "MyMacroTests",
-    destinations: .macOS,
-    product: .uiTests,
+    destinations: .iOS,
+    product: .unitTests,
     bundleId: "com.example.MyMacroTests",
-    sources: ["Targets/MyMacroTests/Sources/**"],
+    deploymentTargets: .iOS("15.0"),
+    sources: ["Tests/**"],
     dependencies: [
-        .target(name: "MyMacroMacros")
+        .macro(name: "MyMacroMacros"),
+        .package(product: "SwiftSyntaxMacrosTestSupport")
     ]
 )
 
 
 let project = Project(
   name: "MyMacro",
-  options: .options(
-    disableBundleAccessors: true,
-    disableSynthesizedResourceAccessors: true
-  ),
   packages: [
     .remote(url: "https://github.com/swiftlang/swift-syntax.git", requirement: .upToNextMajor(from: "600.0.0"))
   ],
