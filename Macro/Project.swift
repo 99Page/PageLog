@@ -47,6 +47,17 @@ let macroClient = Target.target(
     ]
 )
 
+let macroTest = Target.target(
+    name: "MyMacroTests",
+    destinations: .macOS,
+    product: .uiTests,
+    bundleId: "com.example.MyMacroTests",
+    sources: ["Targets/MyMacroTests/Sources/**"],
+    dependencies: [
+        .target(name: "MyMacroMacros")
+    ]
+)
+
 
 let project = Project(
   name: "MyMacro",
@@ -57,18 +68,5 @@ let project = Project(
   packages: [
     .remote(url: "https://github.com/swiftlang/swift-syntax.git", requirement: .upToNextMajor(from: "600.0.0"))
   ],
-  targets: [macroTarget, macroLibrary, macroClient]
-//
-//    // 4) 매크로 테스트
-//    Target(
-//      name: "MyMacroTests",
-//      platform: .macOS,
-//      product: .unitTests,
-//      bundleId: "com.example.MyMacroTests",
-//      sources: ["Targets/MyMacroTests/Sources/**"],
-//      dependencies: [
-//        .target(name: "MyMacroMacros"),
-//        .package(product: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
-//      ]
-//    )
+  targets: [macroTarget, macroLibrary, macroClient, macroTest]
 )
