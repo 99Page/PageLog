@@ -10,6 +10,7 @@ import MyMacroMacros
 
 let testMacros: [String: Macro.Type] = [
     "stringify": StringifyMacro.self,
+    "EnumSubset": SlopeSubsetMacro.self
 ]
 #endif
 
