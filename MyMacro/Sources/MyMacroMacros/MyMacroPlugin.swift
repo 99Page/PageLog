@@ -14,7 +14,9 @@ import SwiftSyntaxMacros
 struct MyMacroPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         StringifyMacro.self,
-        SlopeSubsetMacro.self
+        SlopeSubsetMacro.self,
+        ViewMacro.self,
+        CoreViewMacro.self
     ]
 }
 

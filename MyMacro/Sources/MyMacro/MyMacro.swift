@@ -15,11 +15,68 @@ public macro EnumSubset<SuperSet>() = #externalMacro(module: "MyMacroMacros", ty
 
 /// attached 유형
 ///
-/// * peer: 모든 선언(함수, 프로퍼티, computed property...)에 추가 가능. 이미 선언된 것과 비슷한 무언가를 만들 때 사용하는 느낌(추측)
-/// * accessor: 변수와 아래첨자(get, set, willSet...) 등에 추가. getter, setter 만드는 용도같음
-/// * memberAttribute: extension, type에 사용한다. 기존에 있던 멤버에 뭔가를 추가
-/// * member: extension, type에 사용. 새로운 멤버를 추가하는 용도
-/// * conformance: 프로토콜 추가 용도
+/// # Peer: 매크로가 추가된 곳 외부에 새로운 무엇인가를 만드는 용도
+///
+/// ```
+/// @Preview
+/// struct CustomView: View {
+///     var body: some View {
+///         Text("1")
+///     }
+/// }
+/// ```
+///
+/// 이게 확장되면
+///
+/// ```
+/// struct CustomView: View {
+///     var body: some View {
+///         Text("1")
+///     }
+/// }
+///
+/// #Preview {
+///     CustomView()
+/// }
+/// ```
+///
+/// 이런 느낌. member, memberAttribute는 선언된 곳 내부를 바꾸는 반면, 저거는 선언된 곳 외부에 추가
+///
+///
+/// # accessor: stored property에 get/set/didSet/willSet 등을 추가하는 용도
+///
+/// # memberAttribute: 이미 정의된 것에 덧붙여 쓴다는 느낌
+///
+/// ```
+/// @Discardable
+/// struct Calculator {
+///     func add(a: Int, b: Int) { a + b }
+///     func minus(a: Int, b: Int) { a - b }
+/// }
+/// ```
+/// 이게 확장되면 이렇게 바꿀 수 있음
+///
+/// ```
+/// struct Calculator {
+///     @discardableResult func add(a: Int, b: Int) { a + b }
+///     @discardableResult func minus(a: Int, b: Int) { a - b }
+/// }
+/// ```
+///
+/// # member: 새로운 것들 추가함
+///
+/// ```
+/// @DiscardableAddition
+/// struct Calculator {
+/// }
+/// ```
+///
+/// 이게 확장되면
+///
+/// ```
+/// struct Caculator {
+///     @discardableResult func add(a: Int, b: Int) { a + b }
+/// }
 
 /// name specifiers
 /// * overloaded
@@ -27,3 +84,14 @@ public macro EnumSubset<SuperSet>() = #externalMacro(module: "MyMacroMacros", ty
 /// * suffixed
 /// * named
 /// * arbirary
+
+@attached(member)
+public macro View() = #externalMacro(module: "MyMacroMacros", type: "ViewMacro")
+
+@attached(extension, conformances: CoreView)
+public macro CoreView() = #externalMacro(module: "MyMacroMacros", type: "CoreViewMacro")
+
+public protocol CoreView {
+    associatedtype T: CoreView
+    var body: T { get }
+}
