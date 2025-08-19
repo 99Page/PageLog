@@ -35,9 +35,12 @@ tuist generate
 
 [The Swift Programming Language(6.1) - Language Guide](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/#Language-Guide)
 
+
 ### WWDC 23
 
 [Write Swift macros](https://developer.apple.com/videos/play/wwdc2023/10166/)
+
+[Expand on Swift macros](https://developer.apple.com/videos/play/wwdc2023/10167/)
 
 [Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)
 

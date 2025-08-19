@@ -25,7 +25,7 @@ public struct SlopeSubsetMacro: MemberMacro {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
-        in context: some MacroExpansionContext
+        in context: some MacroExpansionContext // 컴파일러와 통신하는 내용
     ) throws -> [DeclSyntax] {
         // 주어진 타입이 Enum인지 확인
         // po enumDecl 명령어로 디버깅 가능
