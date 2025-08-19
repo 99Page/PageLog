@@ -34,7 +34,7 @@ let testTarget = Target.target(
     destinations: .iOS,
     product: .unitTests,
     bundleId: "com.page.ui.case-studies-swiftui.test",
-    deploymentTargets: .iOS("18.0"),
+    deploymentTargets: .iOS("17.0"),
     sources: ["Tests/**"],
     dependencies: [
         .target(name: projectName)
