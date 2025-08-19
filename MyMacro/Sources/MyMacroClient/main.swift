@@ -21,3 +21,16 @@ enum EasySlope {
     case practiceRun
 }
 
+
+@CoreView
+class TextView {
+    var body: some CoreView {
+        DefaultView()
+    }
+}
+
+class DefaultView: CoreView {
+    var body: some CoreView {
+        DefaultView()
+    }
+}

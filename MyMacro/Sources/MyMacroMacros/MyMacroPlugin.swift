@@ -15,7 +15,8 @@ struct MyMacroPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         StringifyMacro.self,
         SlopeSubsetMacro.self,
-        ViewMacro.self
+        ViewMacro.self,
+        CoreViewMacro.self
     ]
 }
 

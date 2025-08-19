@@ -30,3 +30,11 @@ public macro EnumSubset<SuperSet>() = #externalMacro(module: "MyMacroMacros", ty
 
 @attached(member)
 public macro View() = #externalMacro(module: "MyMacroMacros", type: "ViewMacro")
+
+@attached(extension, conformances: CoreView)
+public macro CoreView() = #externalMacro(module: "MyMacroMacros", type: "CoreViewMacro")
+
+public protocol CoreView {
+    associatedtype T: CoreView
+    var body: T { get }
+}
