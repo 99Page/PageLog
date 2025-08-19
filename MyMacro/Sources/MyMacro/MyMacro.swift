@@ -27,3 +27,6 @@ public macro EnumSubset<SuperSet>() = #externalMacro(module: "MyMacroMacros", ty
 /// * suffixed
 /// * named
 /// * arbirary
+
+@attached(member)
+public macro View() = #externalMacro(module: "MyMacroMacros", type: "ViewMacro")

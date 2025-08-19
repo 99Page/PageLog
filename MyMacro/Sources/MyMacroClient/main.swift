@@ -20,3 +20,4 @@ enum EasySlope {
     case beginnersParadise
     case practiceRun
 }
+
