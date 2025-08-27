@@ -17,16 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // UIWindow 생성 및 초기화
-        window = UIWindow(frame: UIScreen.main.bounds)
-        
-        // 윈도우의 루트 뷰 컨트롤러 설정
-        window?.rootViewController = MyAlertViewController(store: Store(initialState: AlertFeature.State(), reducer: {
-            AlertFeature()
-        }))
-        
-        window?.makeKeyAndVisible()
-        
         return true
     }
 }
