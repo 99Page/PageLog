@@ -12,13 +12,21 @@ import UIKit
 import SnapKit
 import SwiftUI
 
-struct ImageItem: Identifiable, Hashable {
+protocol SectionProvidable {
+    associatedtype Section: Hashable, Sendable
+    var section: Section { get }
+}
+
+struct ImageItem: Identifiable, Hashable, SectionProvidable {
+    typealias Section = ImageListViewController.Section
+    
     
     let id = UUID().uuidString
     let image: ImageResource
     let name: String
     
     var color: ColorResource
+    var section: ImageListViewController.Section { .main }
     
     static var colorCandidates: [ColorResource] {
         [.bubblegum, .buttercup, .indigo, .lavender, .magenta, .orange, .navy, .poppy, .seafoam]
@@ -34,7 +42,6 @@ struct ImageListFeature {
     @ObservableState
     struct State {
         var images = IdentifiedArrayOf<ImageItem>()
-        var snapshot = UITableView.SnapshotEvent.append([])
     }
     
     enum Action: ViewAction {
@@ -60,7 +67,6 @@ struct ImageListFeature {
                 return .none
             case let .view(.deleteButtonTapped(indexPath)):
                 state.images.remove(at: indexPath.row)
-//                state.snapshot = .apply(state.images.elements)
                 return .none
             }
         }
@@ -77,9 +83,6 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
     }
     
     private let tableView: UITableView
-    
-    // 스냅샷에는 아이디값만 사용합니다.
-    private var dataSource: UITableViewDiffableDataSource<Section, String>!
     private let addButton = UIButton()
     
     init(store: StoreOf<ImageListFeature>) {
@@ -96,32 +99,9 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        applySnapshot(items: [])
         makeConstraints()
     }
 
-    private func applyUpdate(items: [ImageItem]) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems(items.map(\.id))
-        dataSource.apply(snapshot, animatingDifferences: true)
-    }
-    
-    private func appendItems(items: [String]) {
-        var snapshot = dataSource.snapshot()
-        snapshot.appendItems(items, toSection: .main)
-        dataSource.apply(snapshot)
-    }
-    
-    private func applySnapshot(items: [ImageItem]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
-        
-        // 내부 리스트를 전체 초기화하는 방법
-        // 초기 로드 + 전체 갱신
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(items.map(\.id), toSection: .main)
-        
-        dataSource.apply(snapshot)
-    }
     
     private func setupView() {
         title = "Diffable Table"
@@ -130,15 +110,6 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: "ImageTableViewCell")
         tableView.rowHeight = 100
-        
-        tableView.snapshotHandler = { snapshot in
-            switch snapshot {
-            case let .append(ids):
-                self.appendItems(items: ids)
-            default:
-                break
-            }
-        }
         
         setupDataSource()
         
@@ -153,16 +124,30 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
     }
     
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, String>(tableView: tableView) { tableView, indexPath, id in
+        tableView.configureDiffable { tableView, indexPath, id in
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
             
+            // id는 AnySendableHashable(또는 타입 소거된 ID)이므로 내부의 base에서 String을 추출
+            // 이런 캐스팅은 나쁜 구조인지 의문이 든다.
+            // 그런데 TableViewCell도 보면 캐스팅이 강제된다.
+            // 저기서도 괜찮으니까 여기서도 괜찮은걸까?
             
-            // id 정보만 주고, 이를 통해 바인딩 값을 찾기때문에
-            // binidng 값은 항상 optional
-            let binding = self.$store.images[id: id]
-
-            cell?.configure(binding)
-            return cell
+            // 해답은 외부 프레임워크에 의한 캐스팅이면 괜찮다.
+            // TableViewCell, AnyHashableSendable은 다른 프레임워크에서 정의된 것이고
+            // 내부에서 사용하기 위해 캐스팅 중이다.
+            // 이런 '경계'에서의 캐스팅은 괜찮다.
+            
+            // 그런데, 캐스팅을 하는 두 타입이 내가 정의한 타입일때는 문제가된다.
+            if let id = id.base as? String {
+                // id 정보만 주고, 이를 통해 바인딩 값을 찾기때문에
+                // binidng 값은 항상 optional
+                // index로 접근하면 런타임 에러 발생
+                let binding = self.$store.images[id: id]
+                cell?.configure(binding)
+                return cell
+            } else {
+                return cell
+            }
         }
     }
     
@@ -182,14 +167,14 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let item = dataSource.itemIdentifier(for: indexPath) else { return nil }
-        let delete = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
-            self?.send(.deleteButtonTapped(indexPath: indexPath))
-            completion(true)
-        }
-        return UISwipeActionsConfiguration(actions: [delete])
-    }
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        guard let item = dataSource.itemIdentifier(for: indexPath) else { return nil }
+//        let delete = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
+//            self?.send(.deleteButtonTapped(indexPath: indexPath))
+//            completion(true)
+//        }
+//        return UISwipeActionsConfiguration(actions: [delete])
+//    }
 }
 
 #Preview {
