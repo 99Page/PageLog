@@ -12,25 +12,6 @@ import UIKit
 import SnapKit
 import SwiftUI
 
-protocol ItemSendable {
-    var asscoiatedType: any Identifiable { get }
-}
-
-extension UITableView {
-    convenience init<V: Identifiable>(binding: UIBinding<IdentifiedArrayOf<V>>) {
-        self.init()
-        
-        observe {
-            let newItems = binding.wrappedValue.map(\.id)
-        }
-    }
-    
-    var oldItems: [UUID] {
-      get { objc_getAssociatedObject(self, malloc(1)) as? [UUID] ?? [] }
-      set { objc_setAssociatedObject(self, malloc(1), newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
-    }
-}
-
 struct ImageItem: Identifiable, Hashable {
     
     let id = UUID().uuidString
@@ -53,14 +34,7 @@ struct ImageListFeature {
     @ObservableState
     struct State {
         var images = IdentifiedArrayOf<ImageItem>()
-        var previousImages = IdentifiedArrayOf<ImageItem>()
-        var snapshot: Snapshot = .apply([])
-        
-        enum Snapshot: Equatable {
-            case apply([ImageItem])
-            case reload([ImageItem])
-            case none
-        }
+        var snapshot = UITableView.SnapshotEvent.append([])
     }
     
     enum Action: ViewAction {
@@ -78,25 +52,15 @@ struct ImageListFeature {
         
         Reduce<State, Action> { state, action in
             switch action {
-            case .view(.binding(\.images)):
-                let old = state.previousImages
-                let changedItems: [ImageItem] = state.images.compactMap { item in
-                    guard let oldItem = old[id: item.id] else { return nil }
-                    return oldItem != item ? oldItem : nil
-                }
-                
-                state.snapshot = .reload(changedItems)
-                return .none
             case .view(.binding):
                 return .none
             case .view(.addButtonTapped):
                 let color = ImageItem.colorCandidates.randomElement() ?? .bubblegum
                 state.images.append(ImageItem(image: .leaf, name: "leaf", color: color))
-                state.snapshot = .apply(state.images.elements)
                 return .none
             case let .view(.deleteButtonTapped(indexPath)):
                 state.images.remove(at: indexPath.row)
-                state.snapshot = .apply(state.images.elements)
+//                state.snapshot = .apply(state.images.elements)
                 return .none
             }
         }
@@ -112,14 +76,16 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
         case main
     }
     
-    private let tableView = UITableView()
+    private let tableView: UITableView
     
     // 스냅샷에는 아이디값만 사용합니다.
     private var dataSource: UITableViewDiffableDataSource<Section, String>!
     private let addButton = UIButton()
     
     init(store: StoreOf<ImageListFeature>) {
+        @UIBindable var binding = store
         self.store = store
+        self.tableView = UITableView($binding.images)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -130,34 +96,20 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        applySnapshot(items: [])
         makeConstraints()
-        updateView()
     }
-    
-    private func updateView() {
-        observe { [weak self] in
-            guard let self else { return }
-            
-            switch store.snapshot {
-            case let .apply(items):
-                applySnapshot(items: items)
-            case let .reload(items):
-                applyUpdate(items: items)
-            case .none:
-                break
-            }
-            
-            // observe 내부에서는 상태가 바뀌어도 observe 내부가 다시 호출되지 않는다.
-            store.snapshot = .none
-            store.previousImages = store.images
-        }
-    }
-    
+
     private func applyUpdate(items: [ImageItem]) {
         var snapshot = dataSource.snapshot()
         snapshot.reconfigureItems(items.map(\.id))
-        
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func appendItems(items: [String]) {
+        var snapshot = dataSource.snapshot()
+        snapshot.appendItems(items, toSection: .main)
+        dataSource.apply(snapshot)
     }
     
     private func applySnapshot(items: [ImageItem]) {
@@ -178,6 +130,16 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         tableView.register(ImageTableViewCell.self, forCellReuseIdentifier: "ImageTableViewCell")
         tableView.rowHeight = 100
+        
+        tableView.snapshotHandler = { snapshot in
+            switch snapshot {
+            case let .append(ids):
+                self.appendItems(items: ids)
+            default:
+                break
+            }
+        }
+        
         setupDataSource()
         
         addButton.setTitle("+", for: .normal)
