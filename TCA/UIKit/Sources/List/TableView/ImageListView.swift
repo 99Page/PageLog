@@ -12,6 +12,25 @@ import UIKit
 import SnapKit
 import SwiftUI
 
+protocol ItemSendable {
+    var asscoiatedType: any Identifiable { get }
+}
+
+extension UITableView {
+    convenience init<V: Identifiable>(binding: UIBinding<IdentifiedArrayOf<V>>) {
+        self.init()
+        
+        observe {
+            let newItems = binding.wrappedValue.map(\.id)
+        }
+    }
+    
+    var oldItems: [UUID] {
+      get { objc_getAssociatedObject(self, malloc(1)) as? [UUID] ?? [] }
+      set { objc_setAssociatedObject(self, malloc(1), newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+}
+
 struct ImageItem: Identifiable, Hashable {
     
     let id = UUID().uuidString
