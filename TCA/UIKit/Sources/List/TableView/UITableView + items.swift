@@ -10,35 +10,53 @@ import Foundation
 import ComposableArchitecture
 import UIKit
 
+typealias SectionID = AnyHashableSendable
+typealias ItemID = AnyHashableSendable
+
 private struct AssocKeys {
+    //  objc_getAssociatedObject에 사용할 key 값들은 모두 동일한 값을 가져야한다
     static var oldItems: UInt8 = 0
     static var dataSource: UInt8 = 0
     static var sectionProvider: UInt8 = 0
 }
 
 extension UITableView {
-    convenience init<V: SectionProvidable>(_ binding: UIBinding<IdentifiedArrayOf<V>>) where V.ID: Hashable {
+    convenience init<V: SectionProvidable & Equatable>(_ binding: UIBinding<IdentifiedArrayOf<V>>) where V.ID: Hashable {
         self.init()
+        
+        var oldItems: IdentifiedArrayOf<V> = []
         
         observe { [weak self] in
             guard let self else { return }
-            streamEvent(newItem: binding.wrappedValue.elements)
-            self.oldItems = binding.wrappedValue.elements.map(\.id).map(AnyHashableSendable.init)
+            
+            let newItems = binding.wrappedValue
+            let diffs = PaulHeckel.computeDiff(from: oldItems.elements, to: newItems.elements)
+            
+            for diff in diffs {
+                switch diff {
+                case .insert(let to):
+                    let item = newItems[to]
+                    let id = newItems[to].id
+                    append(ids: [AnyHashableSendable(id)], to: item.section)
+                case .delete(let from):
+                    let item = oldItems[from]
+                    let id = item.id
+                    remove(id: AnyHashableSendable(id))
+                case .move(let from, let to):
+                    // 임시로 제한
+                    break
+                case .update(_, let to):
+                    let item = AnyHashableSendable(newItems[to].id)
+                    update(item: item)
+                }
+            }
+            
+            oldItems = binding.wrappedValue
         }
     }
-    
-    func streamEvent<V: SectionProvidable & Identifiable>(newItem: [V]) {
-        if let newLast = newItem.last, oldItems.last != AnyHashableSendable(newLast.id) {
-            append(ids: [AnyHashableSendable(newLast.id)], to: newLast.section)
-        }
-    }
-    
-    var oldItems: [AnyHashableSendable] {
-        get { objc_getAssociatedObject(self, &AssocKeys.oldItems) as? [AnyHashableSendable] ?? [] }
-        set { objc_setAssociatedObject(self, &AssocKeys.oldItems, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
-    }
-    
+      
     /// 내부 Diffable Data Source (ID는 AnyHashable로 소거)
+    /// `objc_getAssociated`를 활용해서 exntension에서 stored property를 추가할 수 있다
     var diffableDataSource: UITableViewDiffableDataSource<AnyHashableSendable, AnyHashableSendable>? {
         get { objc_getAssociatedObject(self, &AssocKeys.dataSource) as? UITableViewDiffableDataSource<AnyHashableSendable, AnyHashableSendable> }
         set { objc_setAssociatedObject(self, &AssocKeys.dataSource, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -52,6 +70,27 @@ extension UITableView {
         
         self.diffableDataSource = ds
         self.dataSource = ds
+    }
+    
+    func move(from: AnyHashableSendable, to: AnyHashableSendable) {
+        guard let ds = diffableDataSource else { return }
+        var snapshot = ds.snapshot()
+        snapshot.moveItem(from, afterItem: to)
+        ds.apply(snapshot)
+    }
+    
+    func update(item: AnyHashableSendable) {
+        guard let ds = diffableDataSource else { return }
+        var snapshot = ds.snapshot()
+        snapshot.reconfigureItems([item])
+        ds.apply(snapshot)
+    }
+    
+    func remove(id: AnyHashableSendable) {
+        guard let ds = diffableDataSource else { return }
+        var snapshot = ds.snapshot()
+        snapshot.deleteItems([id])
+        ds.apply(snapshot)
     }
     
     func append<S: Hashable>(ids: [AnyHashableSendable], to section: S, animating: Bool = true) {
@@ -71,6 +110,3 @@ extension UITableView {
         ds.apply(snapshot, animatingDifferences: animating)
     }
 }
-
-typealias SectionID = AnyHashableSendable
-typealias ItemID = AnyHashableSendable

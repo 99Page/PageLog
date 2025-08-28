@@ -167,14 +167,13 @@ final class ImageListViewController: UIViewController, UITableViewDelegate {
         }
     }
     
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        guard let item = dataSource.itemIdentifier(for: indexPath) else { return nil }
-//        let delete = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
-//            self?.send(.deleteButtonTapped(indexPath: indexPath))
-//            completion(true)
-//        }
-//        return UISwipeActionsConfiguration(actions: [delete])
-//    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
+            self?.send(.deleteButtonTapped(indexPath: indexPath))
+            completion(true)
+        }
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
 }
 
 #Preview {
