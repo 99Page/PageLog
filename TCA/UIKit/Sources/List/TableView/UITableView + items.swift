@@ -32,6 +32,8 @@ extension UITableView {
             let newItems = binding.wrappedValue
             let diffs = PaulHeckel.computeDiff(from: oldItems.elements, to: newItems.elements)
             
+            debugPrint(diffs)
+            
             for diff in diffs {
                 switch diff {
                 case .insert(let to):
@@ -43,8 +45,9 @@ extension UITableView {
                     let id = item.id
                     remove(id: AnyHashableSendable(id))
                 case .move(let from, let to):
-                    // 임시로 제한
-                    break
+                    let from = AnyHashableSendable(from)
+                    let to = AnyHashableSendable(to)
+                    move(from: from, to: to)
                 case .update(_, let to):
                     let item = AnyHashableSendable(newItems[to].id)
                     update(item: item)
