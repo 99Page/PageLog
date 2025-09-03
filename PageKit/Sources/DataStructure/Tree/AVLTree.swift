@@ -22,6 +22,9 @@ class AVLTreeNode<T: Comparable> {
 }
 
 /// AVL Tree 클래스
+///
+/// 삽입/삭제 시 높이가 log N을 넘지 않도록 회전
+/// 탐색 속도를 최적화하는 트리
 class AVLTree<T: Comparable> {
     private var root: AVLTreeNode<T>?
 
