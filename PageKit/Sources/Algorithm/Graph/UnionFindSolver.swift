@@ -84,7 +84,7 @@ struct UnionFindSolver {
             }
         }
         
-        var addtinalIndex: Int {
+        var addtionalIndex: Int {
             switch self {
             case .zero:
                 return 0
