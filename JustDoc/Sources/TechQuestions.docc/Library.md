@@ -17,3 +17,21 @@
 * 개인마다 다른 개발 세팅 문제를 해결한다. 
 
 * 프로젝트의 설정을 swift로 작성할 수 있어서 편리
+
+| 구분 | Static Framework | Dynamic Framework| 
+| --- | --- | --- |
+| 링크 시점 | 컴파일타임 | 런타임 |
+| 중복 포함 | 여러 모듈이 참조하면 중복됨 | 공유 가능 |. 
+
+프로젝트 구성이 다음같은 경우를 가정해보자. 
+
+* App -> FeatureA, FeatureB
+* FeatureA -> FrameworkA 
+* FeatureB -> FrameworkA
+
+이런 경우에는 빌드할 때 FreamworkA가 App 바이너리에 두번 포함된다. 경우에 따라 duplicate symbol 에러가 발생할 수도 있다. 
+
+
+
+
+
