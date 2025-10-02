@@ -41,6 +41,7 @@ let target = Target.target(
     resources: ["../../Resource/Resources/**"],
     dependencies: [
         .package(product: "SnapKit"),
+        .project(target: "PageKit", path: .relativeToRoot("PageKit"))
     ]
 )
 

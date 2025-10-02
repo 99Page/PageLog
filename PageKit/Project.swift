@@ -10,19 +10,24 @@ let projectName = "PageKit"
 
 let target = Target.target(
     name: projectName,
-    destinations: .macOS,
+    destinations: .iOS,
     product: .staticFramework,
     bundleId: "com.page.pageKit",
-    deploymentTargets: .macOS("14.5"),
-    sources: ["Sources/**"]
+    deploymentTargets: .iOS("17.0"),
+    sources: ["Sources/**"],
+    settings: .settings(
+        base: [
+            "DEVELOPMENT_TEAM": "MAU8HFALP8"
+        ]
+    )
 )
 
 let testTarget = Target.target(
     name: "\(projectName)Tests",
-    destinations: .macOS,
+    destinations: .iOS,
     product: .unitTests,
     bundleId: "com.page.pageKit.tests",
-    deploymentTargets: .macOS("14.5"),
+    deploymentTargets: .iOS("17.0"),
     sources: ["Tests/**"],
     dependencies: [
         .target(name: projectName)

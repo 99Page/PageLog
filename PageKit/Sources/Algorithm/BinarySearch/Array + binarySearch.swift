@@ -15,7 +15,7 @@ extension Array where Element: Comparable {
     ///   - value: 탐색할 값
     ///   - comparator: 비교 조건을 정의하는 클로저 (기본값으로 `<=` 사용)
     /// - Returns: 주어진 값보다 큰 첫 번째 요소의 인덱스, 없으면 배열의 크기
-    func binarySearch(_ value: Element, using comparator: (ArrayElement, GivenElement) -> Bool) -> Int {
+    func binarySearch(_ value: Element, using comparator: (Element, Element) -> Bool) -> Int {
         var low = 0
         var high = self.count
         

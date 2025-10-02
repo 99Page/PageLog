@@ -19,6 +19,5 @@ let workspace = Workspace(
         "JustDoc/**",
         "PageKit/**", 
         "Xcode/**",
-        "Macro/**"
     ]
 )
