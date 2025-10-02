@@ -28,6 +28,7 @@ class MainViewController: UIViewController {
         addSection(section: "View", title: "Image", destination: ImageViewController.self)
         addSection(section: "View", title: "NavigationItem", destination: NavigationItemViewController.self)
         addSection(section: "View", title: "Present", destination: DynamicPresentationViewController.self)
+        addSection(section: "View", title: "CustomsTableView", destination: CustomTableExampleView.self)
         
         addSection(section: "Event", title: "Notification", destination: KeyboardViewController.self)
     }
