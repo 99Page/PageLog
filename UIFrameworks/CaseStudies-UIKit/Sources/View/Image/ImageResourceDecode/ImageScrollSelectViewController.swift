@@ -1,16 +1,15 @@
 //
-//  MainViewController.swift
+//  ImageScrollSelectViewController.swift
 //  CaseStudies-UIKit
 //
-//  Created by 노우영 on 6/22/25.
+//  Created by 노우영 on 10/2/25.
 //  Copyright © 2025 Page. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-/// 메인 화면. 리스트를 보여줌
-class MainViewController: UIViewController, NavigationSelectable {
-
+final class ImageScrollSelectViewController: UIViewController, NavigationSelectable {
     let tableView = UITableView()
     var sections: [(title: String, items: [ListItem])] = []
 
@@ -18,15 +17,8 @@ class MainViewController: UIViewController, NavigationSelectable {
         super.viewDidLoad()
         setupTableView()
         
-        addSection(section: "View", title: "Observation", destination: ObservationViewController.self)
-        addSection(section: "View", title: "NavigationItem", destination: NavigationItemViewController.self)
-        addSection(section: "View", title: "Present", destination: DynamicPresentationViewController.self)
-        addSection(section: "View", title: "CustomsTableView", destination: CustomTableExampleView.self)
-        
-        addSection(section: "View", title: "ImageCache", destination: ImageViewController.self)
-        addSection(section: "View", title: "ImageDecode", destination: ImageScrollSelectViewController.self)
-        
-        addSection(section: "Event", title: "Notification", destination: KeyboardViewController.self)
+        addSection(section: "Section", title: "VanilaImageView", destination: VanilaImageViewController.self)
+        addSection(section: "Section", title: "EffectiveDecode", destination: EffectiveImageViewController.self)
     }
 
     private func setupTableView() {

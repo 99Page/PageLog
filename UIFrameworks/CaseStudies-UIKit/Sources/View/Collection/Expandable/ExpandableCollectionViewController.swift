@@ -134,7 +134,7 @@ extension ExpandableCollectionViewController: UICollectionViewDelegateFlowLayout
 }
 
 /// 이미지만 보여주는 셀
-final class ImageCell: UICollectionViewCell {
+private class ImageCell: UICollectionViewCell {
     static let reuseIdentifier = "ImageCell"
 
     let imageView: UIImageView = {
