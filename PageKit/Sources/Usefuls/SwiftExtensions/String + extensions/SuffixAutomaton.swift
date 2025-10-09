@@ -56,63 +56,77 @@ import Foundation
 /// 이제 만들어준 링크로 Transition을 생성해준다. 시간 관계상 일단 생략하고, 다음에 작성!
 ///
 struct SuffixAutomaton {
-     /// 내부 상태(State)
-     /// - length: 이 상태가 표현할 수 있는 부분문자열의 최대 길이
-     /// - link: suffix link (실패 링크)
-     /// - next: 문자 전이
-     struct State {
-         var length: Int
-         var link: Int
-         var next: [Character: Int]
-     }
-
-     private(set) var states: [State] = [State(length: 0, link: -1, next: [:])]
-     private var last: Int = 0
-
-     /// 함수: 문자를 하나 확장하여 자동자를 증가 구성합니다.
-     /// - 매개변수 c: 추가할 문자
-     mutating func extend(with c: Character) {
-         let cur = states.count
-         states.append(State(length: states[last].length + 1, link: 0, next: [:]))
-
-         var p = last
-         while p != -1 && states[p].next[c] == nil {
-             states[p].next[c] = cur
-             p = states[p].link
-         }
-
-         if p == -1 {
-             states[cur].link = 0
-         } else {
-             let q = states[p].next[c]!
-             if states[p].length + 1 == states[q].length {
-                 states[cur].link = q
-             } else {
-                 // clone 상태 생성 (전이를 복제하여 길이만 조정)
-                 let clone = states.count
-                 states.append(State(length: states[p].length + 1,
-                                     link: states[q].link,
-                                     next: states[q].next))
-                 var pp = p
-                 while pp != -1 && states[pp].next[c] == q {
-                     states[pp].next[c] = clone
-                     pp = states[pp].link
-                 }
-                 states[q].link = clone
-                 states[cur].link = clone
-             }
-         }
-         last = cur
-     }
-
-     /// 함수: 서로 다른 부분문자열의 개수를 계산합니다.
-     /// - 반환값: 부분문자열의 개수 (중복 제외)
-     /// - 설명: Σ (len[v] - len[link[v]]), v ≠ root
-     func countDistinctSubstrings() -> Int {
-         var total = 0
-         for v in 1..<states.count {
-             total += states[v].length - states[states[v].link].length
-         }
-         return total
-     }
- }
+    /// 내부 상태(State)
+    /// - length: 이 상태가 표현할 수 있는 부분문자열의 최대 길이
+    /// - link: suffix link (실패 링크)
+    /// - next: 문자 전이
+    struct State {
+        var length: Int
+        var link: Int
+        var next: [Character: Int]
+    }
+    
+    private(set) var states: [State] = [State(length: 0, link: -1, next: [:])]
+    private var last: Int = 0
+    
+    /// 함수: 문자를 하나 확장하여 자동자를 증가 구성합니다.
+    /// - 매개변수 c: 추가할 문자
+    mutating func extend(with c: Character) {
+        let cur = states.count
+        states.append(State(length: states[last].length + 1, link: 0, next: [:]))
+        
+        var p = last
+        while p != -1 && states[p].next[c] == nil {
+            states[p].next[c] = cur
+            p = states[p].link
+        }
+        
+        if p == -1 {
+            states[cur].link = 0
+        } else {
+            let q = states[p].next[c]!
+            if states[p].length + 1 == states[q].length {
+                states[cur].link = q
+            } else {
+                // clone 상태 생성 (전이를 복제하여 길이만 조정)
+                let clone = states.count
+                states.append(State(length: states[p].length + 1,
+                                    link: states[q].link,
+                                    next: states[q].next))
+                var pp = p
+                while pp != -1 && states[pp].next[c] == q {
+                    states[pp].next[c] = clone
+                    pp = states[pp].link
+                }
+                states[q].link = clone
+                states[cur].link = clone
+            }
+        }
+        last = cur
+    }
+    
+    /// 함수: 서로 다른 부분문자열의 개수를 계산합니다.
+    /// - 반환값: 부분문자열의 개수 (중복 제외)
+    /// - 설명: Σ (len[v] - len[link[v]]), v ≠ root
+    func countDistinctSubstrings() -> Int {
+        var total = 0
+        for v in 1..<states.count {
+            total += states[v].length - states[states[v].link].length
+        }
+        return total
+    }
+    
+    /// 문자열이 이 자동자의 부분 문자열인지 검사합니다.
+    /// - Parameter pattern: 검사할 부분 문자열
+    /// - Returns: `pattern`이 부분 문자열이면 `true`, 아니면 `false`
+    func contains(_ pattern: String) -> Bool {
+        var state = 0 // root
+        for ch in pattern {
+            guard let next = states[state].next[ch] else {
+                return false
+            }
+            state = next
+        }
+        return true
+    }   
+}
