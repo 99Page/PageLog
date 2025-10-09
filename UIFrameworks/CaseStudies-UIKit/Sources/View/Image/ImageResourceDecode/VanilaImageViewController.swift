@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-/// iPhone 16 Pro
-/// iOS 18.2 기준
-/// 메모리 약 1.0GB
+/// 많은 이미지를 디코딩하는 환경 예제의 뷰컨트롤러
+/// https://developer.apple.com/documentation/uikit/uiimage/preparingfordisplay()
+/// preparingForDisplay 메소드를 사용해 메인 쓰레드의 부하를 줄일 수 있다.
 class VanilaImageViewController: UIViewController {
     
     enum Section: CaseIterable { case main }
@@ -44,12 +44,12 @@ class VanilaImageViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         tableView.separatorStyle = .none
-        tableView.register(VanilaImageCell.self, forCellReuseIdentifier: VanilaImageCell.reuseID)
+        tableView.register(ImageCell.self, forCellReuseIdentifier: ImageCell.reuseID)
     }
     
     private func makeDataSource() {
         dataSource = UITableViewDiffableDataSource<Section, ImageResource>(tableView: tableView) { tableView, indexPath, itemIdentifier in
-            let cell = tableView.dequeueReusableCell(withIdentifier: VanilaImageCell.reuseID, for: indexPath) as! VanilaImageCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.reuseID, for: indexPath) as! ImageCell
             cell.configure(resource: itemIdentifier)
             return cell
         }
@@ -63,10 +63,10 @@ class VanilaImageViewController: UIViewController {
     }
 }
 
-/// 단순 이미지를 표시하는 기본 테이블 뷰 셀
-private class VanilaImageCell: UITableViewCell {
+private class ImageCell: UITableViewCell {
     /// 썸네일 이미지 뷰
     let thumbnail = UIImageView()
+    private let imageQueue = DispatchQueue(label: "customview.image.decode", qos: .userInitiated)
     
     /// 재사용 식별자
     static let reuseID = "VanilaImageCell"
@@ -100,7 +100,13 @@ private class VanilaImageCell: UITableViewCell {
     }
     
     func configure(resource: ImageResource) {
-        thumbnail.image = UIImage(resource: resource)
+        imageQueue.async {
+            let decodeImage = UIImage(resource: resource).preparingForDisplay()!
+            
+            DispatchQueue.main.async {
+                self.thumbnail.image = decodeImage
+            }
+        }
     }
     
     override func prepareForReuse() {

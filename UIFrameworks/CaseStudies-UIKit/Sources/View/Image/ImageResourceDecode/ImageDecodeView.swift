@@ -68,6 +68,7 @@ final class ImageDecodeView: UIView {
     
     private func drawCacheImage(_ cacheKey: NSString) {
         guard let image = Self.cache.object(forKey: cacheKey) else { return }
+        debugPrint("cacheHit")
         let canvas = bounds.size
         let img = image.size
         guard canvas.width > 0, canvas.height > 0, img.width > 0, img.height > 0 else { return }
@@ -84,7 +85,7 @@ final class ImageDecodeView: UIView {
     
     private func cacheThumbail(_ cacheKey: NSString) {
         guard Self.cache.object(forKey: cacheKey) == nil else { return }
-        
+        debugPrint("cache miss")
         removeThumbnail()
         
         let target = bounds
