@@ -1,16 +1,15 @@
 //
-//  MainViewController.swift
+//  KFNavigationViewController.swift
 //  CaseStudies-UIKit
 //
-//  Created by 노우영 on 6/22/25.
+//  Created by 노우영 on 10/9/25.
 //  Copyright © 2025 Page. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-/// 메인 화면. 리스트를 보여줌
-class MainViewController: UIViewController, NavigationSelectable {
-
+final class KFNavigationViewController: UIViewController, NavigationSelectable {
     let tableView = UITableView()
     var sections: [(title: String, items: [ListItem])] = []
 
@@ -18,16 +17,7 @@ class MainViewController: UIViewController, NavigationSelectable {
         super.viewDidLoad()
         setupTableView()
         
-        addSection(section: "View", title: "Observation", destination: ObservationViewController.self)
-        addSection(section: "View", title: "NavigationItem", destination: NavigationItemViewController.self)
-        addSection(section: "View", title: "Present", destination: DynamicPresentationViewController.self)
-        addSection(section: "View", title: "CustomsTableView", destination: CustomTableExampleView.self)
-        
-        addSection(section: "Image", title: "Cache", destination: ImageViewController.self)
-        addSection(section: "Image", title: "Decode", destination: ImageScrollSelectViewController.self)
-        addSection(section: "Image", title: "KF", destination: KFNavigationViewController.self)
-        
-        addSection(section: "Event", title: "Notification", destination: KeyboardViewController.self)
+        addSection(section: "Section", title: "KF", destination: KFUseCaseViewController.self)
     }
 
     private func setupTableView() {

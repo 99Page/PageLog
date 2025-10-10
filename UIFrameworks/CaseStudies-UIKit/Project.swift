@@ -40,7 +40,6 @@ let target = Target.target(
     sources: ["Sources/**"],
     resources: ["../../Resource/Resources/**"],
     dependencies: [
-        .package(product: "SnapKit"),
         .project(target: "PageKit", path: .relativeToRoot("PageKit"))
     ]
 )
@@ -57,14 +56,8 @@ let testTarget = Target.target(
     ]
 )
 
-let snapKitURL = "https://github.com/SnapKit/SnapKit.git"
-let snapKitVersion: Package.Requirement = .exact("5.7.1")
-
 let project = Project(
     name: projectName,
     organizationName: "Page",
-    packages: [
-        .remote(url: snapKitURL, requirement: snapKitVersion),
-    ],
     targets: [target, testTarget]
 )
