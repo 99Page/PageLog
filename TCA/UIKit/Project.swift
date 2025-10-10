@@ -41,10 +41,9 @@ let target = Target.target(
     sources: ["Sources/**"],
     resources: ["../../Resource/Resources/**"],
     dependencies: [
-        .package(product: "SnapKit"),
         .package(product: "MessageKit"),
         .package(product: "Starscream"),
-        .package(product: "ComposableArchitecture")
+        .project(target: "PageKit", path: .relativeToRoot("PageKit"))
     ]
 )
 
@@ -60,26 +59,18 @@ let testTarget = Target.target(
     ]
 )
 
-let snapKitURL = "https://github.com/SnapKit/SnapKit.git"
-let snapKitVersion: Package.Requirement = .exact("5.7.1")
-
 let messageKitURL = "https://github.com/MessageKit/MessageKit.git"
 let messageVersion: Package.Requirement = .exact("5.0.0")
 
 let starscreamURL = "https://github.com/daltoniam/Starscream.git"
 let starscreamVersion: Package.Requirement = .exact("4.0.8")
 
-let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
-let tcaVersion: Package.Requirement = .exact("1.20.2")
-
 let project = Project(
     name: projectName,
     organizationName: "Page",
     packages: [
-        .remote(url: snapKitURL, requirement: snapKitVersion),
         .remote(url: messageKitURL, requirement: messageVersion),
         .remote(url: starscreamURL, requirement: starscreamVersion),
-        .remote(url: tcaURL, requirement: tcaVersion)
     ],
     targets: [target, testTarget]
 )

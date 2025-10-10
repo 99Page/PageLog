@@ -26,9 +26,8 @@ let target = Target.target(
     sources: ["Sources/**", "Docs/**"],
     resources: ["../../Resource/Resources/**"],
     dependencies: [
-        .package(product: "ComposableArchitecture"),
+        .project(target: "PageKit", path: .relativeToRoot("PageKit")),
         .package(product: "GRDB"),
-        .package(product: "Sharing")
     ]
 )
 
@@ -44,23 +43,15 @@ let testTarget = Target.target(
     ]
 )
 
-let tcaURL = "https://github.com/pointfreeco/swift-composable-architecture.git"
-let tcaVersion: Package.Requirement = .upToNextMajor(from: "1.17.0")
-
 let grdbURL = "https://github.com/groue/GRDB.swift.git"
 let grdbVersion: Package.Requirement = .exact("6.29.3")
-
-let sharingURL = "https://github.com/pointfreeco/swift-sharing.git"
-let sharingVersion: Package.Requirement = .exact("2.1.0")
 
 
 let project = Project(
     name: projectName,
     organizationName: "Page",
     packages: [
-        .remote(url: tcaURL, requirement: tcaVersion),
-        .remote(url: grdbURL, requirement: grdbVersion),
-        .remote(url: sharingURL, requirement: sharingVersion)
+        .remote(url: grdbURL, requirement: grdbVersion)
     ],
     settings: nil,
     targets: [target, testTarget]

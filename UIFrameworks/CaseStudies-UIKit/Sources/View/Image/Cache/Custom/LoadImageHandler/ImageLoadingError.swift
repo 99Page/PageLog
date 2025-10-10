@@ -10,4 +10,5 @@ import Foundation
 
 enum ImageLoadingError: Error {
     case loadFail
+    case taskCancellation
 }
