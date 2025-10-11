@@ -9,14 +9,15 @@
 import Foundation
 import SnapKit
 import UIKit
+import PageKit
 
 class ImageViewController: UIViewController {
-    let imageCacheView: ImageCacheView
+    let imageCacheView = UIImageView()
     
-    private let imageURL = "https://picsum.photos/200"
+    private let imageURL = ImageURLs.stubs()[0].absoluteString
     
     private let buttonStackView: UIStackView = {
-        let buttonTitles = ["Cache", "Disk", "URL"]
+        let buttonTitles = ["Cache", "Disk", "URL", "Cancel"]
         let buttons = buttonTitles.enumerated().map { index, title -> UIButton in
             let button = UIButton(type: .system)
             button.setTitle(title, for: .normal)
@@ -32,8 +33,6 @@ class ImageViewController: UIViewController {
     }()
     
     init() {
-        let handler = ImageLoaderFactory.makeHandler()
-        self.imageCacheView = ImageCacheView(loadImageHandler: handler)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -67,21 +66,25 @@ class ImageViewController: UIViewController {
     }
     
     func loadImage() {
-        imageCacheView.configure()
-        imageCacheView.loadImage(fromKey: "https://picsum.photos/200")
+        imageCacheView.point.setImage(from: imageURL)
     }
     
     @objc private func buttonTapped(_ sender: UIButton) {
         switch sender.tag {
         case 0:
-            imageCacheView.loadImageHandler = CacheImageLoader()
-            imageCacheView.reloadImage(fromKey: imageURL)
+            imageCacheView.point.loader = CacheImageLoader()
+            imageCacheView.image = nil
+            imageCacheView.point.setImage(from: imageURL)
         case 1:
-            imageCacheView.loadImageHandler = DiskImageLoader()
-            imageCacheView.reloadImage(fromKey: imageURL)
+            imageCacheView.point.loader = DiskImageLoader()
+            imageCacheView.image = nil
+            imageCacheView.point.setImage(from: imageURL)
         case 2:
-            imageCacheView.loadImageHandler = NetworkImageLoader()
-            imageCacheView.reloadImage(fromKey: imageURL)
+            imageCacheView.point.loader = NetworkImageLoader()
+            imageCacheView.image = nil
+            imageCacheView.point.setImage(from: imageURL)
+        case 3:
+            imageCacheView.point.cancelTask()
         default:
             break
         }

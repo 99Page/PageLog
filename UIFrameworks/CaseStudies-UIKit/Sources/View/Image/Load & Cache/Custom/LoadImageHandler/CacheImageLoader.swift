@@ -9,10 +9,14 @@
 import Foundation
 import UIKit
 
-struct CacheImageLoader: LoadImageHandler {
+class CacheImageLoader: LoadImageHandler {
     var next: (any LoadImageHandler)?
     
     static let imageCache = NSCache<NSString, UIImage>()
+    
+    init(next: (any LoadImageHandler)? = nil) {
+        self.next = next
+    }
     
     func loadImage(fromKey key: String) async throws -> UIImage {
         let nsKey = key as NSString

@@ -11,8 +11,12 @@ import UIKit
 import CommonCrypto
 
 
-struct DiskImageLoader: LoadImageHandler {
+class DiskImageLoader: LoadImageHandler {
     var next: (any LoadImageHandler)?
+    
+    init(next: (any LoadImageHandler)? = nil) {
+        self.next = next
+    }
     
     /// 디스크에 저장된 이미지 경로
     private static let fileManager = FileManager.default

@@ -53,7 +53,7 @@ class TabBarController: UITabBarController {
     override func updateProperties() {
         if #available(iOS 26.0, *) {
             super.updateProperties()
-            let isInlineAccessory = traitCollection.tabAccessoryEnvironment == .inline
+//            let isInlineAccessory = traitCollection.tabAccessoryEnvironment == .inline
         }
         
     }

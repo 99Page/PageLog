@@ -9,8 +9,12 @@
 import Foundation
 import UIKit
 
-struct NetworkImageLoader: LoadImageHandler {
+class NetworkImageLoader: LoadImageHandler {
     var next: (any LoadImageHandler)?
+    
+    init(next: (any LoadImageHandler)? = nil) {
+        self.next = next
+    }
     
     /// URL로부터 이미지를 비동기적으로 로드하여 반환합니다.
     /// - Parameter urlString: 이미지 URL의 문자열 표현

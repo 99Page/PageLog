@@ -11,7 +11,5 @@ import Foundation
 extension ExpandableCollectionViewController {
     func insertItemsToHead(rowDiff: Int) {
         guard let zoomStartedIndexPath = collectionState.zoomStartedIndexPath else { return }
-        
-        let visibleArea = zoomStartedIndexPath
     }
 }
