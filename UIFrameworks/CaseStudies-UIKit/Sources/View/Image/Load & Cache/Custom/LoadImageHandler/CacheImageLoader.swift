@@ -13,11 +13,11 @@ class CacheImageLoader: LoadImageHandler {
     
     static let `default` = CacheImageLoader()
     
-    
     var next: (any LoadImageHandler)?
     let imageCache = NSCache<NSString, UIImage>()
+    private var cacheKeys: Set<NSString> = []
     
-    private init() {
+    init() {
         self.next = nil
     }
     
@@ -31,5 +31,9 @@ class CacheImageLoader: LoadImageHandler {
         }
         
         throw ImageLoadingError.loadFail
+    }
+    
+    func deleteImage(key: String) {
+        imageCache.removeObject(forKey: key as NSString)
     }
 }
