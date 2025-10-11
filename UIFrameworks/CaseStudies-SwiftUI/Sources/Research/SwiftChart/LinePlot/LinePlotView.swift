@@ -9,6 +9,7 @@
 import Charts
 import SwiftUI
 
+@available(iOS 18.0, *)
 struct LinePlotView: View {
     @State var type: LinePlotType = .functions
     
@@ -85,6 +86,7 @@ struct LinePlotView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     LinePlotView()
 }

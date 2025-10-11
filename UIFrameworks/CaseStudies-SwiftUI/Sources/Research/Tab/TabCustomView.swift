@@ -28,6 +28,8 @@ enum Tabs: String, Hashable, Equatable, Identifiable {
 ///
 /// ## Reference
 /// [Enhancing your app’s content with tab navigation](https://developer.apple.com/documentation/swiftui/enhancing-your-app-content-with-tab-navigation)
+
+@available(iOS 18.0, *)
 struct TabCustomView: View {
     
     @AppStorage("sidebarCustomizations") var tabViewCustomization: TabViewCustomization
@@ -60,6 +62,7 @@ struct TabCustomView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     NavigationStack {
         TabCustomView()

@@ -10,11 +10,14 @@ import SwiftUI
 
 /// section 전체에 적용할 수도 있고
 /// 개별 subview 하나에 적용할 수도 있다.
-/// ContainerView, SectionContainerView에서 어떻게 사용하고 있는지 비교해보자. 
+/// ContainerView, SectionContainerView에서 어떻게 사용하고 있는지 비교해보자.
+
+@available(iOS 18.0, *)
 extension ContainerValues {
     @Entry var foregroundColor: Color = .blue
 }
 
+@available(iOS 18.0, *)
 extension View {
     func containerForegroundColor(_ color: Color) -> some View {
         containerValue(\.foregroundColor, color)

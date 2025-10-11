@@ -1,5 +1,5 @@
 {
-  "originHash" : "022a74d38b2e14c64ded4649e13f4f0a814cd8c64ae819b1846c2260e19a8095",
+  "originHash" : "c047ca91add4d14b085bab2b96d446cc01fc1ca4dd78ed2c7fa2e6e34f1d6fb6",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -170,15 +170,6 @@
       "state" : {
         "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
         "version" : "601.0.1"
-      }
-    },
-    {
-      "identity" : "swift-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-testing.git",
-      "state" : {
-        "revision" : "1d1f7e489c9c606ae6c2caa10385372736ef4a39",
-        "version" : "6.1.3"
       }
     },
     {

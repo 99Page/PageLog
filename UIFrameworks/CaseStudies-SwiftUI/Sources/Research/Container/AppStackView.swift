@@ -13,30 +13,34 @@ struct AppStackView: View {
         NavigationStack {
             List {
                 Section("Container") {
-                    NavigationLink("ForEach subviews API") {
-                        ContainerView {
-                            Text("ForEach")
-                                .containerForegroundColor(.blue)
-                            
-                            Text("API!")
-                                .containerForegroundColor(.cyan)
+                    if #available(iOS 18.0, *) {
+                        NavigationLink("ForEach subviews API") {
+                            ContainerView {
+                                Text("ForEach")
+                                    .containerForegroundColor(.blue)
+                                
+                                Text("API!")
+                                    .containerForegroundColor(.cyan)
+                            }
                         }
                     }
                     
-                    NavigationLink("Section API") {
-                        SectionContainerView {
-                            Section {
-                                Text("New section api")
-                                Text("custom header")
-                            }
-                            
-                            Section {
-                                Text("Old section api")
-                            } header: {
-                                Text("Old header")
-                            }
-                            .containerForegroundColor(.green)
+                    if #available(iOS 18.0, *) {
+                        NavigationLink("Section API") {
+                            SectionContainerView {
+                                Section {
+                                    Text("New section api")
+                                    Text("custom header")
+                                }
+                                
+                                Section {
+                                    Text("Old section api")
+                                } header: {
+                                    Text("Old header")
+                                }
+                                .containerForegroundColor(.green)
 
+                            }
                         }
                     }
                 }

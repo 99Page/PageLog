@@ -11,4 +11,11 @@ import Foundation
 enum ImageLoadingError: Error {
     case loadFail
     case taskCancellation
+    case failToConvertToData
+    case diskError(DiskError)
+}
+
+enum DiskError: Error {
+    case invalidCacheURL
+    case empty
 }

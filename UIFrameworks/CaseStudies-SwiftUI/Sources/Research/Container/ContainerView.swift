@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 18.0, *)
 struct ContainerView<Content: View>: View {
     
     @ViewBuilder var content: Content
@@ -34,6 +35,7 @@ struct ContainerView<Content: View>: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview("Small font") {
     ContainerView {
         Text("Hello")
@@ -44,6 +46,7 @@ struct ContainerView<Content: View>: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview("Big font") {
     ContainerView {
         Text("Hello")

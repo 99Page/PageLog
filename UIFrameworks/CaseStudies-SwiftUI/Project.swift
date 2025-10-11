@@ -23,10 +23,13 @@ let target = Target.target(
     destinations: .iOS,
     product: .app,
     bundleId: "com.page.ui.case-studies-swiftui",
-    deploymentTargets: .iOS("18.0"),
+    deploymentTargets: .iOS("17.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../Resource/Resources/**"]
+    resources: ["../../Resource/Resources/**"],
+    dependencies: [
+        .project(target: "PageKit", path: .relativeToRoot("PageKit"))
+    ]
 )
 
 let testTarget = Target.target(

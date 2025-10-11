@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 18.0, *)
 struct ColorRectangleView: UIViewRepresentable {
     @Binding var color: Color
     

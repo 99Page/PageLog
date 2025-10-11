@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 18.0, *)
 struct SectionContainerView<Content: View>: View {
     
     @ViewBuilder var content: Content
@@ -35,6 +36,7 @@ struct SectionContainerView<Content: View>: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     SectionContainerView {
         Section {

@@ -15,6 +15,8 @@ import Translation
 /// [Meet the Translation API](https://developer.apple.com/videos/play/wwdc2024/10117/)
 ///
 /// [Translating text within your app](https://developer.apple.com/documentation/translation/translating-text-within-your-app)
+
+@available(iOS 18.0, *)
 struct TranslationView: View {
     @State private var viewModel = TranslationViewModel()
     
@@ -61,6 +63,7 @@ struct TranslationView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     NavigationStack {
         TranslationView()

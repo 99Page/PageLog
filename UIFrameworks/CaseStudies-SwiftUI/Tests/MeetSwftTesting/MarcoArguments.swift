@@ -7,6 +7,7 @@
 //
 
 import Testing
+@testable import CaseStudies_SwiftUI
 
 struct RandomValue {
     static var value: Bool = .random()

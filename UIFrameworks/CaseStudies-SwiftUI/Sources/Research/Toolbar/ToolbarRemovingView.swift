@@ -16,6 +16,8 @@ import SwiftUI
 ///
 /// ## Reference
 /// [toolbar(removing:)](https://developer.apple.com/documentation/SwiftUI/View/toolbar(removing:))
+
+@available(iOS 18.0, *)
 struct ToolbarRemovingView: View {
     var body: some View {
         VStack {
@@ -29,6 +31,7 @@ struct ToolbarRemovingView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     NavigationStack {
         ToolbarRemovingView()

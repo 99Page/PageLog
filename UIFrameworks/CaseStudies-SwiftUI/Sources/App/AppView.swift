@@ -27,36 +27,50 @@ struct AppView: View {
                 case let .symbol(symbolPath):
                     switch symbolPath {
                     case .animation:
-                        SymbolAnimationView()
+                        if #available(iOS 18.0, *) {
+                            SymbolAnimationView()
+                        }
                     }
                 case let .swiftChart(path):
                     switch path {
                     case .basic:
                         SwiftChartBasicView()
                     case .linePlot:
-                        LinePlotView()
+                        if #available(iOS 18.0, *) {
+                            LinePlotView()
+                        }
                     }
                 case let .animation(path):
                     switch path {
                     case .zoomTransition:
-                        ZoomTransitionView()
+                        if #available(iOS 18.0, *) {
+                            ZoomTransitionView()
+                        }
                     case .uiView:
-                        UIViewAnimationView() 
+                        if #available(iOS 18.0, *) {
+                            UIViewAnimationView()
+                        }
                     }
                 case let .framework(path):
                     switch path {
                     case .translation:
-                        TranslationView()
+                        if #available(iOS 18.0, *) {
+                            TranslationView()
+                        }
                     }
                 case let .toolbar(path):
                     switch path {
                     case .toolbar:
-                        ToolbarRemovingView()
+                        if #available(iOS 18.0, *) {
+                            ToolbarRemovingView()
+                        }
                     }
                 case let .tab(path):
                     switch path {
                     case .customTab:
-                        TabCustomView()
+                        if #available(iOS 18.0, *) {
+                            TabCustomView()
+                        }
                     }
                 }
             }
@@ -134,6 +148,7 @@ struct AppView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     AppView()
 }

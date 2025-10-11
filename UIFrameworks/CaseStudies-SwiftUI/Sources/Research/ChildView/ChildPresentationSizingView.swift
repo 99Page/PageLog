@@ -19,6 +19,7 @@ import SwiftUI
 /// ## Reference
 /// [presentationSizing(_:)](https://developer.apple.com/documentation/SwiftUI/View/presentationSizing(_:))
 
+@available(iOS 18.0, *)
 struct ChildPresentationSizingView: View {
     
     @State private var show = false
@@ -35,6 +36,7 @@ struct ChildPresentationSizingView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     ChildPresentationSizingView()
 }

@@ -23,7 +23,8 @@ class KFUseCaseViewController: UIViewController {
         }
         
         let url = URL(string: "")
-        
+        imageView.kf.setImage(with: .network(URL("")!))
+        imageView.kf.cancelDownloadTask()
         KF.url(url)
             .set(to: imageView)
     }

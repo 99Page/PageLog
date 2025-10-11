@@ -9,6 +9,7 @@
 import Foundation
 import Translation
 
+@available(iOS 18.0, *)
 @Observable
 final class TranslationViewModel {
     var model = TranslateModel()

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CommonCrypto
 
-protocol LoadImageHandler {
-    var next: LoadImageHandler? { get set }
-    func loadImage(fromKey key: String) async throws -> UIImage
+protocol LoadImageHandler: AnyObject {
+    var next: (any LoadImageHandler)? { get set }
+    func loadImage(fromKey key: String) async throws -> Data
 }

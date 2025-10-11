@@ -19,7 +19,6 @@ let target = Target.target(
         .package(product: "Kingfisher"),
         .package(product: "SnapKit"),
         .package(product: "ComposableArchitecture"),
-        .package(product: "Testing"),
     ],
     settings: .settings(
         base: [
@@ -55,14 +54,6 @@ let project = Project(
         .remote(
             url: "https://github.com/pointfreeco/swift-composable-architecture.git",
             requirement: .upToNextMajor(from: "1.22.3")
-        ),
-        /// Xcode26부터 모든 모듈의 인터페이스를 명시적으로 스캔해서 빌드 성능과 안정성을 높혔다.
-        /// 따라서 Testing도 명시적으로 의존해줘야한다.
-        /// 이 설정은 SWIFT_ENBALE_EXPLICIT_MODULES 에서 확인할 수 있다.
-        .remote(
-            url: "https://github.com/swiftlang/swift-testing.git",
-            requirement: .exact("6.1.3") // swify-syntax 충돌 문제로 현재 나와있는 6.2 버전 사용 불가
-                                         // 2025. 10. 10
         )
     ],
     targets: [target, testTarget],

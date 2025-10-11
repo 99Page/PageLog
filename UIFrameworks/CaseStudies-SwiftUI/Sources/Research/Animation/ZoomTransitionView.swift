@@ -12,6 +12,8 @@ import SwiftUI
 ///
 /// # Reference
 /// [UI 애니메이션 및 전환 효과 향상하기](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
+
+@available(iOS 18.0, *)
 struct ZoomTransitionView: View {
     
     let columns: [GridItem] = [.init(.flexible(minimum: 50)), .init(.flexible(minimum: 50))]
@@ -40,6 +42,7 @@ struct ZoomTransitionView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     NavigationStack {
         ZoomTransitionView()

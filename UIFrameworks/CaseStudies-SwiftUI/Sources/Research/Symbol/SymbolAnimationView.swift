@@ -12,6 +12,8 @@ import SwiftUI
 ///
 /// # Reference
 /// [SF symbols 6의 새로운 기능](https://developer.apple.com/kr/videos/play/wwdc2024/10188/)
+///
+@available(iOS 18.0, *)
 struct SymbolAnimationView: View {
     
     @State private var powerplugTapCount = 0
@@ -72,6 +74,7 @@ struct SymbolAnimationView: View {
     }
 }
 
+@available(iOS 18.0, *)
 #Preview {
     SymbolAnimationView()
 }

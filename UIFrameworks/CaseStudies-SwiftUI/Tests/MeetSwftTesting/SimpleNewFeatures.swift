@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import WWDC24
+@testable import CaseStudies_SwiftUI
 
 /// Testing에서 알아야할 핵심 매크로는 4가지다
 /// 1. @Test
