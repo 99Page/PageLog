@@ -12,7 +12,8 @@ struct ImageLoaderFactory {
     static func makeHandler() -> any LoadImageHandler {
         let url = NetworkImageLoader()
         let disk = DiskImageLoader(next: url)
-        let cache = CacheImageLoader(next: disk)
+        let cache = CacheImageLoader.default
+        cache.next = disk
         return cache
     }
 }

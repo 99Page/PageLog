@@ -72,7 +72,7 @@ class ImageViewController: UIViewController {
     @objc private func buttonTapped(_ sender: UIButton) {
         switch sender.tag {
         case 0:
-            imageCacheView.point.loader = CacheImageLoader()
+            imageCacheView.point.loader = CacheImageLoader.default
             imageCacheView.image = nil
             imageCacheView.point.setImage(from: imageURL)
         case 1:
@@ -84,7 +84,7 @@ class ImageViewController: UIViewController {
             imageCacheView.image = nil
             imageCacheView.point.setImage(from: imageURL)
         case 3:
-            imageCacheView.point.cancelTask()
+            imageCacheView.point.cancelDownload()
         default:
             break
         }

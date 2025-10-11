@@ -25,6 +25,11 @@ struct ImageViewWrapper<Base> {
 }
 
 extension ImageViewWrapper {
+    // struct에는 getAssociatedObject 사용할 수 없다.
+    // struct에 어떤 class를 참조 시키고,
+    // 이 class에 extension 해주면
+    // associatedObject 활용이 가능하기때문에
+    // stored property처럼 이용 가능하다.
     var loader: (any LoadImageHandler) {
         get { getAssociatedObject(base, &imageLoaderKey) ?? ImageLoaderFactory.makeHandler() }
         set { setRetainedAssociatedObject(base, &imageLoaderKey, newValue) }
@@ -37,6 +42,8 @@ extension ImageViewWrapper {
 }
     
 extension ImageSettable {
+    // 캐싱/로드 기능을 사용하기 위한 entry point
+    // 이런 entry point는 class에만 적용 가능
     var point: ImageViewWrapper<Self> {
         get { return ImageViewWrapper(base: self) }
         set { }
@@ -63,7 +70,7 @@ extension ImageViewWrapper where Base: UIImageView {
         copiedSelf.imageTask = task
     }
     
-    func cancelTask() {
+    func cancelDownload() {
         imageTask?.cancel()
     }
     

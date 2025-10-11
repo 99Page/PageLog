@@ -10,21 +10,23 @@ import Foundation
 import UIKit
 
 class CacheImageLoader: LoadImageHandler {
+    
+    static let `default` = CacheImageLoader()
+    
+    
     var next: (any LoadImageHandler)?
+    let imageCache = NSCache<NSString, UIImage>()
     
-    static let imageCache = NSCache<NSString, UIImage>()
-    
-    init(next: (any LoadImageHandler)? = nil) {
-        self.next = next
+    private init() {
+        self.next = nil
     }
     
     func loadImage(fromKey key: String) async throws -> UIImage {
         let nsKey = key as NSString
-        
-        if let result = Self.imageCache.object(forKey: nsKey) {
+        if let result = imageCache.object(forKey: nsKey) {
             return result
         } else if let result = try await next?.loadImage(fromKey: key) {
-            Self.imageCache.setObject(result, forKey: nsKey)
+            imageCache.setObject(result, forKey: nsKey)
             return result
         }
         
