@@ -46,7 +46,6 @@ let testTarget = Target.target(
 let grdbURL = "https://github.com/groue/GRDB.swift.git"
 let grdbVersion: Package.Requirement = .exact("6.29.3")
 
-
 let project = Project(
     name: projectName,
     organizationName: "Page",
