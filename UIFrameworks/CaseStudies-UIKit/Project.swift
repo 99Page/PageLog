@@ -7,8 +7,10 @@
 
 import Foundation
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let projectName = "CaseStudies-UIKit"
+
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -40,8 +42,9 @@ let target = Target.target(
     sources: ["Sources/**"],
     resources: ["../../Resource/Resources/**"],
     dependencies: [
-        .project(target: "PageKit", path: .relativeToRoot("PageKit"))
-    ]
+        .project(target: "PageKit", path: .relativeToRoot("PageKit")),
+    ],
+    settings: .default
 )
 
 let testTarget = Target.target(
@@ -53,8 +56,10 @@ let testTarget = Target.target(
     sources: ["Tests/**"],
     dependencies: [
         .target(name: projectName)
-    ]
+    ],
+    settings: .default
 )
+
 
 let project = Project(
     name: projectName,

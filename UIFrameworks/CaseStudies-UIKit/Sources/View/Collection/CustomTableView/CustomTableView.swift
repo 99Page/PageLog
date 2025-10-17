@@ -20,19 +20,12 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     private var currentVisibleIndexSet: Set<Int> = []
     
     private var didInitializeLayout = false
-    
-    private var topIndex = 0
-    private var bottomIndex = 0
-    
-    private var scrollDirection: Direction = .up
-    private var velocity: CGPoint = .zero
-    var decelerationRate: CGFloat = 0.95 // 0~1, 1에 가까울수록 오래 감속
+   
+    private var gesture = Gesture()
+    private var cellInfo = CellInfo()
+    private var reuseQueue = Queue<Cell>()
     private(set) var contentOffset: CGPoint = .zero
     private lazy var pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-    
-    private var cellCount = 5 // 임시 값
-    private var cellSize: CGSize?
-    var spacing: CGFloat = 10
     
     init(datas: [Cell.Data]) {
         self.datas = datas
@@ -52,15 +45,18 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
         if !didInitializeLayout {
             setCellCount()
             makeConstraints()
-            updateVisibility()
             didInitializeLayout = true
+        }
+        
+        if currentVisibleIndexSet.isEmpty {
+            updateVisibility()
         }
     }
     
     var estimatedContentHeight: CGFloat {
-        guard let h = cellSize?.height, !datas.isEmpty else { return 0 }
+        guard let h = cellInfo.size?.height, !datas.isEmpty else { return 0 }
         let rows = CGFloat(datas.count)
-        return rows * h + (rows - 1) * spacing
+        return rows * h + (rows - 1) * cellInfo.spacing
     }
     
     private var isContentOffsetOutOfBounds: Bool {
@@ -97,8 +93,9 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     }
     
     private func setCellCount() {
-        guard let cellSize else { return }
-        cellCount = min(Int(self.bounds.height / cellSize.height) + 4, datas.count)
+        guard let cellSize = cellInfo.size else { return }
+        cellInfo.count = min(Int(self.bounds.height / cellSize.height) + 4, datas.count)
+        cellInfo.minVisibleCount = Int(self.bounds.height / cellSize.height)
     }
     
     private func setupView() {
@@ -107,12 +104,12 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
         stack.axis = .vertical
         stack.distribution = .equalSpacing
         stack.alignment = .fill
-        stack.spacing = spacing
+        stack.spacing = cellInfo.spacing
         stack.isLayoutMarginsRelativeArrangement = true
     }
     
     private func measureExpectedCellSizeIfNeeded() {
-        guard cellSize == nil, bounds.width > 0 else { return }
+        guard cellInfo.size == nil, bounds.width > 0 else { return }
         let availableWidth = bounds.width - 32
         let cell = Cell()
 
@@ -132,19 +129,19 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
-        cellSize = CGSize(width: availableWidth, height: size.height)
+        self.cellInfo.size = CGSize(width: availableWidth, height: size.height)
     }
     
     private func makeConstraints() {
         addSubview(stack)
 
-        (0..<cellCount).forEach { index in
+        (0..<cellInfo.count).forEach { index in
             let cell = Cell()
             
             if index < datas.count {
                 cell.configure(data: datas[index])
                 cell.dataIndex = index
-                bottomIndex = index
+                cellInfo.bottomIndex = index
             }
             
             stack.addArrangedSubview(cell)
@@ -172,7 +169,7 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
             contentOffset = applyBounceIfNeeded(next)
             applyScrollChanges()
         case .ended, .cancelled:
-            velocity = gesture.velocity(in: self)
+            self.gesture.velocity = gesture.velocity(in: self)
             startDecel()
             
             if isContentOffsetOutOfBounds {
@@ -184,9 +181,9 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     
     private func updateScrollDirection(_ velocity: CGPoint) {
         if velocity.y < 0 {
-            scrollDirection = .up
+            gesture.scrollDirection = .up
         } else if velocity.y > 0 {
-            scrollDirection = .down
+            gesture.scrollDirection = .down
         }
         
         // velocity.y == 0 인 경우는 제스쳐 후 멈춘 상황. 현재 방향 유지
@@ -221,14 +218,12 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     }
     
     @objc private func updateScrollOffset(_ link: CADisplayLink) {
-        let speed = hypot(velocity.x, velocity.y)
-        
-        if speed < 5 {
+        if gesture.speed < 5 {
             stopDecel()
             return
         }
         
-        if shouldTriggerBounce(speed: speed) {
+        if shouldTriggerBounce(speed: gesture.speed) {
             stopDecel()
             bounce()
             return
@@ -244,12 +239,12 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     private func scrollWithDecleartion(_ link: CADisplayLink) {
         let dt = CGFloat(link.targetTimestamp - link.timestamp) // 프레임 지속 시간
         
-        velocity.x *= pow(decelerationRate, dt * 60)
-        velocity.y *= pow(decelerationRate, dt * 60)
+        gesture.velocity.x *= pow(gesture.decelerationRate, dt * 60)
+        gesture.velocity.y *= pow(gesture.decelerationRate, dt * 60)
 
         let next = CGPoint(
-            x: contentOffset.x + velocity.x * dt,
-            y: contentOffset.y + velocity.y * dt
+            x: contentOffset.x + gesture.velocity.x * dt,
+            y: contentOffset.y + gesture.velocity.y * dt
         )
 
         contentOffset = next
@@ -266,7 +261,7 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
         }()
         
         contentOffset.y = targetY
-        velocity = .zero // 바운스 후 감속에 의한 스크롤 제거
+        gesture.velocity = .zero // 바운스 후 감속에 의한 스크롤 제거
         
         UIView.animate(withDuration: 0.8,
                        delay: 0,
@@ -287,13 +282,14 @@ final class CustomTableView<Cell: ConfigurableCell>: UIView {
     func applyScrollChanges() {
         applyTransform()
         updateVisibility()
-        reuseCell()
+//        reuseCell()
+        enqueueCell()
+        dequeueCell()
     }
 }
 
 // MARK: Reuse cell
 extension CustomTableView {
-    
     private func updateVisibility() {
         let viewport = self.bounds // 보이는 화면 영역
         
@@ -312,56 +308,166 @@ extension CustomTableView {
         currentVisibleIndexSet = newSet
     }
     
-    private func reuseCell() {
-        switch scrollDirection {
-        case .up:
-            guard topIndex != currentVisibleIndexSet.sorted().first else { return }
-            guard let firstCell = stack.arrangedSubviews.first as? Cell else { return }
-            let nextIndex = bottomIndex + 1
-            guard nextIndex < datas.count else { return }
-
-            let h = firstCell.bounds.height + stack.spacing
-
-            // 맨 위 셀 제거
-            stack.removeArrangedSubview(firstCell)
-            firstCell.removeFromSuperview()
-
-            // 오프셋 보정
-            contentOffset.y += h
+    // 데이터를 순차적으로 enqueue 하면서, 예상 못한 순서로 enqueue 되는 것을 방지
+    private func enqueueCell() {
+        guard stack.arrangedSubviews.count > cellInfo.minVisibleCount else { return }
+        
+        for subview in stack.arrangedSubviews {
+            guard let cell = subview as? Cell else { continue }
             
+            switch gesture.scrollDirection {
+            case .up:
+                if cell.dataIndex == cellInfo.topIndex
+                    && !currentVisibleIndexSet.contains(cellInfo.topIndex) {
+                    enqueueWhenScrollUp(cell)
+                    return
+                }
+            case .down:
+                if cell.dataIndex == cellInfo.bottomIndex
+                    && !currentVisibleIndexSet.contains(cellInfo.bottomIndex) {
+                    enqueueWhenScrollDown(cell)
+                    return
+                }
+            }
+        }
+    }
+    
+    private func enqueueWhenScrollDown(_ cell: Cell) {
+        stack.removeArrangedSubview(cell)
+        cell.removeFromSuperview()
+        cell.prepareForReuse()
+        reuseQueue.enqueue(cell)
+        cellInfo.bottomIndex -= 1
+    }
+    
+    private func enqueueWhenScrollUp(_ cell: Cell) {
+        stack.removeArrangedSubview(cell)
+        cell.removeFromSuperview()
+        cell.prepareForReuse()
+        reuseQueue.enqueue(cell)
+        adjustContentOffsetWhenEnqueue(cell)
+        cellInfo.topIndex += 1
+    }
+    
+    private func adjustContentOffsetWhenEnqueue(_ cell: Cell) {
+        switch gesture.scrollDirection {
+        case .up:
+            let h = cell.bounds.height + stack.spacing
+            contentOffset.y += h
             applyTransform()
-            updateVisibility()
-
-            // 맨 아래 새 셀 추가
-            topIndex += 1
-            bottomIndex = nextIndex
-            firstCell.dataIndex = bottomIndex
-            firstCell.configure(data: datas[bottomIndex])
-            stack.addArrangedSubview(firstCell)
-
         case .down:
-            guard bottomIndex != currentVisibleIndexSet.sorted().last else { return }
-            guard let lastCell = stack.arrangedSubviews.last as? Cell else { return }
-            let newTopIndex = topIndex - 1
-            guard newTopIndex >= 0 else { return }
+            break
+        }
+    }
+    
+    private func dequeueCell() {
+        let sortedVisibleIndexes = currentVisibleIndexSet.sorted()
+        switch gesture.scrollDirection {
+        case .up:
+            guard self.cellInfo.bottomIndex == sortedVisibleIndexes.last else { return }
+            guard cellInfo.bottomIndex + 1 < datas.count else { return }
+            guard let cell = reuseQueue.dequeue() else { return }
+            
+            cellInfo.bottomIndex += 1
 
-            let h = lastCell.bounds.height + stack.spacing
+            cell.dataIndex = cellInfo.bottomIndex
+            cell.configure(data: datas[cellInfo.bottomIndex])
+            stack.addArrangedSubview(cell)
+        case .down:
+            guard cellInfo.topIndex == sortedVisibleIndexes.first else { return }
+            guard cellInfo.topIndex - 1 >= 0 else { return }
+            guard let cell = reuseQueue.dequeue() else { return }
+            
+            cellInfo.topIndex -= 1
 
-            // 맨 아래 셀 제거
-            stack.removeArrangedSubview(lastCell)
-            lastCell.removeFromSuperview()
-
-            // 오프셋 보정
+            cell.dataIndex = cellInfo.topIndex
+            cell.configure(data: datas[cellInfo.topIndex])
+            let h = cell.bounds.height + stack.spacing
             contentOffset.y -= h
             applyTransform()
-            updateVisibility()
+            stack.insertArrangedSubview(cell, at: 0)
+        }
+    }
+    
+//    private func reuseCell() {
+//        switch gesture.scrollDirection {
+//        case .up:
+//            guard self.cell.topIndex != currentVisibleIndexSet.sorted().first else { return }
+//            guard let firstCell = stack.arrangedSubviews.first as? Cell else { return }
+//            let nextIndex = self.cell.bottomIndex + 1
+//            guard nextIndex < datas.count else { return }
+//
+//            let h = firstCell.bounds.height + stack.spacing
+//
+//            // 맨 위 셀 제거
+//            stack.removeArrangedSubview(firstCell)
+//            firstCell.removeFromSuperview()
+//
+//            // 오프셋 보정
+//            contentOffset.y += h
+//            
+//            applyTransform()
+//            updateVisibility()
+//
+//            // 맨 아래 새 셀 추가
+//            self.cell.topIndex += 1
+//            self.cell.bottomIndex = nextIndex
+//            firstCell.dataIndex = self.cell.bottomIndex
+//            firstCell.configure(data: datas[self.cell.bottomIndex])
+//            stack.addArrangedSubview(firstCell)
+//
+//        case .down:
+//            guard self.cell.bottomIndex != currentVisibleIndexSet.sorted().last else { return }
+//            guard let lastCell = stack.arrangedSubviews.last as? Cell else { return }
+//            let newTopIndex = self.cell.topIndex - 1
+//            guard newTopIndex >= 0 else { return }
+//
+//            let h = lastCell.bounds.height + stack.spacing
+//
+//            // 맨 아래 셀 제거
+//            stack.removeArrangedSubview(lastCell)
+//            lastCell.removeFromSuperview()
+//
+//            // 오프셋 보정
+//            contentOffset.y -= h
+//            applyTransform()
+//            updateVisibility()
+//
+//            // 맨 위 새 셀 추가
+//            self.cell.topIndex = newTopIndex
+//            self.cell.bottomIndex -= 1
+//            lastCell.dataIndex = self.cell.topIndex
+//            lastCell.configure(data: datas[self.cell.topIndex])
+//            stack.insertArrangedSubview(lastCell, at: 0)
+//        }
+//    }
+}
 
-            // 맨 위 새 셀 추가
-            topIndex = newTopIndex
-            bottomIndex -= 1
-            lastCell.dataIndex = topIndex
-            lastCell.configure(data: datas[topIndex])
-            stack.insertArrangedSubview(lastCell, at: 0)
+extension CustomTableView {
+    struct Gesture {
+        var scrollDirection: Direction = .up
+        var velocity: CGPoint = .zero
+        var decelerationRate: CGFloat = 0.95 // 0~1, 1에 가까울수록 오래 감속
+        
+        var speed: CGFloat {
+            hypot(velocity.x, velocity.y)
+        }
+    }
+    
+    struct CellInfo {
+        var topIndex = 0
+        var bottomIndex = -1
+        var count = 5 // 임시 값
+        var minVisibleCount = 1 // 바운스 과정에서 의도치 않은 셀 enqueue 방지
+        var size: CGSize?
+        var spacing: CGFloat = 10
+        
+        var isBottomIndexIntialized: Bool {
+            bottomIndex != -1
+        }
+        
+        var dataIndexRange: ClosedRange<Int> {
+            topIndex...bottomIndex
         }
     }
 }
@@ -385,7 +491,7 @@ class IntCell: UILabel, ConfigurableCell {
     }
     
     override var intrinsicContentSize: CGSize {
-        CGSize(width: UIView.noIntrinsicMetric, height: 100)
+        CGSize(width: UIView.noIntrinsicMetric, height: 95)
     }
 }
 
