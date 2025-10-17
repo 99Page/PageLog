@@ -12,6 +12,8 @@ public struct Queue<Element> {
     private var inStack = [Element]()
     private var outStack = [Element]()
     
+    public init() { }
+    
     /// 큐가 비어있는지 여부를 반환합니다.
     public var isEmpty: Bool {
         inStack.isEmpty && outStack.isEmpty

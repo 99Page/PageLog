@@ -15,6 +15,13 @@ protocol ConfigurableCell: UIView {
     init()
     
     func configure(data: Data)
+    func prepareForReuse()
     
     var dataIndex: Int { get set }
+}
+
+extension ConfigurableCell {
+    func prepareForReuse() {
+        
+    }
 }
