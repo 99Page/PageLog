@@ -52,10 +52,10 @@ DocC 사용법에 대해서 정리한 글
 
 ## CAUTION 
 
-Documentation을 생성하면 제목에는 프로젝트 이름이 들어갑니다. 이 프로젝트의 이름은 ``CaseStudies_SwiftUI``이므로, 이 프로젝트 내에서 생성시 첫 라인은 다음과 같습니다.
+Documentation을 생성하면 제목에는 프로젝트 이름이 들어갑니다. 이 프로젝트의 이름은 ``AboutXcode``이므로, 이 프로젝트 내에서 생성시 첫 라인은 다음과 같습니다.
 
 ```
-# ``CaseStudies_SwiftUI``
+# AboutXcode
 ```
 
 이 때 제목을 수정해주지 않으면 Documentation Preview 사용이 불가능합니다. 이 문서도 제목을 README로 수정했기 때문에 프리뷰를 확인할 수 있습니다.
@@ -69,3 +69,4 @@ Documentation을 생성하면 제목에는 프로젝트 이름이 들어갑니�
 ### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
 
 - <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->
+

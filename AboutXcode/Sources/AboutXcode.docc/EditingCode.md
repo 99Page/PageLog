@@ -1,4 +1,4 @@
-# Code Edit
+# Editing
 
 Xcode 사용 중, 직접적인 코드 작성이나 코드 작성에 도움이 되는 내용을 정리한 글 
 
@@ -41,3 +41,4 @@ func plus(a: Int, b: Int) -> Int {
 [Writing code with intelligence in Xcode](https://developer.apple.com/documentation/Xcode/writing-code-with-intelligence-in-xcode) 
 
 문서에는 나와있지만 아직 베타버전의 Xcode에는 적용되지 않았습니다. 문서 작성일인 2025. 08. 17에는 Xcode > Settings에 Intelligence 항목이 제공되지 않았습니다. 
+

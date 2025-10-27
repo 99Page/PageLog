@@ -6,8 +6,9 @@
 //
 
 import ProjectDescription
+import ProjectDescriptionHelpers
 
-let projectName = "Xcode"
+let projectName = "AboutXcode"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -25,7 +26,8 @@ let target = Target.target(
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../Resource/Resources/**"]
+    resources: ["../../Resource/Resources/**"],
+    settings: .default
 )
 
 let project = Project(
