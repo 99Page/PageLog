@@ -148,6 +148,7 @@
 | 2620 | Union find + 그래프의 중심 노드 | 골드2
 | 1976 | Floyd warshall | 골드4 |
 | 2458 | Floyd warhsall | 골드4 |
+|1414|MinHeap 활용|골드3|
 
 
 ## 구현, 문법, 자료구조
