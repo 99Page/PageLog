@@ -1,0 +1,16 @@
+@Tutorials(name: "메모리 분석") {
+    @Intro(title: "메모리 분석") {
+        메모리가 급증하거나 해제되지 않는 상황을 찾아내고 문제를 해결합니다.  
+        
+        @Image(source: memory-increase, alt: "튜토리얼 이미지")
+    }
+    
+    @Chapter(name: "튜토리얼 작성하기") {
+        @Image(source: table.png, alt: "튜토리얼 항목")
+        
+        DocC의 튜토리얼에서 스텝을 작성하는 방법을 알아봅니다. 
+        
+        @TutorialReference(tutorial: "doc:Write-Step")
+    }
+}
+

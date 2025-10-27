@@ -15,6 +15,7 @@ let target = Target.target(
     bundleId: "com.page.pageKit",
     deploymentTargets: .iOS("17.0"),
     sources: ["Sources/**"],
+    resources: ["../Resource/Resources/**"],
     dependencies: [
         .package(product: "Kingfisher"),
         .package(product: "SnapKit"),
