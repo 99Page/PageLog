@@ -57,6 +57,8 @@ tuist generate
 
 [Go further with Swift Testing](https://developer.apple.com/videos/play/wwdc2024/10195/)
 
+[Analyze heap memory](https://developer.apple.com/videos/play/wwdc2024/10173/)
+
 ## WWDC25 
 
 [Meet Liquid Glass](https://developer.apple.com/videos/play/wwdc2025/219/)
