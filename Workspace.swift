@@ -17,8 +17,7 @@ let workspace = Workspace(
         "TCA/**",
         "Resource/**",
         "JustDoc/**",
-        "PageKit/**", 
-        "AboutXcode/**",
+        "PageKit/**",
         "UILog/**"
     ]
 )
