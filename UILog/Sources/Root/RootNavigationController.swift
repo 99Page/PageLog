@@ -51,30 +51,7 @@ class RootNavigationController: UIViewController, NavigationSelectable {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = sections[indexPath.section].items[indexPath.row]
-        let viewController = item.destination.init()
+        let viewController = item.makeViewController()
         navigationController?.pushViewController(viewController, animated: true)
     }
-}
-
-protocol NavigationSelectable: AnyObject, UITableViewDelegate, UITableViewDataSource {
-    var tableView: UITableView { get }
-    var sections: [(title: String, items: [NavigationItem])] { get set }
-}
-
-extension NavigationSelectable {
-    func addSection(section: String,
-                            title: String,
-                            destination: UIViewController.Type) {
-        let item = NavigationItem(title: title, destination: destination)
-        if let index = sections.firstIndex(where: { $0.title == section }) {
-            sections[index].items.append(item)
-        } else {
-            sections.append((title: section, items: [item]))
-        }
-    }
-}
-
-struct NavigationItem {
-    let title: String
-    let destination: UIViewController.Type
 }

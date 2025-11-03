@@ -18,7 +18,7 @@ class MemoryViewController: UIViewController, NavigationSelectable {
         super.viewDidLoad()
         setupTableView()
         
-        addSection(section: "Problem", title: "Spike", destination: UIHostingController(rootView: MemorySpikeView()).self)
+        addSection(section: "Problem", title: "Spike") { MemorySpikeView() }
     }
 
     private func setupTableView() {
@@ -51,7 +51,7 @@ class MemoryViewController: UIViewController, NavigationSelectable {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = sections[indexPath.section].items[indexPath.row]
-        let viewController = item.destination.init()
+        let viewController = item.makeViewController()
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

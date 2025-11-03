@@ -5,12 +5,12 @@
         @Image(source: memory-increase, alt: "튜토리얼 이미지")
     }
     
-    @Chapter(name: "튜토리얼 작성하기") {
-        @Image(source: table.png, alt: "튜토리얼 항목")
+    @Chapter(name: "메모리 분석하기") {
+        @Image(source: memory-spike, alt: "메모리 스파이크 이미지")
         
         DocC의 튜토리얼에서 스텝을 작성하는 방법을 알아봅니다. 
         
-        @TutorialReference(tutorial: "doc:Write-Step")
+        @TutorialReference(tutorial: "doc:MemorySpike")
     }
 }
 

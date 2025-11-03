@@ -1,0 +1,120 @@
+@Tutorial(time: 10) {
+    @Intro(title: "메모리 스파이크 분석") {
+        메모리가 스파이크 되는 상황을 파악합니다. 
+        
+        @Image(source: memory-spike, alt: "메모리 스파이크")
+    }
+    
+    @Section(title: "메모리 스파이크 파악") {
+        @ContentAndMedia {
+            메모리 스파이크란 무엇인지, 어떻게 확인할 수 있는지 알아봅니다. 
+            @Image(source: memory-spike, alt: "메모리 스파이크")
+        }
+        
+        @Steps {
+            @Step {
+                Product > Profile(cmd + I)로 이동합니다.
+                
+                Allocations를 누르고 Choose를 선택합니다. 
+                
+                @Image(source: profile-allocations, alt: "")
+            }
+            
+            @Step {
+                좌측 상단의 붉은 버튼(recording)을 눌러 실행합니다.
+                
+                @Image(source: allocations-recording, alt: "")
+            }
+            
+            @Step {
+                
+                Allocations 실행 시 기본 화면입니다. 세 구역으로 분할되는데, 위에서 메모리 할당량, Allocations 횟수입니다. (제일 하단은 파악x) 
+                
+                @Image(source: allocations-run, alt: "")
+            }
+            
+            @Step {
+                일시적으로 메모리 사용량이 치솟는걸 확인할 수 있습니다. 이런 상황을 메모리 스파이크라고 부르며, 특히 하단에 있는 Allocations과 동일하게 치솟는 상황에서는 이런 문제를 쉽게 해결할 수 있습니다. 
+                
+                
+                @Image(source: memory-spike-with-allocations, alt: "")
+            }
+        }
+    }
+    
+    @Section(title: "메모리 스파이크 재현과 해결 방법") {
+        @ContentAndMedia {
+            메모리 스파이크 재현과 해결 방법. 그리고 스파이크가 발생한 위치를 찾는 방법에 대해 설명합니다. 
+             
+            @Image(source: memory-spike, alt: ".")
+        }
+        
+        @Steps {
+            @Step {
+                메모리 스파이크가 발생한 구간을 선택합니다. 메모리 스파이크가 지속되고 있는 구간 + Created & Persistent를 선택하거나, 메모리 스파이크가 끝난 구간 + Created & Destroyed를 선택합니다. 본 예제에서는 후자를 선택했습니다.
+                
+                @Image(source: created-destroyed, alt: "")
+            }
+            
+            @Step {
+                하단 인스펙터에서, call-trees를 선택합니다. 콜 스택을 따라서 메모리가 증가하는 구간을 추적할 수 있습니다. 
+                
+                @Image(source: call-trees, alt: "")
+            }
+            
+            @Step {
+                메모리가 증가한 적당한 구간을 찾아봅니다. 파란색 사람 아이콘에서 적당한 곳을 찾아야, 어떤 코드에서 발생했는지 확인할 수 있습니다. 
+                
+                @Image(source: track-call-trees, alt: "")
+            }
+            
+            @Step {
+                더블 클릭하면 작성한 코드로 이동할 수 있습니다. 파란색 아이콘이 아닌 다른 곳에서는 source code가 아닌 디셈블러 코드로 이동합니다.  
+                
+                @Image(source: spike-source-code, alt: "")
+            }
+            
+            @Step {
+                이전 스텝에서 찾은 코드입니다. `Now is \(Date.now)` 로 문자열을 생성해 메모리 스파이크를 발생시키고 있습니다. 반복문이 메모리 스파이크를 발생시키기 제일 쉬운 구조입니다. 
+                
+                @Code(name: "MemorySpike", file: MemorySpike.swift) {
+                    @Image(source: memory-spike-with-allocations, alt: "")
+                }
+            }
+            
+            @Step {
+                autoreleasepool을 사용하면 쉽게 메모리 증가를 피할 수 있습니다. Allocations의 수치는 동일하게 증가하고 있지만, 메모리 사용량은 유지되고 있는 것을 확인할 수 있습니다.
+                
+                @Code(name: "Autorelease", file: Autorelease.swift) {
+                    @Image(source: avoid-spike, alt: "")
+                }
+            }
+        }
+    }
+    
+    
+    @Section(title: "원리") {
+        @ContentAndMedia {
+            메모리가 급증하는 이유와, autorelease로 해결할 수 있는 이유를 설명합니다. 
+             
+            @Image(source: memory-spike, alt: ".")
+        }
+        
+        @Steps {
+            @Step {
+                키워드 - **ARC, Autoreleasepool**
+                
+                
+                Swift에서는 참조를 ARC를 통해서 관리합니다. ARC는 참조되는 객체를 일정한 pool 영역에서 모두 관리하고, 이를 한꺼번에 해제합니다. 즉, for문이나 특정 상황에서는 거대한 객체들이 하나의 pool 영역에서 관리되어 메모리가 계속 쌓이는 증상이 발생할 수 있습니다.
+                
+                @Image(source: autoreleasePools-01)
+            }
+            
+            @Step {
+                명시적으로 autoreleasepool 영역을 만들어주면 각 이터레이션마다 별도의 풀 영역을 만들어줄 수 있습니다. 따라서 다른 이터레이션이 끝날 때까지 기다리는게 아니라, 한개의 이터레이션이 끝나는 즉시 메모리에서 해제할 수 있습니다. 
+                
+                @Image(source: autoreleasePools-02)
+            }
+        }
+    }
+}
