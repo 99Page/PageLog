@@ -2,14 +2,11 @@
 //  Project.swift
 //  2023KakaoManifests
 //
-//  Created by Reppley_iOS on 4/21/25.
+//  Created by 노우영 on 10/29/25.
 //
 
-import Foundation
 import ProjectDescription
 import ProjectDescriptionHelpers
-
-let projectName = "CaseStudies-UIKit"
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleVersion": "1",
@@ -30,16 +27,17 @@ let infoPlist: [String: Plist.Value] = [
     ]
 ]
 
+let projectName = "UILog"
 
 let target = Target.target(
     name: projectName,
     destinations: .iOS,
     product: .app,
-    bundleId: "com.page.ui.case-studies-uikit",
-    deploymentTargets: .iOS("18.0"),
+    bundleId: "com.rim.ui.log",
+    deploymentTargets: .iOS("17.0"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Sources/**"],
-    resources: ["../../Resource/Resources/**"],
+    resources: ["../Resource/Resources/**"],
     dependencies: [
         .project(target: "PageKit", path: .relativeToRoot("PageKit")),
     ],
@@ -50,8 +48,8 @@ let testTarget = Target.target(
     name: "\(projectName)Tests",
     destinations: .iOS,
     product: .unitTests,
-    bundleId: "com.page.ui.case-studies-uikit.test",
-    deploymentTargets: .iOS("18.0"),
+    bundleId: "com.rim.ui.log.tests",
+    deploymentTargets: .iOS("17.0"),
     sources: ["Tests/**"],
     dependencies: [
         .target(name: projectName)
@@ -63,5 +61,10 @@ let testTarget = Target.target(
 let project = Project(
     name: projectName,
     organizationName: "Page",
+    packages: [
+    ],
+    settings: nil,
     targets: [target, testTarget]
 )
+
+
