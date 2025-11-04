@@ -20,6 +20,9 @@ class MemoryNavigationViewController: UIViewController, NavigationSelectable {
         
         addSection(section: "Problem", title: "Spike") { MemorySpikeView() }
         addSection(section: "Problem", title: "Persistent Growth") { MemoryPersistentGrowthView() }
+        addSection(section: "Problem", title: "Memory Leak") {
+            MemoryLeakView()
+        }
     }
 
     private func setupTableView() {
