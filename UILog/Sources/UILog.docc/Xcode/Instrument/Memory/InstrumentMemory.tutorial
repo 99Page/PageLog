@@ -11,6 +11,7 @@
         DocC의 튜토리얼에서 스텝을 작성하는 방법을 알아봅니다. 
         
         @TutorialReference(tutorial: "doc:MemorySpike")
+        @TutorialReference(tutorial: "doc:MemoryGrowth")
     }
 }
 

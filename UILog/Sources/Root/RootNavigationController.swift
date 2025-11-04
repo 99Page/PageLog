@@ -18,7 +18,11 @@ class RootNavigationController: UIViewController, NavigationSelectable {
         super.viewDidLoad()
         setupTableView()
         
-        addSection(section: "Instrument", title: "Memory", destination: MemoryViewController.self)
+        addSection(
+            section: "Instrument",
+            title: "Memory",
+            destination: MemoryNavigationViewController.self
+        )
     }
 
     private func setupTableView() {

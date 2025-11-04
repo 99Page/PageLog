@@ -1,0 +1,88 @@
+@Tutorial(time: 10) {
+    @Intro(title: "메모리 영구 증가 분석") {
+        메모리가 영구적으로 증가하는 상황을 확인합니다.  
+        
+        @Image(source: memory-icon)
+    }
+    
+    @Section(title: "메모리 영구 증가 파악") {
+        @ContentAndMedia {
+            메모리가 영구 증가하는 상황을 확인하는 방법을 알아봅니다. 
+            
+            @Image(source: memory-icon)
+        }
+        
+        @Steps {
+            @Step {
+                Product > Profile(cmd + I)로 이동합니다.
+                
+                Allocations를 누르고 Choose를 선택합니다. 
+                
+                @Image(source: profile-allocations, alt: "")
+            }
+            
+            @Step {
+                좌측 상단의 붉은 버튼(recording)을 눌러 실행합니다.
+                
+                @Image(source: allocations-recording, alt: "")
+            }
+            
+            @Step {
+                
+                Allocations 실행 시 기본 화면입니다. 세 구역으로 분할되는데, 위에서 메모리 할당량, Allocations 횟수입니다. (제일 하단은 파악x) 
+                
+                @Image(source: allocations-run, alt: "")
+            }
+            
+            @Step {
+                특정 상황에서, 메모리가 계단식으로 증가하는 것을 알 수 있습니다. 
+                
+                
+                @Image(source: memory-growth-01-01, alt: "")
+            }
+        }
+    }
+    
+    @Section(title: "메모리 영구증가 재현과 해결 방법") {
+        @ContentAndMedia {
+            메모리 영구증가 재현과 해결 방법. 그리고 메모리가 증가한 코드를 찾는 방법에 대해 설명합니다. 
+             
+            @Image(source: memory-growth-01-01, alt: ".")
+        }
+        
+        @Steps {
+            @Step {
+                
+                메모리가 증가한 구간을 선택 후 하단의 `Mark Generation`을 클릭합니다. 
+            
+                @Image(source: memory-growth-02-01, alt: "")
+            }
+            
+            @Step {
+                확인하려는 구간을 선택합니다. 여기서는 메모리가 제일 크게 증가하는 구간을 선택해보고, 해당 증가가 발생한 주소를 선택해 코드를 찾아보겠습니다. `0x121ec0000`의 오른쪽 화살표를 클릭합니다. 
+                
+                @Image(source: memory-growth-02-02)
+            }
+            
+            @Step {
+                메모리가 증가한 적당한 위치를 찾아봅니다. 파란색 사람 아이콘에서 적당한 곳을 찾아야, 어떤 코드에서 발생했는지 확인할 수 있습니다. 적당한 곳을 찾아 선택 후 더블 클릭합니다. 
+                
+                @Image(source: memory-growth-02-03)
+            }
+            
+            @Step {
+                이제 어떤 코드에서 메모리가 증가했는지 확인할 수 있습니다. 이미지를 store할 때 증가합니다. 참고로 함수에 의한 메모리 증가를 찾아주고, 직접 할당하는 곳에서의 메모리 증가를 찾아주진 않습니다. 값을 저장하는 코드는 `store[.now] = image.pngData()!`인데, call tree는 `store(_)` 함수를 찾아줍니다.  
+                
+                @Image(source: memory-growth-02-04)
+            }
+            
+            @Step {
+                메모리가 증가하는 곳을 찾는 것까지가 핵심이고, 상황마다 이 문제를 해결하는 방법은 다양합니다. 예제의 경우에는 이미지를 캐싱할 때 마다 새로운 Date 키 값을 사용해서 동일한 이미지를 계속 캐싱하는 것이 문제였습니다. 각 상황에 맞게 중복되는 데이터 저장을 회피할 방법을 찾아야합니다. 
+                
+                @Code(name: "ImageStorage.swift", file: ImageStorage.swift)
+                
+            }
+        }
+    }
+
+}

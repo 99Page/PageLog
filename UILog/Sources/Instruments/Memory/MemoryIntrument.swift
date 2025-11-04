@@ -9,7 +9,7 @@
 import UIKit
 import SwiftUI
 
-class MemoryViewController: UIViewController, NavigationSelectable {
+class MemoryNavigationViewController: UIViewController, NavigationSelectable {
 
     let tableView = UITableView()
     var sections: [(title: String, items: [NavigationItem])] = []
@@ -19,6 +19,7 @@ class MemoryViewController: UIViewController, NavigationSelectable {
         setupTableView()
         
         addSection(section: "Problem", title: "Spike") { MemorySpikeView() }
+        addSection(section: "Problem", title: "Persistent Growth") { MemoryPersistentGrowthView() }
     }
 
     private func setupTableView() {
