@@ -12,6 +12,7 @@
         
         @TutorialReference(tutorial: "doc:MemorySpike")
         @TutorialReference(tutorial: "doc:MemoryGrowth")
+        @TutorialReference(tutorial: "doc:MemoryLeak")
     }
 }
 
