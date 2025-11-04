@@ -1,9 +1,9 @@
 //
-//  ColorUIVIew.swift
-//  PageResearch
+//  ColorRectangleView.swift
+//  UILog
 //
-//  Created by 노우영 on 12/10/24.
-//  Copyright © 2024 Page. All rights reserved.
+//  Created by 노우영 on 11/4/25.
+//  Copyright © 2025 Page. All rights reserved.
 //
 
 import SwiftUI
@@ -19,8 +19,10 @@ struct ColorRectangleView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        context.animate {
-            uiView.backgroundColor = UIColor(color)
-        }
+        if #available(iOS 18.0, *) {
+            context.animate {
+                uiView.backgroundColor = UIColor(color)
+            }
+        } 
     }
 }

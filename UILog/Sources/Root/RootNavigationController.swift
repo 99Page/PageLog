@@ -15,8 +15,17 @@ class RootNavigationController: UIViewController, NavigationSelectable {
     var sections: [(title: String, items: [NavigationItem])] = []
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         setupTableView()
+        
+        addSection(
+            section: "SwiftUI",
+            title: "Animation"
+        ) {
+            AnimationNavigateView()
+        }
         
         addSection(
             section: "Instrument",
