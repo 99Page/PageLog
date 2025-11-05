@@ -1,11 +1,11 @@
 import ProjectDescription
 
-let problemNumber = "baekjoon-solve"
+let problemNumber = "BaekjoonLog"
 let target = Target.target(
     name: problemNumber,
     destinations: .macOS,
     product: .commandLineTool,
-    bundleId: "com.page.backjoon.solver",
+    bundleId: "com.page.baekjoon-log",
     deploymentTargets: .macOS("14.5"),
     sources: ["Sources/**"]
 )
