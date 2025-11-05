@@ -14,10 +14,6 @@ struct AnimationNavigateView: View {
             NavigationLink("UIViewAnimation") {
                 UIViewAnimationView()
             }
-            
-            NavigationLink("ZoomTransition") {
-                ZoomTransitionView()
-            }
         }
     }
 }
