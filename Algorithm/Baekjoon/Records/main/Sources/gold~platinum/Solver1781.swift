@@ -37,7 +37,7 @@ struct Solver1781 {
         while !homeworkPQ.isEmpty {
             let homework = homeworkPQ.pop()!
             
-            fillNoodle(to: homework.deadline, noddleCount: homework.noddleCount)
+            let _ = fillNoodle(to: homework.deadline, noddleCount: homework.noddleCount)
         }
     }
     
