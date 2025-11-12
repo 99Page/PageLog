@@ -96,9 +96,9 @@ Edge를 입력한 순서에 따라서 특정 케이스는 확인하지 못하는
 대표적인 문제가 카카오 코테의 [주사위 고르기 문제](https://school.programmers.co.kr/learn/courses/30/lessons/258709) 문제입니다. 
  
 
-### 케이스의 상태
+### DFS/BFS 선택
 
-DFS로 문제 풀이 시, 해당 경로만의 정보인지 아니면 전역적으로 관리할 수 있는 정보인지 판단해야 합니다. 
+* 방문 여부를 분리할 필요가 있는 경우는 DFS를 사용합니다.  
 
 ```swift 
 visitMap[next.r][next.c] = true
@@ -106,14 +106,9 @@ visit(next)
 visitMap[next.r][next.c] = false 
 ```
 
-전역적으로 관리할 수 있는 정보인 경우, 방문을 시작하고 나올 때 상태를 처리해서 call stack의 메모리를 아낄 수 있습니다. 
+* 최단 거리를 구해야하는 경우에는 BFS를 사용합니다. 
 
-```swift 
-visitMap[next.r][next.c] = true
-visit(next, visitMap) 
-```
 
-전역적으로 관리하기 어려운 경우는 parameter에 추가해서 다른 경로와 충돌되지 않게 구분해줘야 합니다. 
 
 ## Dynamic programming 
 
