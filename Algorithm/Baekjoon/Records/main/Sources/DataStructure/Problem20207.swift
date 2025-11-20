@@ -76,7 +76,7 @@ struct Problem20207 {
     }
     
     struct Event: Comparable {
-        static func < (lhs: Problem1476.Event, rhs: Problem1476.Event) -> Bool {
+        static func < (lhs: Event, rhs: Event) -> Bool {
             if lhs.start != rhs.start {
                 return lhs.start < rhs.start
             } else {
