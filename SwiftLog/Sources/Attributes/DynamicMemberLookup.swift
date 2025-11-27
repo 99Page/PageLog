@@ -8,8 +8,8 @@
 
 import Foundation
 
-// dynamicMemberLookup은
-// 컴파일 시 없는 멤버에 대한 접근을 처리해주는 것이다.
+/// dynamicMemberLookup은
+/// 컴파일 시 없는 멤버에 대한 접근을 처리해주는 것이다.
 @dynamicMemberLookup
 struct Price {
     var priceByItem: [String: Int] = [:]

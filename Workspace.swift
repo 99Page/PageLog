@@ -18,6 +18,7 @@ let workspace = Workspace(
         "Resource/**",
         "JustDoc/**",
         "PageKit/**",
-        "UILog/**"
+        "UILog/**",
+        "SwiftLog/**"
     ]
 )
