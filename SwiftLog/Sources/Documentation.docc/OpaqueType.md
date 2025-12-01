@@ -4,6 +4,8 @@ Opaque Type에 대해 정리한 문서
 
 ## Opqaue and Boxed Protocol Types
 
+> Keyword: Protocol & associated type. Compiler. Type erasure. 
+
 스위프트에서는 타입의 구체적인 사항은 opaque type, boxed protocol type 
 두가지 방법으로 숨길 수 있습니다. 
 모듈과 모듈을 호출하는 코드 사이에 타입 정보를 숨기면, 반환값의 실제 타입을 숨길 수 있어 유용합니다. 
