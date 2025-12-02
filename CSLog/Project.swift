@@ -7,6 +7,7 @@
 
 import Foundation
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let projectName = "CSLog"
 
@@ -25,7 +26,8 @@ let target = Target.target(
     bundleId: "com.page.cs.log",
     deploymentTargets: .iOS("18.0"),
     infoPlist: .extendingDefault(with: infoPlist),
-    sources: ["Sources/**"]
+    sources: ["Sources/**"],
+    settings: .default
 )
 
 let project = Project(
