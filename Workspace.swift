@@ -12,7 +12,7 @@ let workspace = Workspace(
     projects: [
         "UIFrameworks/CaseStudies-SwiftUI/**",
         "UIFrameworks/CaseStudies-UIKit/**",
-        "Algorithm/**",
+        "SolveLog/**",
         "TCA/**",
         "Resource/**",
         "CSLog/**",
