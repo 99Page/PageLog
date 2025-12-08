@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 class RootNavigationController: UIViewController, NavigationSelectable {
 
@@ -32,6 +33,19 @@ class RootNavigationController: UIViewController, NavigationSelectable {
             title: "Memory",
             destination: MemoryNavigationViewController.self
         )
+        
+        addChartView(title: "BarGraph") { BarGraphView() }
+        
+        if #available(iOS 18.0, *) {
+            addChartView(title: "LineGraph") { LineGraphView() }
+        }
+    }
+    
+    func addChartView<Content: View>(
+        title: String,
+        @ViewBuilder builder: @escaping () -> Content
+    ) {
+        addSection(section: "Chart", title: title, builder: builder)
     }
 
     private func setupTableView() {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum LinePlotType: CaseIterable {
+enum LinePlotType: String, CaseIterable {
     case functions
     case collection
 }

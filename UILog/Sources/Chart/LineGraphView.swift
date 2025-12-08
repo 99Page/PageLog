@@ -9,7 +9,8 @@
 import Charts
 import SwiftUI
 
-struct LinePlotView: View {
+@available(iOS 18.0, *)
+struct LineGraphView: View {
     @State var type: LinePlotType = .functions
     
     /// Sample expense data for the chart.
@@ -39,23 +40,31 @@ struct LinePlotView: View {
     private func chartPicker() -> some View {
         Picker("Plot type", selection: $type) {
             ForEach(LinePlotType.allCases, id: \.self) { type in
-                Text("\(type)")
+                // Avoid deprecated localized interpolation.
+                Text(verbatim: typeTitle(type))
             }
         }
         .pickerStyle(.segmented)
+    }
+    
+    private func typeTitle(_ type: LinePlotType) -> String {
+        switch type {
+        case .functions: return "Functions"
+        case .collection: return "Collection"
+        }
     }
     
     @ViewBuilder
     private func charts() -> some View {
         switch type {
         case .functions:
-            functionsChart()
+            curveChart()
         case .collection:
-            collectionChart()
+            lineChart()
         }
     }
     
-    private func collectionChart() -> some View {
+    private func lineChart() -> some View {
         Chart {
             LinePlot(
                 expenses,
@@ -67,7 +76,7 @@ struct LinePlotView: View {
         }
     }
     
-    private func functionsChart() -> some View {
+    private func curveChart() -> some View {
         Chart {
             LinePlot(x: "x", y: "y = sin(x)") { sin($0) }
                 .foregroundStyle(by: .value("expression", "y=sin(x)"))
@@ -83,8 +92,16 @@ struct LinePlotView: View {
         .chartXScale(domain: -10 ... 10)
         .chartYScale(domain: -10 ... 10)
     }
+    
+    struct Expense {
+        let month: Int
+        var cost: Int
+        let category: String
+    }
+
 }
 
+@available(iOS 18.0, *)
 #Preview {
-    LinePlotView()
+    LineGraphView()
 }

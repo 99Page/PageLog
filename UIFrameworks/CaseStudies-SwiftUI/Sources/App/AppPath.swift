@@ -10,7 +10,6 @@ import Foundation
 
 enum AppPath: Hashable {
     case symbol(SymbolPath)
-    case swiftChart(SwiftChartPath)
     case animation(AnimationPath)
     case framework(FrameworkPath)
     case toolbar(ToolbarPath)

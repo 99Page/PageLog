@@ -20,10 +20,6 @@ struct AppViewModel {
         state.path.append(.symbol(symbolPath))
     }
     
-    func chartSectionTapped(_ chartPath: SwiftChartPath) {
-        state.path.append(.swiftChart(chartPath))
-    }
-    
     func animationSectionTapped(_ animationPath: AnimationPath) {
         state.path.append(.animation(animationPath))
     }
