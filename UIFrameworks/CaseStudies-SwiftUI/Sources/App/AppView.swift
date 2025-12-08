@@ -16,7 +16,6 @@ struct AppView: View {
         NavigationStack(path: $viewModel.state.path) {
             List {
                 symbolSectionView()
-                chartSectionView()
                 animationSectionView()
                 frameworkSectionView()
                 toolbarSectionView()
@@ -28,13 +27,6 @@ struct AppView: View {
                     switch symbolPath {
                     case .animation:
                         SymbolAnimationView()
-                    }
-                case let .swiftChart(path):
-                    switch path {
-                    case .basic:
-                        SwiftChartBasicView()
-                    case .linePlot:
-                        LinePlotView()
                     }
                 case let .animation(path):
                     switch path {
@@ -69,21 +61,6 @@ struct AppView: View {
             }
         } header: {
             Text("Animations")
-        }
-    }
-    
-    private func chartSectionView() -> some View {
-        Section {
-            Button("ChartBasic") {
-                viewModel.chartSectionTapped(.basic)
-            }
-            
-            Button("LinePlot") {
-                viewModel.chartSectionTapped(.linePlot)
-            }
-
-        } header: {
-            Text("SwiftCharts")
         }
     }
     

@@ -13,7 +13,7 @@ import SwiftUI
 ///
 /// # Reference
 /// [Creating a chart using Swift charts](https://developer.apple.com/documentation/charts/creating-a-chart-using-swift-charts)
-struct SwiftChartBasicView: View {
+struct BarGraphView: View {
     
     var stackedBarData: [ToyShape] = [
         .init(color: "Green", type: "Cube", count: 2),
@@ -45,9 +45,10 @@ struct SwiftChartBasicView: View {
         .chartForegroundStyleScale([
             "Green": .green, "Purple": .purple, "Pink": .pink, "Yellow": .yellow
         ])
+        .padding(.horizontal)
     }
 }
 
 #Preview {
-    SwiftChartBasicView()
+    BarGraphView()
 }
