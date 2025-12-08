@@ -32,9 +32,12 @@ tuist generate
 
 ### Documentation provided by Apple
 
-
 [The Swift Programming Language(6.1) - Language Guide](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/#Language-Guide)
 
+
+### WWDC 20
+
+[Introduction to SwiftUI](https://developer.apple.com/kr/videos/play/wwdc2020/10119/)
 
 ### WWDC 23
 
