@@ -34,10 +34,19 @@ tuist generate
 
 [The Swift Programming Language(6.1) - Language Guide](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/#Language-Guide)
 
+### WWDC19
 
-### WWDC 20
+|Session|Content|
+|---|---|
+|[SwiftUI Essentials](https://developer.apple.com/kr/videos/play/wwdc2019/216/)|Declarative vs Imperative <br>View가 구조체인 이유 <br>Environment|
+
+
+### WWDC20
+
+[Data Essentials in SwiftUI](https://developer.apple.com/videos/play/wwdc2020/10040/)
 
 [Introduction to SwiftUI](https://developer.apple.com/kr/videos/play/wwdc2020/10119/)
+
 
 ### WWDC 23
 
