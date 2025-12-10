@@ -48,8 +48,14 @@ tuist generate
 
 [Introduction to SwiftUI](https://developer.apple.com/kr/videos/play/wwdc2020/10119/)
 
+### WWDC21
 
-### WWDC 23
+|Session|Content|
+|---|---|
+|[Demystify SwiftUI](https://developer.apple.com/kr/videos/play/wwdc2021/10022/)|Identity에 View에 미치는 영향 <br>Dependency graph와 뷰 업데이트
+
+
+### WWDC23
 
 [Write Swift macros](https://developer.apple.com/videos/play/wwdc2023/10166/)
 
