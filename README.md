@@ -39,6 +39,7 @@ tuist generate
 |Session|Content|
 |---|---|
 |[SwiftUI Essentials](https://developer.apple.com/kr/videos/play/wwdc2019/216/)|Declarative vs Imperative <br>View가 구조체인 이유 <br>Environment|
+|[Data Flow Through SwiftUI](https://developer.apple.com/kr/videos/play/wwdc2019/226/)|Model data <br>Dependency, Persitent Storage <br>Single source of truth|
 
 
 ### WWDC20

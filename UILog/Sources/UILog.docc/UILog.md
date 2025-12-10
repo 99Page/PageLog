@@ -19,6 +19,7 @@ UI 개발에 도움이 되는 내용들을 정리한 프로젝트입니다.
 
 ### SwiftUI
 
+- <doc:Model-data>
 - <doc:Declarative>
 - <doc:Why-SwiftUI-Views-Are-Structs>
 - <doc:Environment-in-SwiftUI>
