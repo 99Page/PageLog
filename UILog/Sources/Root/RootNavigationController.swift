@@ -21,12 +21,8 @@ class RootNavigationController: UIViewController, NavigationSelectable {
         
         setupTableView()
         
-        addSection(
-            section: "SwiftUI",
-            title: "Animation"
-        ) {
-            AnimationNavigateView()
-        }
+        addSwiftUIView(title: "Animation") { AnimationNavigateView() }
+        addSwiftUIView(title: "HowRerenderWorks") { RerenderView() }
         
         addSection(
             section: "Instrument",
@@ -39,6 +35,13 @@ class RootNavigationController: UIViewController, NavigationSelectable {
         if #available(iOS 18.0, *) {
             addChartView(title: "LineGraph") { LineGraphView() }
         }
+    }
+    
+    func addSwiftUIView<Content: View>(
+        title: String,
+        @ViewBuilder builder: @escaping () -> Content
+    ) {
+        addSection(section: "SwiftUI", title: title, builder: builder)
     }
     
     func addChartView<Content: View>(

@@ -58,7 +58,9 @@ CustomView가 한번 생성된 후, 분기점에 의해 사라지고 다시 생�
 
 따라서 기존 model data 값을 유지하지 않습니다. 
 
+## Sample
 
+<doc:RerenderView>
 
 ## Reference
 
