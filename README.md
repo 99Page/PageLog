@@ -57,11 +57,13 @@ tuist generate
 
 ### WWDC23
 
-[Write Swift macros](https://developer.apple.com/videos/play/wwdc2023/10166/)
+|Session|Content|
+|---|---|
+|[Write Swift macros](https://developer.apple.com/videos/play/wwdc2023/10166/)||
+|[Expand on Swift macros](https://developer.apple.com/videos/play/wwdc2023/10167/)||
+|[Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)||
+| [Demystify SwiftUI performance](https://developer.apple.com/kr/videos/play/wwdc2023/10160/) |뷰 업데이트 개선 <br>리스트 성능 개선|
 
-[Expand on Swift macros](https://developer.apple.com/videos/play/wwdc2023/10167/)
-
-[Create rich documentation with Swift-DocC](https://developer.apple.com/videos/play/wwdc2023/10244/)
 
 ### WWDC24
 [Enhance your UI animations and transitions](https://developer.apple.com/kr/videos/play/wwdc2024/10145/)
