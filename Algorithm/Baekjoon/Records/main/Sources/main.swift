@@ -1,26 +1,52 @@
-var problem = Problem1439()
+import Foundation
+
+var problem = Problem1013()
 problem.solve()
 
-struct Problem1439 {
-    func solve() {
-        let string = [Character](readLine()!)
+struct Problem1013 {
+    var testCase = 0
+    
+    mutating func solve() {
+        read()
         
-        var lastCharacter: Character = "2"
-        var zeroCount = 0
-        var oneCount = 0
+        (0..<testCase).forEach { _ in
+            checkValidPattern(readLine()!)
+        }
+    }
+    
+    mutating func checkValidPattern(_ pattern: String) {
+        let splited = pattern
+            .components(separatedBy: "01")
+            .map { String($0) }
         
-        for c in string {
-            if c != lastCharacter {
-                if c == "1" {
-                    oneCount += 1
-                } else {
-                    zeroCount += 1
-                }
+        var lastSplit = ""
+        
+        let regex1 = try! Regex("^10+$")
+        let regex2 = try! Regex("^1+$")
+        
+        for split in splited {
+            if split == "" {
+                lastSplit = split
+                continue
             }
             
-            lastCharacter = c
+            if !(split.contains(regex1) || split.contains(regex2)) {
+                print("NO")
+                return
+            }
+            
+            if split.contains(regex2) && !lastSplit.contains(regex1) {
+                print("NO")
+                return
+            }
+            
+            lastSplit = split
         }
         
-        print(min(zeroCount, oneCount))
+        print("YES")
+    }
+    
+    mutating func read() {
+        testCase = Int(readLine()!)!
     }
 }
