@@ -15,38 +15,33 @@ struct Problem1013 {
     }
     
     mutating func checkValidPattern(_ pattern: String) {
-        let splited = pattern
-            .components(separatedBy: "01")
-            .map { String($0) }
+        let contactRegex = "^(100+1+|01)+$"
         
-        var lastSplit = ""
-        
-        let regex1 = try! Regex("^10+$")
-        let regex2 = try! Regex("^1+$")
-        
-        for split in splited {
-            if split == "" {
-                lastSplit = split
-                continue
-            }
-            
-            if !(split.contains(regex1) || split.contains(regex2)) {
-                print("NO")
-                return
-            }
-            
-            if split.contains(regex2) && !lastSplit.contains(regex1) {
-                print("NO")
-                return
-            }
-            
-            lastSplit = split
+        if pattern.matchesRegex(contactRegex) {
+            print("YES")
+        } else {
+            print("NO")
         }
-        
-        print("YES")
     }
     
     mutating func read() {
         testCase = Int(readLine()!)!
+    }
+}
+
+
+private extension String {
+    func matchesRegex(_ pattern: String) -> Bool {
+        guard !self.isEmpty else { return false }
+        
+        do {
+            let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+            let fullRange = NSRange(location: 0, length: self.utf16.count)
+            let match = regex.firstMatch(in: self, options: [], range: fullRange)
+            return match != nil
+            
+        } catch {
+            return false
+        }
     }
 }
