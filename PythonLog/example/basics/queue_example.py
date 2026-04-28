@@ -44,6 +44,13 @@ def example_rotate():
     dq.rotate(-1)
     print(f"rotate(-1): {dq}")  # deque([5, 1, 2, 3, 4])
 
+def example_peek():
+    """제거 없이 앞/뒤 요소 확인"""
+    dq = deque([1, 2, 3])
+    front = dq[0]   # 제일 앞
+    back = dq[-1]   # 제일 뒤
+    print(f"front: {front}, back: {back}")  # 1, 3
+
 def example_maxlen():
     """최대 길이를 제한 (초과 시 오래된 요소 자동 삭제)"""
     dq = deque(maxlen=3)
@@ -60,4 +67,5 @@ if __name__ == "__main__":
     example_extend()
     example_extendleft()
     example_rotate()
+    example_peek()
     example_maxlen()
