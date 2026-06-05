@@ -50,6 +50,11 @@ def example_string_capitalize_title():
     title_s = text.title()
     print(f"Capitalize: {capitalize_s}, Title: {title_s}")
 
+def example_string_replace():
+    text = "a-b-c"
+    replaced = text.replace("-", "_")
+    print(f"Replace: {replaced}")
+
 if __name__ == "__main__":
     example_slicing_basic()
     example_negative_slicing()
@@ -59,3 +64,4 @@ if __name__ == "__main__":
     example_list_slicing_and_modification()
     example_string_lower_upper()
     example_string_capitalize_title()
+    example_string_replace()
