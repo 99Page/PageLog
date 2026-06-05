@@ -4,4 +4,5 @@
 
 ## Index
 
-- 아직 등록된 문서가 없습니다.
+- [Commit Rules](agents/commit-rules.md)
+- [Writing Rules](agents/writing-rules.md)
