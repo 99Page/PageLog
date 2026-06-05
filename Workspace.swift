@@ -1,6 +1,6 @@
 //
 //  Workspace.swift
-//  PageLogManifests
+//  SudoLogManifests
 //
 //  Created by 노우영 on 6/8/24.
 //
@@ -8,16 +8,15 @@
 import ProjectDescription
 
 let workspace = Workspace(
-    name: "PageLog",
+    name: "SudoLog",
     projects: [
-        "UIFrameworks/CaseStudies-SwiftUI/**",
-        "UIFrameworks/CaseStudies-UIKit/**",
+        "iOS/UIFrameworks/CaseStudies-SwiftUI/**",
+        "iOS/UIFrameworks/CaseStudies-UIKit/**",
+        "iOS/TCA/**",
         "Algorithm/**",
-        "TCA/**",
         "Resource/**",
-        "CSLog/**",
         "PageKit/**",
-        "UILog/**",
-        "SwiftLog/**"
+        "iOS/UILog/**",
+        "Language/Swift/**"
     ]
 )
